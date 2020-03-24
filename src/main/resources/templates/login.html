@@ -1,0 +1,38 @@
+<!doctype html>
+<html th:replace="~{fragments/layout::standardLayout(~{::login}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="header-content" th:remove="tag">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
+</head>
+
+
+<div th:fragment="login" class="login-form">
+
+    <form class="form-signin" th:action="@{/login}" method="POST">
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+        <label for="email" class="sr-only">Email address</label>
+        <input type="email" id="username" name="username" class="form-control" placeholder="Email address" />
+
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Password" />
+
+        <div align="center" th:if="${param.error}">
+            <p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+
+    <br />
+
+    <a th:href="${fbLoginUrl}">Login with Facebook</a>
+    <br />
+    <a th:href="${googleLoginUrl}">Login with Google</a>
+    <br />
+    <a th:href="${linkedinLoginUrl}">Login with LinkedIn</a>
+
+
+</div>
+
+</html>

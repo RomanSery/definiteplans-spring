@@ -1,0 +1,45 @@
+<!doctype html>
+<html th:replace="~{fragments/layout::standardLayout(~{::edit-my-pwd}, ~{})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="edit-my-pwd">
+
+    <h1>Update Password</h1>
+
+
+    <form th:action="@{/me/pwd}" th:object="${user}" method="post">
+
+        <ul th:if="${#fields.hasErrors('*')}">
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+        </ul>
+
+        <div th:if="${hasPwd}" class="form-group row">
+            <label for="currPwdField" class="col-sm-2 col-form-label">Current Password</label>
+            <div class="col-sm-3">
+                <input type="password" class="form-control" id="currPwdField" th:field="*{currPwd}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="newPwd1Field" class="col-sm-2 col-form-label">New Password</label>
+            <div class="col-sm-3">
+                <input type="password" class="form-control" id="newPwd1Field" th:field="*{password1}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="newPwd2Field" class="col-sm-2 col-form-label">Confirm New Password</label>
+            <div class="col-sm-3">
+                <input type="password" class="form-control" id="newPwd2Field" th:field="*{password2}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+</html>

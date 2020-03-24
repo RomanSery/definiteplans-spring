@@ -1,0 +1,20 @@
+
+<html th:fragment="standardLayout(pageContent, headerContent)" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header::standard-header(${headerContent})"></div>
+
+<body>
+    <nav th:replace="fragments/nav::nav-bar"></nav>
+
+    <main role="main" class="container">
+
+        <br />
+        <br />
+        <br />
+
+        <div th:replace="${pageContent}"></div>
+
+    </main><!-- /.container -->
+
+</body>
+</html>

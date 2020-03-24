@@ -1,0 +1,27 @@
+<!doctype html>
+<html th:replace="~{fragments/layout::standardLayout(~{::view-profile}, ~{})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="view-profile">
+
+    <h1>View Profile</h1>
+
+    Name: <span th:text="${displayName}" />
+
+    <br />
+
+    College: <span th:text="${college}" />
+
+    <br />
+
+    Subjects:
+    <br />
+
+    <th:block th:each="s : ${subjects}">
+        <span th:text="${s.getDisplayName()}">subject name</span>
+        <br />
+    </th:block>
+
+
+</div>
+
+</html>
