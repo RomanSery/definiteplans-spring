@@ -1,69 +1,9 @@
 <!doctype html>
-<html th:replace="~{fragments/layout::standardLayout(~{::index-content}, ~{})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{fragments/layout::guestLayout(~{::index-content}, ~{})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
 <div th:fragment="index-content">
 
-    <script th:inline="javascript" th:if="${isFbUser}">
-        $(document).ready(function() {
-            $.getScript('https://connect.facebook.net/en_US/sdk.js', function(){
-                FB.init({
-                    appId            : /*[[${fbAppId}]]*/ '1234',
-                    autoLogAppEvents : true,
-                    xfbml            : true,
-                    version          : 'v5.0'
-                });
-            });
-
-
-
-            $( "#facebookContainerHeader" ).click(function() {
-                $.get( "fb/friends", function( data ) {
-                    $("#facebookContent").html(data);
-                });
-            });
-        });
-    </script>
-
-
-
-    <h1>My Connections</h1>
-
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a href="#connectionsContainer" class="nav-link active" data-toggle="tab"><i class="fas fa-users"></i> Connections</a>
-        </li>
-        <li class="nav-item">
-            <a href="#facebookContainer" id="facebookContainerHeader" class="nav-link" data-toggle="tab"><i class="fab fa-facebook-square"></i> Facebook</a>
-        </li>
-        <li class="nav-item">
-            <a href="#linkedinContainer" class="nav-link" data-toggle="tab"><i class="fab fa-linkedin"></i> LinkedIn</a>
-        </li>
-        <li class="nav-item">
-            <a href="#googleContainer" class="nav-link" data-toggle="tab"><i class="fab fa-google"></i> Google</a>
-        </li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="connectionsContainer">
-            <p>See which of your friends might be on the site.</p>
-        </div>
-        <div class="tab-pane fade" id="facebookContainer">
-            <a th:href="${fbLoginUrl}" th:if="${!isFbUser}">Login with Facebook</a>
-            <span id="facebookContent"></span>
-        </div>
-        <div class="tab-pane fade" id="linkedinContainer">
-            <a th:href="${linkedinLoginUrl}" th:if="${!isLinkedinUser}">Login with LinkedIn</a>
-            <p th:if="${isLinkedinUser}">
-                Share on linkedin
-            </p>
-        </div>
-        <div class="tab-pane fade" id="googleContainer">
-            <a th:href="${googleLoginUrl}" th:if="${!isGoogleUser}">Login with Google</a>
-            <p th:if="${isGoogleUser}">
-                share on google
-            </p>
-        </div>
-    </div>
 
 </div>
 

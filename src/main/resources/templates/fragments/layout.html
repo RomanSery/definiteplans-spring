@@ -1,20 +1,81 @@
 
-<html th:fragment="standardLayout(pageContent, headerContent)" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:fragment="guestLayout(pageContent, headerContent)" lang="en" xmlns:th="http://www.thymeleaf.org">
+    <div th:replace="fragments/header::standard-header(${headerContent})"></div>
 
-<div th:replace="fragments/header::standard-header(${headerContent})"></div>
+    <body class="top-navigation">
 
-<body>
-    <nav th:replace="fragments/nav::nav-bar"></nav>
+        <div id="wrapper">
+            <div id="page-wrapper" class="gray-bg">
+                <div class="row border-bottom white-bg">
+                    <nav th:replace="fragments/nav::nav-bar"></nav>
+                </div>
 
-    <main role="main" class="container">
+                <div class="wrapper wrapper-content">
+                    <div class="container">
 
-        <br />
-        <br />
-        <br />
+                        <div th:replace="${pageContent}"></div>
 
-        <div th:replace="${pageContent}"></div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox">
+                                    <div class="ibox-content">
 
-    </main><!-- /.container -->
+                                        <section class="features">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-lg-12 text-center">
+                                                        <div class="navy-line"></div>
+                                                        <h1>What makes us different</h1>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center">
+                                                    <div class="col-lg-5 col-lg-offset-1 features-text">
+                                                        <small>INSPINIA</small>
+                                                        <h2>Definite Dating </h2>
+                                                        <i class="fa fa-calendar fa-5x float-right"></i>
+                                                        <p>Making definite plans leads to more kept dates and less wasted time. When two people make
+                                                            definite plans it shows they respect and value each other's time and are enthusiastic about
+                                                            seeing each other.</p>
+                                                    </div>
+                                                    <div class="col-lg-5 features-text">
+                                                        <small>INSPINIA</small>
+                                                        <h2>No guesswork </h2>
+                                                        <i class="fa fa-question fa-5x float-right"></i>
+                                                        <p>Does she want another date? Does he want to see me again? These kind of questions cause
+                                                            unnecessary confusion. After the date, both of you will be asked to give your feedback on a 2nd
+                                                            date. No more guesswork!</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center">
+                                                    <div class="col-lg-5 col-lg-offset-1 features-text">
+                                                        <small>INSPINIA</small>
+                                                        <h2>No endless messaging </h2>
+                                                        <i class="fa fa-envelope fa-5x float-right"></i>
+                                                        <p>You can only get to know and build attraction with someone in-person, not by constant messaging,
+                                                            texting, and phone calling back and forth. You can't talk someone into liking you, but you can
+                                                            definitely talk them out of it!</p>
+                                                    </div>
+                                                    <div class="col-lg-5 features-text">
+                                                        <small>INSPINIA</small>
+                                                        <h2>Safety features </h2>
+                                                        <i class="fa fa-users fa-5x float-right"></i>
+                                                        <p>No one wants to be stood up. We provide a simple way for our members to flag people that don't
+                                                            show up after you've made definite plans to meet and you will be able to see how many no-shows
+                                                            everyone has! You can also hide yourself from age ranges that you don't wish to hear from.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-</body>
+            </div>
+        </div>
+
+    </body>
+
 </html>
