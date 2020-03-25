@@ -85,7 +85,7 @@ public class User implements Serializable {
     @Column(name = "neighborhood")
     private String neighborhood;
 
-    @Column(name = "postalCode")
+    @Column(name = "postal_code")
     private String postalCode;
 
     @Column(name = "country")
