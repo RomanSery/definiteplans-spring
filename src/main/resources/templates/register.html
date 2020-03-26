@@ -1,0 +1,51 @@
+<!doctype html>
+<html th:replace="~{fragments/layout::guestLayout(~{::register}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="header-content" th:remove="tag">
+
+</head>
+
+<div class="row" th:fragment="register">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4 text-center">
+
+        <div class="alert alert-danger" id="registerFeedback" style="display:none;"></div>
+
+        <form role="form" id="regForm" th:action="@{/register}" th:object="${user}" method="POST">
+            <ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+            </ul>
+
+            <div class="form-group">
+                <input class="form-control" placeholder="First name" type="text" name="displayName" th:field="*{displayName}">
+            </div>
+            <div class="form-group">
+                <input class="form-control" data-mask="99/99/9999" placeholder="Date of birth (mm/dd/yyyy)" type="text" name="dob" th:field="*{dob}">
+            </div>
+            <div class="form-group">
+                <select class="form-control m-b" name="gender" th:field="*{gender}">
+                    <option th:each="g : ${genders}" th:value="${g.id}" th:text="${g.enumValue}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input class="form-control" data-mask="99999" placeholder="Zip Code" type="text" name="postalCode" th:field="*{postalCode}">
+            </div>
+            <div class="form-group">
+                <input class="form-control" placeholder="Email" type="email" name="email"  th:field="*{email}">
+            </div>
+            <div class="form-group">
+                <input class="form-control" placeholder="Password" type="password" name="password"  th:field="*{password}">
+            </div>
+            <button class="btn btn-primary block full-width" type="submit">Register</button>
+
+            <p class="text-muted text-center"><small>Already have an account?</small></p>
+            <a class="btn btn-sm btn-white btn-block" th:href="@{/login}">Login</a>
+        </form>
+    </div>
+    <div class="col-lg-4"></div>
+</div>
+
+
+
+
+</html>

@@ -49,8 +49,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // The pages does not require login
-        http.authorizeRequests().antMatchers("/", "/login", "/logout", "/registration", "/webjars/**").permitAll();
+        // These pages do not require login
+        http.authorizeRequests().antMatchers("/login", "/logout", "/register", "/webjars/**").permitAll();
 
         http.authorizeRequests().anyRequest().authenticated();
 
