@@ -16,3 +16,35 @@
         </ul>
     </div>
 </nav>
+
+<nav th:fragment="auth-nav-bar" class="navbar navbar-expand-lg navbar-static-top" role="navigation">
+
+    <a href="/" class="navbar-brand"><i class="fa fa-calendar fa-2x"></i> DefinitePlans.com</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fa fa-reorder"></i>
+    </button>
+
+    <div class="navbar-collapse collapse" id="navbar">
+        <ul class="nav navbar-nav mr-auto">
+            <li>
+                <div class="profile-element block m-t" th:text="${currUserDisplayName}"></div>
+            </li>
+            <li class="active">
+                <a aria-expanded="false" role="button" href="/"> Calendar</a>
+            </li>
+            <li>
+                <a aria-expanded="false" role="button" th:href="@{/editProfile}"> Edit profile</a>
+            </li>
+            <li>
+                <a aria-expanded="false" role="button" th:href="@{/browse}"> Browse</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-top-links navbar-right">
+            <li>
+                <a href="#" th:href="@{/logout}">
+                    <i class="fa fa-sign-out"></i> Log out
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

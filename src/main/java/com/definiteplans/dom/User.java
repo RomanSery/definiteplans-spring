@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.definiteplans.dom.enumerations.State;
-import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
 
 import net.minidev.json.JSONArray;
@@ -48,9 +47,6 @@ public class User implements Serializable {
 
     @Column(name = "pwd", length = 200)
     private String password;
-
-    @Column(name = "salt")
-    private String salt;
 
     @Column(name = "user_status_id")
     private int userStatus;
@@ -171,14 +167,8 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public void setHashedPwdAndSaltViaPlaintextPwd(String plaintextPassword, UserService userService) {
-        String[] hashedPasswordAndSalt = userService.getHashedPasswordAndSalt(plaintextPassword);
-        setPassword(hashedPasswordAndSalt[0]);
-        setSalt(hashedPasswordAndSalt[1]);
-    }
-
     public boolean hasEmailAndPwdLogin() {
-        return (getPassword() != null && getPassword().length() > 0 && getSalt() != null && getSalt().length() > 0);
+        return (getPassword() != null && getPassword().length() > 0);
     }
 
     public int getUserStatus() {
@@ -187,14 +177,6 @@ public class User implements Serializable {
 
     public void setUserStatus(int userStatus) {
         this.userStatus = userStatus;
-    }
-
-    public String getSalt() {
-        return this.salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getPostalCode() {

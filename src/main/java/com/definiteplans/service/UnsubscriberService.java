@@ -17,7 +17,6 @@ public class UnsubscriberService {
     private static final Logger logger = LoggerFactory.getLogger(UnsubscriberService.class);
 
     @Autowired private UnsubscriberRepository unsubscriberRepository;
-    @Autowired private CipherService cipherService;
 
     public Unsubscriber getById(String email) {
         if (email == null || email.length() == 0) {
@@ -38,17 +37,18 @@ public class UnsubscriberService {
 
     public String decryptEmailToUnsub(String encStr) {
         String decryptedString = null;
-        try {
-            decryptedString = this.cipherService.base64DecodeAndDecrypt(encStr);
-        } catch (Exception e) {
-            logger.debug("error decrypting str {}", encStr, e);
-            return null;
-        }
+//        try {
+//            decryptedString = this.cipherService.base64DecodeAndDecrypt(encStr);
+//        } catch (Exception e) {
+//            logger.debug("error decrypting str {}", encStr, e);
+//            return null;
+//        }
 
         return decryptedString;
     }
 
     public String createEncryptedUnsubString(String email) throws UnsupportedEncodingException {
-        return this.cipherService.encryptAndBase64Encode(email);
+        //return this.cipherService.encryptAndBase64Encode(email);
+        return null;
     }
 }

@@ -30,6 +30,7 @@ public class DpUserDetailsService implements UserDetailsService {
 
         org.springframework.security.core.userdetails.User.UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(String.valueOf(user.getId()));
         builder.password(user.getPassword());
+        builder.roles("USER");
         return builder.build();
     }
 }

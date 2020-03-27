@@ -1,16 +1,11 @@
 package com.definiteplans.service;
 
 
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
-import org.apache.shiro.crypto.RandomNumberGenerator;
-import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -28,13 +23,11 @@ import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.State;
 import com.definiteplans.dom.enumerations.UserStatus;
-import com.definiteplans.util.DateUtil;
 import com.definiteplans.util.Utils;
 
 @Service
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-    private static final Pattern DEFAULT_PASSWORD_VALIDATION_PATTERN = Pattern.compile("((?=.*\\d)(?=.*[a-z]).{6,20})");
 
     private int validationLinkExpirationHours;
 
@@ -43,18 +36,14 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ZipCodeService zipCodeService;
     private final EnumValueService enumValueService;
-    private final CipherService cipherService;
-    private final RandomNumberGenerator rng;
 
     public UserService(UserRepository userRepository, UserEmailRepository userEmailRepository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder, ZipCodeService zipCodeService, EnumValueService enumValueService, CipherService cipherService, RandomNumberGenerator rng) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder, ZipCodeService zipCodeService, EnumValueService enumValueService) {
         this.userRepository = userRepository;
         this.userEmailRepository = userEmailRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.zipCodeService = zipCodeService;
         this.enumValueService = enumValueService;
-        this.cipherService = cipherService;
-        this.rng = rng;
     }
 
     public boolean changeUserPassword(final User user, final PwdUpdate pwdUpdate) {
@@ -212,65 +201,31 @@ public class UserService {
         return addr;
     }
 
-    public boolean updatePassword(User user, String plaintextPassword) {
-        if (user == null || plaintextPassword == null || plaintextPassword.length() <= 0) {
-            return false;
-        }
-
-        user.setHashedPwdAndSaltViaPlaintextPwd(plaintextPassword, this);
-        userRepository.save(user);
-        return true;
-    }
-
-
-    public String[] getHashedPasswordAndSalt(String plainTextPassword) {
-        String saltBase64 = this.rng.nextBytes().toBase64();
-        return getHashedPasswordAndSalt(saltBase64, plainTextPassword);
-    }
-
-    private String[] getHashedPasswordAndSalt(String salt, String plainTextPassword) {
-        String hashedPasswordBase64 = (new Sha256Hash(plainTextPassword, salt, 1024)).toBase64();
-        String[] hashedPasswordAndSalt = {hashedPasswordBase64, salt};
-        return hashedPasswordAndSalt;
-    }
-
-    public boolean isCorrectPassword(User user, String plainTextPassword) {
-        String[] hashedPasswordAndSalt = getHashedPasswordAndSalt(user.getSalt(), plainTextPassword);
-        return user.getPassword().equals(hashedPasswordAndSalt[0]);
-    }
 
     public String validateEncryptedExpiringUserValidationString(String encryptedExpiringUserValidationString) throws ExpiredUserValidationStringException {
         String decryptedString = null;
-        try {
-            decryptedString = this.cipherService.base64DecodeAndDecrypt(encryptedExpiringUserValidationString);
-        } catch (Exception e) {
-            logger.debug("error decrypting str {}", encryptedExpiringUserValidationString, e);
-            return null;
-        }
-        logger.debug("decrypted string: {}", decryptedString);
-        String[] tokens = decryptedString.split("\\|");
-        if (tokens.length != 2) {
-            return null;
-        }
-        try {
-            long expireTime = Long.valueOf(tokens[0]).longValue();
-            if (DateUtil.getCurrentServerTime().toInstant(ZoneOffset.UTC).toEpochMilli() > expireTime) {
-                throw new ExpiredUserValidationStringException(tokens[1]);
-            }
-            return tokens[1];
-        } catch (NumberFormatException e1) {
-            logger.debug("invalid expire time", e1);
-            return null;
-        }
-    }
-
-    public Pattern getPasswordValidationPattern() {
-        return DEFAULT_PASSWORD_VALIDATION_PATTERN;
-    }
-
-
-    public String createEncryptedExpiringUserValidationString(User myUser) throws UnsupportedEncodingException {
-        return this.cipherService.encryptAndBase64Encode(DateUtil.getCurrentServerTime(validationLinkExpirationHours).toInstant(ZoneOffset.UTC).toEpochMilli() + "|" + myUser.getEmail());
+//        try {
+//            decryptedString = this.cipherService.base64DecodeAndDecrypt(encryptedExpiringUserValidationString);
+//        } catch (Exception e) {
+//            logger.debug("error decrypting str {}", encryptedExpiringUserValidationString, e);
+//            return null;
+//        }
+//        logger.debug("decrypted string: {}", decryptedString);
+//        String[] tokens = decryptedString.split("\\|");
+//        if (tokens.length != 2) {
+//            return null;
+//        }
+//        try {
+//            long expireTime = Long.valueOf(tokens[0]).longValue();
+//            if (DateUtil.getCurrentServerTime().toInstant(ZoneOffset.UTC).toEpochMilli() > expireTime) {
+//                throw new ExpiredUserValidationStringException(tokens[1]);
+//            }
+//            return tokens[1];
+//        } catch (NumberFormatException e1) {
+//            logger.debug("invalid expire time", e1);
+//            return null;
+//        }
+        return null;
     }
 
     public int getValidationLinkExpirationHours() {

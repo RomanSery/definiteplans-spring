@@ -83,7 +83,6 @@ public class RegisterController {
         Optional<ZipCode> zip = zipCodeRepository.findById(user.getPostalCode());
 
         user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());
-        user.setHashedPwdAndSaltViaPlaintextPwd(user.getPassword(), userService);
         if(zip.isPresent()) {
             user.setCity(zip.get().getPrimaryCity());
             user.setState(zip.get().getState());
