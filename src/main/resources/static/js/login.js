@@ -22,5 +22,5 @@ definitePlansScripts.loginPage = function () {
 };
 
 $(document).ready(function() {
-	definitePlansScripts.regPage();
+	definitePlansScripts.loginPage();
 });

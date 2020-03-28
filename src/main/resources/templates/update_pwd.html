@@ -1,12 +1,13 @@
 <!doctype html>
-<html th:replace="~{fragments/layout::guestLayout(~{::edit-my-pwd}, ~{})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{fragments/layout::authenticatedLayout(~{::edit-my-pwd}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="edit-my-pwd">
+<head th:fragment="header-content" th:remove="tag">
+    <script th:src="@{/js/pwd.js}"></script>
+</head>
 
-    <h1>Update Password</h1>
+<div class="row" th:fragment="edit-my-pwd">
 
-
-    <form th:action="@{/me/pwd}" th:object="${user}" method="post">
+    <form role="form" id="resetPasswordForm" th:action="@{/me/pwd}" th:object="${user}" method="post">
 
         <ul th:if="${#fields.hasErrors('*')}">
             <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
@@ -15,21 +16,21 @@
         <div th:if="${hasPwd}" class="form-group row">
             <label for="currPwdField" class="col-sm-2 col-form-label">Current Password</label>
             <div class="col-sm-3">
-                <input type="password" class="form-control" id="currPwdField" th:field="*{currPwd}">
+                <input type="password" class="form-control" id="currPwdField" name="currPwdField" th:field="*{currPwd}">
             </div>
         </div>
 
         <div class="form-group row">
             <label for="newPwd1Field" class="col-sm-2 col-form-label">New Password</label>
             <div class="col-sm-3">
-                <input type="password" class="form-control" id="newPwd1Field" th:field="*{password1}">
+                <input type="password" class="form-control" id="newPwd1Field" name="newPwd1Field" th:field="*{password1}">
             </div>
         </div>
 
         <div class="form-group row">
             <label for="newPwd2Field" class="col-sm-2 col-form-label">Confirm New Password</label>
             <div class="col-sm-3">
-                <input type="password" class="form-control" id="newPwd2Field" th:field="*{password2}">
+                <input type="password" class="form-control" id="newPwd2Field" name="newPwd2Field" th:field="*{password2}">
             </div>
         </div>
 
