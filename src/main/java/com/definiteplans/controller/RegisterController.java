@@ -47,7 +47,7 @@ public class RegisterController {
     }
 
     private static class RegValidator {
-        private static void validate(User obj, Errors e, UserService userService, UserRepository userRepository, ZipCodeRepository zipCodeRepository) {
+        private static void validate(User obj, Errors e, UserRepository userRepository, ZipCodeRepository zipCodeRepository) {
             ValidationUtils.rejectIfEmpty(e, "displayName", "", "First Name is required");
             ValidationUtils.rejectIfEmpty(e, "dob", "", "Date of Birth is required");
             ValidationUtils.rejectIfEmpty(e, "gender", "", "Gender is required");
@@ -71,7 +71,7 @@ public class RegisterController {
 
     @PostMapping("/register")
     public ModelAndView doRegister(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-        RegValidator.validate(user, bindingResult, userService, userRepository, zipCodeRepository);
+        RegValidator.validate(user, bindingResult, userRepository, zipCodeRepository);
         if (bindingResult.hasErrors()) {
             return new ModelAndView("register", Map.of("user", user));
         }

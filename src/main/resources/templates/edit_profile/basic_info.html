@@ -1,16 +1,18 @@
-<form id="basicInfoForm" th:fragment="basic-info">
+<form id="basicInfoForm" th:fragment="basic-info" th:action="@{/me/basic}" th:object="${user}" method="POST">
     <div class="form-row">
         <div class="form-group col-md-4">
             <label>Display Name</label>
-            <input class="form-control" type="text" id="displayName">
+            <input class="form-control" placeholder="First name" type="text" name="displayName" th:field="*{displayName}">
         </div>
         <div class="form-group col-md-4">
             <label>Gender</label>
-            <select class="form-control" id="gender"></select>
+            <select class="form-control" name="gender" th:field="*{gender}">
+                <option th:each="g : ${genders}" th:value="${g.id}" th:text="${g.enumValue}"></option>
+            </select>
         </div>
         <div class="form-group col-md-4">
             <label>Date of birth</label>
-            <input class="form-control" data-mask="99/99/9999" placeholder="" type="text" id="dob">
+            <input class="form-control" data-mask="99/99/9999" placeholder="" type="text" id="dob" th:field="*{dob}">
             <span class="help-block m-b-none">mm/dd/yyyy</span>
         </div>
     </div>
@@ -18,24 +20,24 @@
     <div class="form-row">
         <div class="form-group col-md-4">
             <label>City</label>
-            <input class="form-control" type="text" id="city">
+            <input class="form-control" type="text" id="city" th:field="*{city}">
         </div>
         <div class="form-group col-md-4">
             <label>State</label>
-            <select class="form-control chosen-select doit-select2" data-placeholder="Select" id="state"></select>
+            <select class="form-control doit-select2" data-placeholder="Select" name="state" th:field="*{state}">
+                <option th:each="s : ${states}" th:value="${s.abbreviation}" th:text="${s}"></option>
+            </select>
         </div>
         <div class="form-group col-md-2">
             <label>Zip code</label>
-            <input class="form-control" data-mask="99999" type="text" id="postalCode">
+            <input class="form-control" data-mask="99999" type="text" id="postalCode" th:field="*{postalCode}">
         </div>
     </div>
 
     <div class="form-row">
         <div class="form-group col-md-4">
-            <label>Neighborhood <a class="fa fa-question-circle tooltip-icon-test" data-content="Enter your neighborhood to make planning the location of the date easier" data-toggle="popover"
-                                   data-trigger="focus" role="button" tabindex="0"
-                                   title="Neighborhood"></a></label>
-            <input class="form-control" type="text" id="neighborhood">
+            <label>Neighborhood <a class="fa fa-question-circle tooltip-icon-test" data-content="Enter your neighborhood to make planning the location of the date easier" data-toggle="popover" data-trigger="focus" role="button" tabindex="0" title="Neighborhood"></a></label>
+            <input class="form-control" type="text" id="neighborhood" th:field="*{neighborhood}">
         </div>
     </div>
 

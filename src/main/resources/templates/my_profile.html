@@ -1,6 +1,39 @@
 <!doctype html>
 <html th:replace="~{fragments/layout::authenticatedLayout(~{::edit-my-profile}, ~{})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
+<head th:fragment="header-content" th:remove="tag">
+    <link th:href="@{/css/plugins/dropzone/basic.css}" rel="stylesheet">
+    <link th:href="@{/css/plugins/dropzone/dropzone.css}" rel="stylesheet">
+    <script th:src="@{/js/plugins/dropzone/dropzone.js}"></script>
+    <script th:src="@{/js/edit_profile.js}"></script>
+
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-storage.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyBJxI3c-hcRfiEdaNHkqhTkeZovbR1RoLw",
+            authDomain: "ultra-compound-851.firebaseapp.com",
+            databaseURL: "https://ultra-compound-851.firebaseio.com",
+            projectId: "ultra-compound-851",
+            storageBucket: "ultra-compound-851.appspot.com",
+            messagingSenderId: "947515066542",
+            appId: "1:947515066542:web:413c40377db4022467453f",
+            measurementId: "G-8LRFEF2NGM"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+    </script>
+</head>
+
 <div class="row" th:fragment="edit-my-profile">
 
     <div class="col-lg-12">

@@ -164,11 +164,11 @@ public class UserService {
         if (u != null && u.getGender() > 0) {
             EnumValue ev = this.enumValueService.getByTypeAndName(EnumValueType.GENDER, "Male");
             if (u.getGender() == ev.getId()) {
-                return "img/male.jpg";
+                return "/img/male.jpg";
             }
-            return "img/female.jpg";
+            return "/img/female.jpg";
         }
-        return "img/question_mark.jpg";
+        return "/img/question_mark.jpg";
     }
 
     public List<User> browsePagedResults(User currUser, long first, long count, Integer ageFrom, Integer ageTo, Integer heightFrom, Integer heightTo, List<String> distanceFrom, String state, List<Integer> ethnicity, List<Integer> maritalStatus, List<Integer> kids, List<Integer> wantsKids, List<Integer> languages, List<Integer> religion, List<Integer> education, List<Integer> income, List<Integer> smokes, List<Integer> gender) {
