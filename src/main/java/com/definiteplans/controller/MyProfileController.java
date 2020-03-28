@@ -24,6 +24,7 @@ import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.State;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
+import com.definiteplans.util.Utils;
 
 @Controller
 @RequestMapping(path="/me")
@@ -49,8 +50,19 @@ public class MyProfileController {
 
         ModelAndView m = new ModelAndView("my_profile");
         m.addObject("user", currUser);
+        m.addObject("selectedLanguages", currUser.getLanguageIds());
         m.addObject("genders", enumValueRepository.findByType(EnumValueType.GENDER.getId()));
         m.addObject("states", State.values());
+        m.addObject("ethnicities", enumValueRepository.findByType(EnumValueType.ETHNICITY.getId()));
+        m.addObject("heights", Utils.getHeightValues());
+        m.addObject("maritalStatuses", enumValueRepository.findByType(EnumValueType.MARITAL_STATUS.getId()));
+        m.addObject("kidTypes", enumValueRepository.findByType(EnumValueType.KIDS.getId()));
+        m.addObject("wantKidTypes", enumValueRepository.findByType(EnumValueType.WANTS_KIDS.getId()));
+        m.addObject("languageTypes", enumValueRepository.findByType(EnumValueType.LANGUAGE.getId()));
+        m.addObject("religions", enumValueRepository.findByType(EnumValueType.RELIGION.getId()));
+        m.addObject("educations", enumValueRepository.findByType(EnumValueType.EDUCATION.getId()));
+        m.addObject("incomeTypes", enumValueRepository.findByType(EnumValueType.INCOME.getId()));
+        m.addObject("smokeTypes", enumValueRepository.findByType(EnumValueType.SMOKES.getId()));
         return m;
     }
 
@@ -73,6 +85,30 @@ public class MyProfileController {
         currUser.setState(update.getState());
         currUser.setPostalCode(update.getPostalCode());
         currUser.setNeighborhood(update.getNeighborhood());
+
+        userService.updateUser(currUser);
+        return new ModelAndView(new RedirectView("/me/profile"));
+    }
+
+    @PostMapping("/details")
+    public ModelAndView saveDetails(@ModelAttribute("user") User update, BindingResult bindingResult) {
+        User currUser = userService.getCurrentUser();
+        if(currUser == null) {
+            return new ModelAndView(new RedirectView("/"));
+        }
+
+        currUser.setLanguages(update.getLanguages());
+        currUser.setReligion(update.getReligion());
+        currUser.setIncome(update.getIncome());
+        currUser.setKids(update.getKids());
+        currUser.setWantsKids(update.getWantsKids());
+        currUser.setMaritalStatus(update.getMaritalStatus());
+        currUser.setEducation(update.getEducation());
+        currUser.setSmokes(update.getSmokes());
+        currUser.setEthnicity(update.getEthnicity());
+        currUser.setAboutMe(update.getAboutMe());
+        currUser.setInterests(update.getInterests());
+        currUser.setHeight(update.getHeight());
 
         userService.updateUser(currUser);
         return new ModelAndView(new RedirectView("/me/profile"));

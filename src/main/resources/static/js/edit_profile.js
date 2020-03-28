@@ -152,5 +152,8 @@ $(document).ready(function() {
     definitePlansScripts.initImageUpload();
     definitePlansScripts.initImgScripts();
 
+    $("#aboutMe").limiter(300, $('#aboutMeChars'));
+    $("#interests").limiter(300, $('#interestsChars'));
+
     $('[data-toggle="popover"]').popover();
 });

@@ -4,7 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -243,6 +247,12 @@ public class User implements Serializable {
 
     public String getLanguages() {
         return this.languages;
+    }
+    public Set<Integer> getLanguageIds() {
+        if(StringUtils.isBlank(languages)) {
+            return Collections.emptySet();
+        }
+        return Arrays.stream(languages.split(",")).map(Integer::parseInt).collect(Collectors.toSet());
     }
 
     public void setLanguages(String languages) {

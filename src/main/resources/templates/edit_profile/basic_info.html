@@ -7,6 +7,7 @@
         <div class="form-group col-md-4">
             <label>Gender</label>
             <select class="form-control" name="gender" th:field="*{gender}">
+                <option value="0">Select</option>
                 <option th:each="g : ${genders}" th:value="${g.id}" th:text="${g.enumValue}"></option>
             </select>
         </div>
@@ -25,6 +26,7 @@
         <div class="form-group col-md-4">
             <label>State</label>
             <select class="form-control doit-select2" data-placeholder="Select" name="state" th:field="*{state}">
+                <option value="0">Select</option>
                 <option th:each="s : ${states}" th:value="${s.abbreviation}" th:text="${s}"></option>
             </select>
         </div>

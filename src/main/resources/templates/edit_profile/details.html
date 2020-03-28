@@ -1,0 +1,103 @@
+<form id="detailInfoForm" th:fragment="detail-info" th:action="@{/me/details}" th:object="${user}" method="POST">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>Ethnicity</label>
+            <select class="form-control doit-select2" name="ethnicity" th:field="*{ethnicity}">
+                <option value="0">Select</option>
+                <option th:each="o : ${ethnicities}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Height</label>
+            <select class="form-control doit-select2" name="height" th:field="*{height}">
+                <option value="0">Select</option>
+                <option th:each="o : ${heights}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Marital Status</label>
+            <select class="form-control doit-select2" name="maritalStatus" th:field="*{maritalStatus}">
+                <option value="0">Select</option>
+                <option th:each="o : ${maritalStatuses}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>Kids</label>
+            <select class="form-control doit-select2" name="kids" th:field="*{kids}">
+                <option value="0">Select</option>
+                <option th:each="o : ${kidTypes}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Wants kids</label>
+            <select class="form-control doit-select2" name="wantsKids" th:field="*{wantsKids}">
+                <option value="0">Select</option>
+                <option th:each="o : ${wantKidTypes}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Languages</label>
+            <select class="form-control doit-select2" id="languages" name="languages" multiple>
+                <option th:each="o : ${languageTypes}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedLanguages.contains(o.id)}"></option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>Religion</label>
+            <select class="form-control doit-select2" name="religion" th:field="*{religion}">
+                <option value="0">Select</option>
+                <option th:each="o : ${religions}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Education</label>
+            <select class="form-control doit-select2" name="education" th:field="*{education}">
+                <option value="0">Select</option>
+                <option th:each="o : ${educations}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Income</label>
+            <select class="form-control doit-select2" name="income" th:field="*{income}">
+                <option th:each="o : ${incomeTypes}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Smokes</label>
+            <select class="form-control doit-select2" name="smokes" th:field="*{smokes}">
+                <option th:each="o : ${smokeTypes}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label>About me</label>
+            <textarea class="form-control" id="aboutMe" th:field="*{aboutMe}"></textarea>
+            <span class="help-block m-b-none" id="aboutMeChars"></span>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label>Interests</label>
+            <textarea class="form-control" id="interests" th:field="*{interests}"></textarea>
+            <span class="help-block m-b-none" id="interestsChars"></span>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <button class="btn btn-primary btn-lg" type="submit">Save changes</button>
+        </div>
+    </div>
+
+</form>
