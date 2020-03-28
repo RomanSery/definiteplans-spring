@@ -1,8 +1,6 @@
 package com.definiteplans.controller;
 
-import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -18,9 +16,7 @@ import com.definiteplans.dao.EnumValueRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.User;
-import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.EnumValueType;
-import com.definiteplans.dom.enumerations.UserStatus;
 import com.definiteplans.email.LetterManager;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
@@ -80,22 +76,7 @@ public class RegisterController {
             return new ModelAndView("register", Map.of("user", user));
         }
 
-        Optional<ZipCode> zip = zipCodeRepository.findById(user.getPostalCode());
-
-        user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());
-        if(zip.isPresent()) {
-            user.setCity(zip.get().getPrimaryCity());
-            user.setState(zip.get().getState());
-        }
-        user.setSendNotifications(true);
-        user.setNotificationsEmail(user.getEmail());
-        user.setCreationDate(LocalDateTime.now());
-        user.setLastModifiedDate(LocalDateTime.now());
-        user.setUserStatus(UserStatus.ACTIVE.getId());
-        user = userRepository.save(user);
-
-        letterManager.sendEmailValidationLetter(user);
-
+        user = userService.createUser(user);
         return new ModelAndView("reg_thanks", Map.of("email", user.getEmail()));
     }
 

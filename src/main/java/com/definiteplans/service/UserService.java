@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.definiteplans.controller.model.PwdUpdate;
 import com.definiteplans.dao.UserEmailRepository;
 import com.definiteplans.dao.UserRepository;
+import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.UserEmail;
@@ -29,21 +30,21 @@ import com.definiteplans.util.Utils;
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    private int validationLinkExpirationHours;
-
     private final UserRepository userRepository;
     private final UserEmailRepository userEmailRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ZipCodeService zipCodeService;
     private final EnumValueService enumValueService;
+    private final ZipCodeRepository zipCodeRepository;
 
     public UserService(UserRepository userRepository, UserEmailRepository userEmailRepository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder, ZipCodeService zipCodeService, EnumValueService enumValueService) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder, ZipCodeService zipCodeService, EnumValueService enumValueService, ZipCodeRepository zipCodeRepository) {
         this.userRepository = userRepository;
         this.userEmailRepository = userEmailRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.zipCodeService = zipCodeService;
         this.enumValueService = enumValueService;
+        this.zipCodeRepository = zipCodeRepository;
     }
 
     public boolean changeUserPassword(final User user, final PwdUpdate pwdUpdate) {
@@ -90,6 +91,30 @@ public class UserService {
 
         return newUser;
     }
+
+
+    public User createUser(User user) {
+
+        Optional<ZipCode> zip = zipCodeRepository.findById(user.getPostalCode());
+
+        user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
+        if(zip.isPresent()) {
+            user.setCity(zip.get().getPrimaryCity());
+            user.setState(zip.get().getState());
+        }
+        user.setSendNotifications(true);
+        user.setNotificationsEmail(user.getEmail());
+        user.setCreationDate(LocalDateTime.now());
+        user.setLastModifiedDate(LocalDateTime.now());
+        user.setUserStatus(UserStatus.ACTIVE.getId());
+        user = userRepository.save(user);
+
+        //letterManager.sendEmailValidationLetter(user);
+        return user;
+    }
+
 
 
     public void updateUser(User user) {
@@ -199,42 +224,6 @@ public class UserService {
             addr = addr + s + "<br>";
         }
         return addr;
-    }
-
-
-    public String validateEncryptedExpiringUserValidationString(String encryptedExpiringUserValidationString) throws ExpiredUserValidationStringException {
-        String decryptedString = null;
-//        try {
-//            decryptedString = this.cipherService.base64DecodeAndDecrypt(encryptedExpiringUserValidationString);
-//        } catch (Exception e) {
-//            logger.debug("error decrypting str {}", encryptedExpiringUserValidationString, e);
-//            return null;
-//        }
-//        logger.debug("decrypted string: {}", decryptedString);
-//        String[] tokens = decryptedString.split("\\|");
-//        if (tokens.length != 2) {
-//            return null;
-//        }
-//        try {
-//            long expireTime = Long.valueOf(tokens[0]).longValue();
-//            if (DateUtil.getCurrentServerTime().toInstant(ZoneOffset.UTC).toEpochMilli() > expireTime) {
-//                throw new ExpiredUserValidationStringException(tokens[1]);
-//            }
-//            return tokens[1];
-//        } catch (NumberFormatException e1) {
-//            logger.debug("invalid expire time", e1);
-//            return null;
-//        }
-        return null;
-    }
-
-    public int getValidationLinkExpirationHours() {
-        return this.validationLinkExpirationHours;
-    }
-
-
-    public void setValidationLinkExpirationHours(int validationLinkExpirationHours) {
-        this.validationLinkExpirationHours = validationLinkExpirationHours;
     }
 
 }
