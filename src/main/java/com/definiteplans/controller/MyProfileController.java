@@ -4,7 +4,6 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -50,6 +49,7 @@ public class MyProfileController {
 
         ModelAndView m = new ModelAndView("my_profile");
         m.addObject("user", currUser);
+        m.addObject("pwdUpdate", new PwdUpdate());
         m.addObject("selectedLanguages", currUser.getLanguageIds());
         m.addObject("genders", enumValueRepository.findByType(EnumValueType.GENDER.getId()));
         m.addObject("states", State.values());
@@ -70,7 +70,7 @@ public class MyProfileController {
     public ModelAndView saveBasicInfo(@ModelAttribute("user") @Valid User update, BindingResult bindingResult) {
         ProfileValidator.validateBasicInfo(update, bindingResult, userRepository, zipCodeRepository);
         if (bindingResult.hasErrors()) {
-            return new ModelAndView("my_profile", Map.of("user", update));
+            return new ModelAndView("my_profile", Map.of("user", update, "pwdUpdate", new PwdUpdate()));
         }
 
         User currUser = userService.getCurrentUser();
@@ -115,15 +115,6 @@ public class MyProfileController {
     }
 
 
-    @GetMapping("/pwd")
-    public ModelAndView showUpdatePasswordPage(Model model) {
-        User currUser = userService.getCurrentUser();
-        if(currUser == null) {
-            return new ModelAndView(new RedirectView("/"));
-        }
-        return new ModelAndView("update_pwd", Map.of("user", new PwdUpdate(), "hasPwd", currUser.hasPwd()));
-    }
-
     @PostMapping("/pwd")
     public ModelAndView updateMyPassword(@ModelAttribute("user") @Valid PwdUpdate pwd, BindingResult bindingResult) {
         User currUser = userService.getCurrentUser();
@@ -131,14 +122,14 @@ public class MyProfileController {
             return new ModelAndView(new RedirectView("/"));
         }
 
-//        ProfileValidator.validate(pwd, bindingResult, userService, currUser);
-//        if (bindingResult.hasErrors()) {
-//            return new ModelAndView("update_pwd", Map.of("user", pwd, "hasPwd", currUser.hasPwd()));
-//        }
+        ProfileValidator.validate(pwd, bindingResult, userService, currUser);
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView("update_pwd", Map.of("pwdUpdate", pwd));
+        }
 
         boolean success = userService.changeUserPassword(currUser, pwd);
         if (!success) {
-            return new ModelAndView("update_pwd", Map.of("user", pwd, "hasPwd", currUser.hasPwd()));
+            return new ModelAndView("update_pwd", Map.of("pwdUpdate", pwd));
         }
         return new ModelAndView(new RedirectView("/me/profile"));
     }
@@ -161,6 +152,22 @@ public class MyProfileController {
             if (zipCodeRepository.findById(obj.getPostalCode()).isEmpty()) {
                 e.reject("validZip", "Please enter a valid zip code.");
                 return;
+            }
+        }
+
+        private static void validate(PwdUpdate obj, Errors e, UserService userService, User user) {
+            if(user.hasPwd()) {
+                ValidationUtils.rejectIfEmpty(e, "currPwd", "", "Current password is required");
+                if(!userService.isCorrectPwd(obj.getCurrPwd(), user)) {
+                    e.reject("currPwdField.mismatch", "Current password is incorrect");
+                }
+            }
+
+            ValidationUtils.rejectIfEmpty(e, "password1", "", "New password is required");
+            ValidationUtils.rejectIfEmpty(e, "password2", "", "Confirm new password");
+
+            if(!obj.getPassword1().equals(obj.getPassword2())) {
+                e.reject("pwd.mismatch", "Passwords must match");
             }
         }
     }

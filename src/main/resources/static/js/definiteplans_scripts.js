@@ -5,7 +5,6 @@ let definitePlansScripts = {
 
 		definitePlansScripts.initSelect2();
 		definitePlansScripts.forgotPasswordPage();
-		definitePlansScripts.resetPassword();
 		definitePlansScripts.validateEmailPage();
 	},
 
@@ -35,34 +34,7 @@ let definitePlansScripts = {
 		});
 	},
 
-	resetPassword: function () {
-		var resetPasswordValidator = $("#resetPasswordForm").validate({
-			rules: {
-				currPassword: {required: true},
-				password: {
-					required: true,
-					minlength: 8
-				},
-				cpassword: {
-					required: true,
-					minlength: 8,
-					equalTo: "#password"
-				}
-			},
-			messages: {
-				currPassword: {
-					required: "Please enter your current password."
-				},
-				password: {
-					required: "Please enter your new password."
-				},
-				cpassword: {
-					required: "Please confirm your password.",
-					passwordsMatch: "Please ensure your passwords match."
-				}
-			}
-		});
-	},
+
 
 	forgotPasswordPage: function() {
 		var forgotPwdValidator = $("#passwordForm").validate({
