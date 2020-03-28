@@ -1,133 +1,56 @@
 <!doctype html>
-<html th:replace="~{fragments/layout::guestLayout(~{::edit-my-profile}, ~{})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{fragments/layout::authenticatedLayout(~{::edit-my-profile}, ~{})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="edit-my-profile">
+<div class="row" th:fragment="edit-my-profile">
 
+    <div class="col-lg-12">
+        <div id="missingFieldsFeedback"></div>
+    </div>
 
-    <script th:inline="javascript">
-        $(document).ready(function() {
-            $( "#socialContainerTab" ).click(function() {
-                $.get( "accounts", function( data ) {
-                    $("#socialContainer").html(data);
-                });
-            });
-
-            $( "#fbDisconnect" ).click(function() {
-                $.get( "disconnect/facebook", function( data ) {
-                    $("#fbConnectLi").removeAttr("style");
-                    $("#fbDisconnectLi").attr('style','display:none !important');
-                });
-            });
-
-            $( "#linkedinDisconnect" ).click(function() {
-                $.get( "disconnect/linkedin", function( data ) {
-                    $("#linkedinConnectLi").removeAttr("style");
-                    $("#linkedinDisconnectLi").attr('style','display:none !important');
-                });
-            });
-
-            $( "#googleDisconnect" ).click(function() {
-                $.get( "disconnect/google", function( data ) {
-                    $("#googleConnectLi").removeAttr("style");
-                    $("#googleDisconnectLi").attr('style','display:none !important');
-                });
-            });
-        });
-    </script>
-
-
-    <h1>Edit My Profile</h1>
-
-
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a href="#basicContainer" class="nav-link active" data-toggle="tab">Basic</a>
-        </li>
-        <li class="nav-item">
-            <a href="#socialContainer" id="socialContainerTab" class="nav-link" data-toggle="tab">Social accounts</a>
-        </li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="basicContainer">
-            <form th:action="@{/me/profile}" th:object="${user}" method="post">
-
-                <ul th:if="${#fields.hasErrors('*')}">
-                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-                </ul>
-
-                <div class="form-group row">
-                    <label for="displayNameField" class="col-sm-2 col-form-label">Display Name</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" id="displayNameField" th:field="*{displayName}">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="collegeField" class="col-sm-2 col-form-label">College</label>
-                    <div class="col-sm-5">
-                        <select id="collegeField" class="form-control custom-select dp-select2" th:field="*{collegeId}">
-                            <option value="0">select college</option>
-                            <option th:each="c : ${colleges}" th:value="${c.id}" th:text="${c.displayName}"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="subjectsField" class="col-sm-2 col-form-label">Subjects</label>
-                    <div class="col-sm-5">
-                        <select id="subjectsField" class="form-control dp-select2" th:field="*{subjectIds}" multiple="multiple">
-                            <option th:each="s : ${subjects}" th:value="${s.id}" th:text="${s.displayName}"></option>
-                        </select>
-                    </div>
-                </div>
-
-
-                <div class="form-group row">
-                    <div class="col-sm-5">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="tab-pane fade" id="socialContainer">
-
-            <ul class="list-group list-group-flush col-sm-5">
-                <li th:style="${isFbUser ? 'display: none !important;' : ''}" id="fbConnectLi" class="list-group-item d-flex justify-content-between align-items-center">
-                    <i class="fab fa-facebook-square"><a class="ml-1" th:href="${fbLoginUrl}" id="fbConnect">Connect Facebook account</a></i>
-                    <i class="fas fa-external-link-alt"></i>
-                </li>
-                <li th:style="${isFbUser ? '' : 'display: none !important;'}" id="fbDisconnectLi" class="list-group-item d-flex justify-content-between align-items-center">
-                    <i class="fab fa-facebook-square"><a class="ml-1" href="#" id="fbDisconnect"> Disconnect Facebook account</a></i>
-                    <i class="fas fa-trash-alt text-danger"></i>
-                </li>
-
-                <li th:style="${isLinkedinUser ? 'display: none !important;' : ''}" id="linkedinConnectLi" class="list-group-item d-flex justify-content-between align-items-center">
-                    <i class="fab fa-linkedin"><a class="ml-1" th:href="${linkedinLoginUrl}" id="linkedinConnect"> Connect LinkedIn account</a></i>
-                    <i class="fas fa-external-link-alt"></i>
-                </li>
-                <li th:style="${isLinkedinUser ? '' : 'display: none !important;'}" id="linkedinDisconnectLi" class="list-group-item d-flex justify-content-between align-items-center">
-                    <i class="fab fa-linkedin"><a class="ml-1" href="#" id="linkedinDisconnect"> Disconnect LinkedIn account</a></i>
-                    <i class="fas fa-trash-alt text-danger"></i>
-                </li>
-
-                <li th:style="${isGoogleUser ? 'display: none !important;' : ''}" id="googleConnectLi" class="list-group-item d-flex justify-content-between align-items-center">
-                    <i class="fab fa-google"><a class="ml-1" th:href="${googleLoginUrl}" id="googleConnect"> Connect Google account</a></i>
-                    <i class="fas fa-external-link-alt"></i>
-                </li>
-                <li th:style="${isGoogleUser ? '' : 'display: none !important;'}" id="googleDisconnectLi" class="list-group-item d-flex justify-content-between align-items-center">
-                    <i class="fab fa-google"><a class="ml-1" href="#" id="googleDisconnect">Disconnect Google account</a></i>
-                    <i class="fas fa-trash-alt text-danger"></i>
-                </li>
-
-            </ul>
-
-
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title"><h5>Basic Info</h5></div>
+            <div class="ibox-content">
+                <p th:replace="edit_profile/basic_info::basic-info"></p>
+            </div>
         </div>
     </div>
 
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title"><h5>Details</h5></div>
+            <div class="ibox-content">
+                <p></p>
+            </div>
+        </div>
+    </div>
 
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title"><h5>Profile Pictures</h5></div>
+            <div class="ibox-content">
+                <p></p>
+            </div>
+        </div>
+    </div>
 
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title"><h5>Update Password</h5></div>
+            <div class="ibox-content">
+                <p></p>
+            </div>
+        </div>
+    </div>
 
-
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title"><h5>Settings</h5></div>
+            <div class="ibox-content">
+                <p></p>
+            </div>
+        </div>
+    </div>
 
 </div>
 

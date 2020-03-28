@@ -32,7 +32,6 @@ public class MyProfileController {
         this.userService = userService;
     }
 
-
     @GetMapping("/profile")
     public ModelAndView editMyProfile(Model model) {
         User currUser = userService.getCurrentUser();
