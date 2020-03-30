@@ -20,7 +20,6 @@ import com.definiteplans.dom.User;
 import com.definiteplans.service.UserService;
 
 @Controller
-@RequestMapping(path="/me")
 public class UpdatePwdController {
     private final UserService userService;
 

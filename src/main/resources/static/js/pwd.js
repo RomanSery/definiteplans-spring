@@ -3,30 +3,31 @@
 definitePlansScripts.updatePassword = function () {
 	let resetPasswordValidator = $("#resetPasswordForm").validate({
 		submitHandler: function (form) {
-			if (resetPasswordValidator.numberOfInvalids() == 0) {
-				form.submit();
-			}
+			console.log(resetPasswordValidator.numberOfInvalids());
+			//if (resetPasswordValidator.numberOfInvalids() == 0) {
+			//	form.submit();
+			//}
 		},
 		rules: {
-			currPwdField: {required: true},
-			newPwd1Field: {
+			currpwd: {required: true},
+			newpwd1: {
 				required: true,
 				minlength: 8
 			},
-			newPwd2Field: {
+			newpwd2: {
 				required: true,
 				minlength: 8,
-				equalTo: "#password"
+				equalTo: "#newpwd1"
 			}
 		},
 		messages: {
-			currPwdField: {
+			currpwd: {
 				required: "Please enter your current password."
 			},
-			newPwd1Field: {
+			newpwd1: {
 				required: "Please enter your new password."
 			},
-			newPwd2Field: {
+			newpwd2: {
 				required: "Please confirm your password.",
 				passwordsMatch: "Please ensure your passwords match."
 			}
