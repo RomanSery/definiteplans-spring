@@ -2,7 +2,11 @@
 <html th:replace="~{fragments/layout::guestLayout(~{::register}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="header-content" th:remove="tag">
-    <script th:src="@{/js/reg.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#regForm').parsley();
+        });
+    </script>
 </head>
 
 <div class="row" th:fragment="register">
@@ -11,30 +15,31 @@
 
         <div class="alert alert-danger" id="registerFeedback" style="display:none;"></div>
 
-        <form role="form" id="regForm" th:action="@{/register}" th:object="${user}" method="POST">
+        <form role="form" id="regForm" th:action="@{/register}" th:object="${user}" method="POST" data-parsley-validate>
             <ul th:if="${#fields.hasErrors('*')}">
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
             </ul>
 
             <div class="form-group">
-                <input class="form-control" placeholder="First name" type="text" name="displayName" th:field="*{displayName}">
+                <input class="form-control" placeholder="First name" type="text" name="displayName" th:field="*{displayName}"
+                       required data-parsley-length="[2, 15]">
             </div>
             <div class="form-group">
-                <input class="form-control" data-mask="99/99/9999" placeholder="Date of birth (mm/dd/yyyy)" type="text" name="dob" th:field="*{dob}">
+                <input class="form-control" data-mask="99/99/9999" placeholder="Date of birth (mm/dd/yyyy)" type="text" name="dob" th:field="*{dob}" required>
             </div>
             <div class="form-group">
-                <select class="form-control m-b" name="gender" th:field="*{gender}">
+                <select class="form-control m-b" name="gender" th:field="*{gender}" required>
                     <option th:each="g : ${genders}" th:value="${g.id}" th:text="${g.enumValue}"></option>
                 </select>
             </div>
             <div class="form-group">
-                <input class="form-control" data-mask="99999" placeholder="Zip Code" type="text" name="postalCode" th:field="*{postalCode}">
+                <input class="form-control" data-mask="99999" placeholder="Zip Code" type="text" name="postalCode" th:field="*{postalCode}" required>
             </div>
             <div class="form-group">
-                <input class="form-control" placeholder="Email" type="email" name="email"  th:field="*{email}">
+                <input class="form-control" placeholder="Email" type="email" name="email"  th:field="*{email}" required data-parsley-type="email">
             </div>
             <div class="form-group">
-                <input class="form-control" placeholder="Password" type="password" name="password"  th:field="*{password}">
+                <input class="form-control" placeholder="Password" type="password" name="password"  th:field="*{password}" required data-parsley-minlength="8">
             </div>
             <button class="btn btn-primary block full-width" type="submit">Register</button>
 

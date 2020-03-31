@@ -1,4 +1,4 @@
-<form id="detailInfoForm" th:fragment="detail-info" th:action="@{/me/details}" th:object="${user}" method="POST">
+<form id="detailInfoForm" th:fragment="detail-info" th:action="@{/me/details}" th:object="${user}" method="POST" data-parsley-validate>
     <div class="form-row">
         <div class="form-group col-md-4">
             <label>Ethnicity</label>
@@ -81,7 +81,7 @@
     <div class="form-row">
         <div class="form-group col-md-12">
             <label>About me</label>
-            <textarea class="form-control" id="aboutMe" th:field="*{aboutMe}"></textarea>
+            <textarea class="form-control" id="aboutMe" th:field="*{aboutMe}" data-parsley-maxlength="300"></textarea>
             <span class="help-block m-b-none" id="aboutMeChars"></span>
         </div>
     </div>
@@ -89,7 +89,7 @@
     <div class="form-row">
         <div class="form-group col-md-12">
             <label>Interests</label>
-            <textarea class="form-control" id="interests" th:field="*{interests}"></textarea>
+            <textarea class="form-control" id="interests" th:field="*{interests}" data-parsley-maxlength="300"></textarea>
             <span class="help-block m-b-none" id="interestsChars"></span>
         </div>
     </div>

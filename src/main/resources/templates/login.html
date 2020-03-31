@@ -2,8 +2,11 @@
 <html th:replace="~{fragments/layout::guestLayout(~{::login}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="header-content" th:remove="tag">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
-    <script th:src="@{/js/login.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#loginForm').parsley();
+        });
+    </script>
 </head>
 
 
@@ -11,15 +14,17 @@
     <div class="col-lg-4"></div>
     <div class="col-lg-4 text-center">
 
-        <div class="alert alert-danger" id="loginFeedback" style="display:none;"></div>
-
         <p>Login in. To see it in action.</p>
-        <form id="loginForm" role="form" th:action="@{/login}" method="POST">
+
+        <form id="loginForm" role="form" th:action="@{/login}" method="POST" data-parsley-validate>
+
             <div class="form-group">
-                <input class="form-control" id="loginemail" name="loginemail" placeholder="Email" type="email">
+                <input class="form-control" id="loginemail" name="loginemail" placeholder="Email" type="email"
+                       required data-parsley-type="email">
             </div>
             <div class="form-group">
-                <input class="form-control" id="loginpassword" name="loginpassword" placeholder="Password" type="password">
+                <input class="form-control" id="loginpassword" name="loginpassword" placeholder="Password" type="password"
+                       required data-parsley-minlength="8">
             </div>
             <label> <input name="remember" type="checkbox" value="1"> Remember me </label>
             <button class="btn btn-primary block full-width" type="submit">Login</button>

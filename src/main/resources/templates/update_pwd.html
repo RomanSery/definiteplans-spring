@@ -2,42 +2,57 @@
 <html th:replace="~{fragments/layout::authenticatedLayout(~{::edit-my-pwd}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="header-content" th:remove="tag">
-    <script th:src="@{/js/pwd.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#resetPasswordForm').parsley();
+        });
+    </script>
 </head>
 
+
 <div class="row" th:fragment="edit-my-pwd">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title"><h5>Update my password</h5></div>
+            <div class="ibox-content">
+                <p>
+                    <form role="form" id="resetPasswordForm" th:action="@{/pwd}" th:object="${user}" method="post" data-parsley-validate>
 
-    <form role="form" id="resetPasswordForm" th:action="@{/pwd}" th:object="${user}" method="post">
+                        <ul th:if="${#fields.hasErrors('*')}">
+                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                        </ul>
 
-
-        <div class="form-group row">
-            <label for="currPwdField" class="col-sm-2 col-form-label">Current Password</label>
-            <div class="col-sm-3">
-                <input type="password" class="form-control" id="currpwd" name="currpwd" th:field="*{currPwd}">
+                        <div class="form-group row">
+                            <label for="currpwd" class="col-sm-2 col-form-label">Current Password</label>
+                            <div class="col-sm-3">
+                                <input type="password" class="form-control" id="currpwd" name="currpwd" th:field="*{currPwd}"
+                                       required data-parsley-minlength="8">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="newpwd1" class="col-sm-2 col-form-label">New Password</label>
+                            <div class="col-sm-3">
+                                <input type="password" class="form-control" id="newpwd1" name="newpwd1" th:field="*{password1}" required data-parsley-minlength="8">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="newpwd2" class="col-sm-2 col-form-label">Confirm New Password</label>
+                            <div class="col-sm-3">
+                                <input type="password" class="form-control" id="newpwd2" name="newpwd2" th:field="*{password2}"
+                                       required data-parsley-minlength="8" data-parsley-equalto="#newpwd1" data-parsley-equalto-message="The 2 passwords must match">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </p>
             </div>
         </div>
-
-        <div class="form-group row">
-            <label for="newPwd1Field" class="col-sm-2 col-form-label">New Password</label>
-            <div class="col-sm-3">
-                <input type="password" class="form-control" id="newpwd1" name="newpwd1" th:field="*{password1}">
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label for="newPwd2Field" class="col-sm-2 col-form-label">Confirm New Password</label>
-            <div class="col-sm-3">
-                <input type="password" class="form-control" id="newpwd2" name="newpwd2" th:field="*{password2}">
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-sm-3">
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </div>
-    </form>
-
+    </div>
 </div>
+
 
 </html>

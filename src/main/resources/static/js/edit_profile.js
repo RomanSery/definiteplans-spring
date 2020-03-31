@@ -1,25 +1,9 @@
 "use strict";
 
 definitePlansScripts.basicInfo = function () {
-    $("#basicInfoForm").validate({
-        rules: {
-            displayName: {required: true, rangelength: [2, 15]},
-            gender: {required: true},
-            dob: {required: true},
-            postalCode: {required: true},
-            state: {required: true}
-        },
-        messages: {
-            displayName: {
-                required: "Please enter your first name",
-                rangelength: "First name must be between 2 and 15 characters"
-            },
-            gender: "Please select your gender",
-            dob: "Please enter your date of birth",
-            postalCode: "Please entery your zip code",
-            state: "Please select your state"
-        }
-    });
+
+    $('#basicInfoForm').parsley();
+    $('#detailInfoForm').parsley();
 
     DOIT.updateCityState = function (zip) {
         $.ajax({
@@ -152,9 +136,6 @@ $(document).ready(function() {
     definitePlansScripts.basicInfo();
     definitePlansScripts.initImageUpload();
     definitePlansScripts.initImgScripts();
-
-    $("#aboutMe").limiter(300, $('#aboutMeChars'));
-    $("#interests").limiter(300, $('#interestsChars'));
 
     $('[data-toggle="popover"]').popover();
 });

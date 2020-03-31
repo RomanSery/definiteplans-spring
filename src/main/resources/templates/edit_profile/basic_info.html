@@ -1,19 +1,19 @@
-<form id="basicInfoForm" th:fragment="basic-info" th:action="@{/me/basic}" th:object="${user}" method="POST">
+<form id="basicInfoForm" th:fragment="basic-info" th:action="@{/me/basic}" th:object="${user}" method="POST" data-parsley-validate>
     <div class="form-row">
         <div class="form-group col-md-4">
             <label>Display Name</label>
-            <input class="form-control" placeholder="First name" type="text" name="displayName" th:field="*{displayName}">
+            <input class="form-control" placeholder="First name" type="text" name="displayName" th:field="*{displayName}" required data-parsley-length="[2, 15]">
         </div>
         <div class="form-group col-md-4">
             <label>Gender</label>
-            <select class="form-control" name="gender" th:field="*{gender}">
+            <select class="form-control" name="gender" th:field="*{gender}" required>
                 <option value="0">Select</option>
                 <option th:each="g : ${genders}" th:value="${g.id}" th:text="${g.enumValue}"></option>
             </select>
         </div>
         <div class="form-group col-md-4">
             <label>Date of birth</label>
-            <input class="form-control" data-mask="99/99/9999" placeholder="" type="text" id="dob" th:field="*{dob}">
+            <input class="form-control" data-mask="99/99/9999" placeholder="" type="text" id="dob" th:field="*{dob}" required>
             <span class="help-block m-b-none">mm/dd/yyyy</span>
         </div>
     </div>
@@ -25,14 +25,14 @@
         </div>
         <div class="form-group col-md-4">
             <label>State</label>
-            <select class="form-control doit-select2" data-placeholder="Select" name="state" th:field="*{state}">
+            <select class="form-control doit-select2" data-placeholder="Select" name="state" th:field="*{state}" required>
                 <option value="0">Select</option>
                 <option th:each="s : ${states}" th:value="${s.abbreviation}" th:text="${s}"></option>
             </select>
         </div>
         <div class="form-group col-md-2">
             <label>Zip code</label>
-            <input class="form-control" data-mask="99999" type="text" id="postalCode" th:field="*{postalCode}">
+            <input class="form-control" data-mask="99999" type="text" id="postalCode" th:field="*{postalCode}" required>
         </div>
     </div>
 
