@@ -1,7 +1,11 @@
 <!doctype html>
-<html th:replace="~{fragments/layout::authenticatedLayout(~{::edit-my-profile}, ~{})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{fragments/layout::authenticatedLayout(~{::edit-my-profile}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="header-content" th:remove="tag">
+    <script>
+        definitePlansScripts.curr_user_id = [[${curr_user_id}]];
+    </script>
+
     <link th:href="@{/css/plugins/dropzone/basic.css}" rel="stylesheet">
     <link th:href="@{/css/plugins/dropzone/dropzone.css}" rel="stylesheet">
     <script th:src="@{/js/plugins/dropzone/dropzone.js}"></script>
@@ -62,7 +66,40 @@
         <div class="ibox">
             <div class="ibox-title"><h5>Profile Pictures</h5></div>
             <div class="ibox-content">
-                <p></p>
+
+                    <form id="editProfilePicForm">
+                        <div class="form-row">
+                            <div class="form-group col-lg-12">
+                                <div id="previewsContainer" style="display:none;"></div>
+                                <div class="alert alert-danger" id="uploadErrDiv" style="display:none;"></div>
+                                <div class="alert alert-success" id="uploadSuccessDiv" style="display:none;">Saved!</div>
+
+                                <button class="btn btn-success " id="btnUploadPic" type="button"><i class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">Upload new profile picture</span></button>
+                                <a class="fa fa-question-circle tooltip-icon-test" data-content="Use a picture that clearly shows your face and body type" data-toggle="popover" data-trigger="focus" role="button" tabindex="0" title="Tips"></a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="col-lg-12 animated fadeInRight">
+                        <div class="row">
+                            <div class="col-lg-3" th:each="pic : ${user_pics}">
+                                <div class="contact-box center-version">
+                                    <a href="profile.html">
+                                        <img alt="image" class="img-fluid" src="${pic.getThumbImgUrl}}">
+                                    </a>
+                                    <div class="text-center">
+                                        <div class="btn-group">
+
+                                            <button class="btn btn-xs btn-outline btn-info set-as-profile-img" type="button" id="updateProfileImgBtn" img-id="${pic.id}"><i class="fa fa-user-check"></i>Use</button>
+                                            <button class="btn btn-xs btn-outline btn-danger delete-profile-img" type="button" id="deleteImgBtn" img-id="${pic.id}"><i class="fa fa-trash-alt"></i>Delete</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -71,7 +108,7 @@
         <div class="ibox">
             <div class="ibox-title"><h5>Settings</h5></div>
             <div class="ibox-content">
-                <p></p>
+                <p th:replace="edit_profile/settings::settings"></p>
             </div>
         </div>
     </div>

@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.dao.EnumValueRepository;
+import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.User;
@@ -31,12 +32,14 @@ public class MyProfileController {
     private final UserRepository userRepository;
     private final ZipCodeRepository zipCodeRepository;
     private final EnumValueRepository enumValueRepository;
+    private final UserImageRepository userImageRepository;
 
-    public MyProfileController(UserService userService, UserRepository userRepository, ZipCodeRepository zipCodeRepository, EnumValueRepository enumValueRepository) {
+    public MyProfileController(UserService userService, UserRepository userRepository, ZipCodeRepository zipCodeRepository, EnumValueRepository enumValueRepository, UserImageRepository userImageRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.zipCodeRepository = zipCodeRepository;
         this.enumValueRepository = enumValueRepository;
+        this.userImageRepository = userImageRepository;
     }
 
     @GetMapping("/profile")
@@ -48,6 +51,7 @@ public class MyProfileController {
 
         ModelAndView m = new ModelAndView("my_profile");
         m.addObject("user", currUser);
+        m.addObject("curr_user_id", currUser.getId());
         m.addObject("selectedLanguages", currUser.getLanguageIds());
         m.addObject("genders", enumValueRepository.findByType(EnumValueType.GENDER.getId()));
         m.addObject("states", State.values());
@@ -61,6 +65,8 @@ public class MyProfileController {
         m.addObject("educations", enumValueRepository.findByType(EnumValueType.EDUCATION.getId()));
         m.addObject("incomeTypes", enumValueRepository.findByType(EnumValueType.INCOME.getId()));
         m.addObject("smokeTypes", enumValueRepository.findByType(EnumValueType.SMOKES.getId()));
+        m.addObject("ages", Utils.getAgeValues());
+        m.addObject("user_pics", userImageRepository.findByUserId(currUser.getId()));
         return m;
     }
 
@@ -111,6 +117,23 @@ public class MyProfileController {
         userService.updateUser(currUser);
         return new ModelAndView(new RedirectView("/me/profile"));
     }
+
+    @PostMapping("/settings")
+    public ModelAndView saveSettings(@ModelAttribute("user") @Valid User update, BindingResult bindingResult) {
+        User currUser = userService.getCurrentUser();
+        if(currUser == null) {
+            return new ModelAndView(new RedirectView("/"));
+        }
+
+        currUser.setSendNotifications(update.isSendNotifications());
+        currUser.setNotificationsEmail(update.getNotificationsEmail());
+        currUser.setAgeMax(update.getAgeMax());
+        currUser.setAgeMin(update.getAgeMin());
+
+        userService.updateUser(currUser);
+        return new ModelAndView(new RedirectView("/me/profile"));
+    }
+
 
 
     private static class ProfileValidator {

@@ -5,34 +5,34 @@ definitePlansScripts.basicInfo = function () {
     $('#basicInfoForm').parsley();
     $('#detailInfoForm').parsley();
 
-    DOIT.updateCityState = function (zip) {
-        $.ajax({
-            type: "POST", url: 'domisc?action=findzip', data: 'zipcode=' + zip,
-            error: function () {
-                alert('Sorry, there was some error. Please try again.');
-            },
-            success: function (data) {
-                if (data.status == 'OK') {
-                    $('#city').val(data.city);
-                    $('#state').val(data.state);
-                    return false;
-                }
-            }
-        });
-    };
-
     $("#postalCode").on('change keyup paste', function () {
         var zip = $(this).val();
         setTimeout(function () {
-            DOIT.updateCityState(zip);
+            definitePlansScripts.updateCityState(zip);
         }, 1000);
+    });
+};
+
+definitePlansScripts.updateCityState = function () {
+    $.ajax({
+        type: "POST", url: 'domisc?action=findzip', data: 'zipcode=' + zip,
+        error: function () {
+            alert('Sorry, there was some error. Please try again.');
+        },
+        success: function (data) {
+            if (data.status == 'OK') {
+                $('#city').val(data.city);
+                $('#state').val(data.state);
+                return false;
+            }
+        }
     });
 };
 
 
 definitePlansScripts.initImageUpload = function () {
     $("#btnUploadPic").dropzone({
-        previewsContainer: '#previewsContainer', url: "uploadProfilePic", uploadMultiple: false, maxFiles: 1, maxFilesize: 3, acceptedFiles: '.jpg,.jpeg,.png,.bmp',
+        previewsContainer: '#previewsContainer', url: "/profile/img/upload", uploadMultiple: false, maxFiles: 1, maxFilesize: 3, acceptedFiles: '.jpg,.jpeg,.png,.bmp',
         createImageThumbnails: true, thumbnailHeight: 120, thumbnailWidth: 120,
         error: function (file, errorMessage) {
             $('#uploadErrDiv').html(errorMessage);
@@ -45,8 +45,8 @@ definitePlansScripts.initImageUpload = function () {
 
             var storage = firebase.storage();
             var storageRef = storage.ref();
-            var thumbImgMetadata = { contentType: mimeType, userId: DOIT.curr_user_id, fileName: fileName };
-            var thumbImgRef = storageRef.child('images/'+DOIT.curr_user_id+'/thumbs/' + definitePlansScripts.timestamp);
+            var thumbImgMetadata = { contentType: mimeType, userId: definitePlansScripts.curr_user_id, fileName: fileName };
+            var thumbImgRef = storageRef.child('images/'+definitePlansScripts.curr_user_id+'/thumbs/' + definitePlansScripts.timestamp);
             var thumbImgUploadTask = thumbImgRef.putString(dataUrl, 'data_url', thumbImgMetadata);
             thumbImgUploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                 function(snapshot) { },
@@ -68,8 +68,8 @@ definitePlansScripts.initImageUpload = function () {
 
             var storage = firebase.storage();
             var storageRef = storage.ref();
-            var fullImgMetadata = { contentType: mimeType, userId: DOIT.curr_user_id, fileName: fileName };
-            var fullImgRef = storageRef.child('images/'+DOIT.curr_user_id+'/' + definitePlansScripts.timestamp);
+            var fullImgMetadata = { contentType: mimeType, userId: definitePlansScripts.curr_user_id, fileName: fileName };
+            var fullImgRef = storageRef.child('images/'+definitePlansScripts.curr_user_id+'/' + definitePlansScripts.timestamp);
             var fullImgUploadTask = fullImgRef.putString(dataUrl, 'data_url', fullImgMetadata);
             fullImgUploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                 function(snapshot) { },
@@ -91,7 +91,7 @@ definitePlansScripts.initImageUpload = function () {
 };
 
 definitePlansScripts.saveProfileImg = function (imgType, mimeType, fileName, imgUrl, d) {
-    $.ajax({type: "POST", url: 'uploadProfilePic?op=save', data: {
+    $.ajax({type: "POST", url: '/profile/img/upload?op=save', data: {
             img_type: imgType, mime_type: mimeType, file_name: fileName, img_url: imgUrl, d: d
         },
         error: function () {
@@ -105,7 +105,7 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
 
     $('.delete-profile-img').click(function () {
         $.ajax({
-            type: "POST", url: 'domisc?action=deleteProfileImg&imageId=' + $(this).attr('img-id'),
+            type: "POST", url: '/profile/img/delete/' + $(this).attr('img-id'),
             error: function () {
                 alert('Sorry, there was some error. Please try again.');
             },
@@ -117,7 +117,7 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
 
     $('.set-as-profile-img').click(function () {
         $.ajax({
-            type: "POST", url: 'domisc?action=updateProfileImg&imageId=' + $(this).attr('img-id'),
+            type: "POST", url: '/profile/img/set/' + $(this).attr('img-id'),
             error: function () {
                 alert('Sorry, there was some error. Please try again.');
             },
