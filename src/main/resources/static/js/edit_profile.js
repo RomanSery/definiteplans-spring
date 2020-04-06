@@ -33,6 +33,7 @@ definitePlansScripts.updateCityState = function () {
 definitePlansScripts.initImageUpload = function () {
     $("#btnUploadPic").dropzone({
         previewsContainer: '#previewsContainer', url: "/profile/img/upload", uploadMultiple: false, maxFiles: 1, maxFilesize: 3, acceptedFiles: '.jpg,.jpeg,.png,.bmp',
+        headers: { 'X-CSRF-TOKEN': $('#_csrf').attr('content') },
         createImageThumbnails: true, thumbnailHeight: 120, thumbnailWidth: 120,
         error: function (file, errorMessage) {
             $('#uploadErrDiv').html(errorMessage);
@@ -91,8 +92,14 @@ definitePlansScripts.initImageUpload = function () {
 };
 
 definitePlansScripts.saveProfileImg = function (imgType, mimeType, fileName, imgUrl, d) {
-    $.ajax({type: "POST", url: '/profile/img/upload?op=save', data: {
-            img_type: imgType, mime_type: mimeType, file_name: fileName, img_url: imgUrl, d: d
+
+    $.ajax({type: "POST", url: '/profile/img/upload', data: {
+            op: 'save', img_type: imgType, mime_type: mimeType, file_name: fileName, img_url: imgUrl, d: d
+        },
+        beforeSend: function (xhr) {
+            var token = $('#_csrf').attr('content');
+            var header = $('#_csrf_header').attr('content');
+            xhr.setRequestHeader(header, token);
         },
         error: function () {
             $('#uploadErrDiv').empty().show();
@@ -106,6 +113,11 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
     $('.delete-profile-img').click(function () {
         $.ajax({
             type: "POST", url: '/profile/img/delete/' + $(this).attr('img-id'),
+            beforeSend: function (xhr) {
+                var token = $('#_csrf').attr('content');
+                var header = $('#_csrf_header').attr('content');
+                xhr.setRequestHeader(header, token);
+            },
             error: function () {
                 alert('Sorry, there was some error. Please try again.');
             },
@@ -118,6 +130,11 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
     $('.set-as-profile-img').click(function () {
         $.ajax({
             type: "POST", url: '/profile/img/set/' + $(this).attr('img-id'),
+            beforeSend: function (xhr) {
+                var token = $('#_csrf').attr('content');
+                var header = $('#_csrf_header').attr('content');
+                xhr.setRequestHeader(header, token);
+            },
             error: function () {
                 alert('Sorry, there was some error. Please try again.');
             },

@@ -85,7 +85,7 @@
                             <div class="col-lg-3" th:each="pic : ${user_pics}">
                                 <div class="contact-box center-version">
                                     <a href="profile.html">
-                                        <img alt="image" class="img-fluid" src="${pic.getThumbImgUrl}}">
+                                        <img alt="image" class="img-fluid" th:src="${pic.getThumbImgUrl()}">
                                     </a>
                                     <div class="text-center">
                                         <div class="btn-group">

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,8 +31,8 @@ public class UserImgsController {
         this.userImageRepository = userImageRepository;
     }
 
-    @GetMapping("/profile/img/upload")
-    public @ResponseBody AjaxResponse uploadImg(@PathVariable(name = "op", required = false) String op,
+    @RequestMapping(value = "/profile/img/upload", method = RequestMethod.POST)
+    public @ResponseBody AjaxResponse uploadImg(@RequestParam(name = "op", required = false) String op,
                                                 @RequestParam(name = "img_type", required = false) String imgType,
                                                 @RequestParam(name = "mime_type", required = false) String mimeType,
                                                 @RequestParam(name = "file_name", required = false) String fileName,
