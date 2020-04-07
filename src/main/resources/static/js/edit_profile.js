@@ -112,7 +112,7 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
 
     $('.delete-profile-img').click(function () {
         $.ajax({
-            type: "POST", url: '/profile/img/delete/' + $(this).attr('img-id'),
+            type: "GET", url: '/profile/img/delete/' + $(this).attr('img-id'),
             beforeSend: function (xhr) {
                 var token = $('#_csrf').attr('content');
                 var header = $('#_csrf_header').attr('content');
@@ -129,7 +129,7 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
 
     $('.set-as-profile-img').click(function () {
         $.ajax({
-            type: "POST", url: '/profile/img/set/' + $(this).attr('img-id'),
+            type: "GET", url: '/profile/img/set/' + $(this).attr('img-id'),
             beforeSend: function (xhr) {
                 var token = $('#_csrf').attr('content');
                 var header = $('#_csrf_header').attr('content');

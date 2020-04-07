@@ -28,9 +28,4 @@ public class EnumValueService {
         List<EnumValue> list = getByType(type);
         return list.stream().filter(v -> v.getEnumValue().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
-
-    public EnumValue getById(int id) {
-        Optional<EnumValue> found = enumValueRepository.findById(id);
-        return found.isPresent() ? found.get() : null;
-    }
 }

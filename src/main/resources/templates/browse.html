@@ -1,0 +1,65 @@
+<!doctype html>
+<html th:replace="~{fragments/layout::authenticatedLayout(~{::browse}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="header-content" th:remove="tag">
+    <script>
+        $(document).ready(function () {
+            $('#filtersToggleLnk').click(function () {
+                if ($('#filtersArrowDir').hasClass('glyphicon-chevron-up')) {
+                    $('#filtersArrowDir').removeClass('glyphicon-chevron-up');
+                    $('#filtersArrowDir').addClass('glyphicon-chevron-down');
+                } else {
+                    $('#filtersArrowDir').addClass('glyphicon-chevron-up');
+                    $('#filtersArrowDir').removeClass('glyphicon-chevron-down');
+                }
+            });
+
+            // $('.contact-box').each(function () {
+            //     animationHover(this, 'pulse');
+            // });
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</head>
+
+<div th:fragment="browse" th:remove="tag">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div aria-expanded="true" class="" id="collapseOne" style="">
+                    <div class="panel-body">
+                        <div th:replace="fragments/filters::browse-filters"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-3" th:each="profile: ${profiles}">
+            <div class="contact-box center-version">
+
+                <a href="#" name="viewProfileLink">
+                    <img class="rounded-circle" th:src="${profile.profileImgSrc}" />
+                    <h3 class="m-b-xs"><strong th:text="${profile.firstName}"></strong></h3>
+                    <address><span th:text="${profile.location}"></span></address>
+                </a>
+                <div class="contact-box-footer">
+                    <div class="m-t-xs btn-group">
+                        <button class="btn btn-xs btn-primary btn-circle" data-placement="bottom" data-toggle="tooltip" title="0 No-Shows" type="button" th:if="${profile.numNoShows == 0}"><i class="fa fa-check"></i></button>
+                        <button class="btn btn-xs btn-danger btn-circle" data-placement="bottom" data-toggle="tooltip" type="button" th:if="${profile.numNoShows > 0}"><i class="fa fa-warning"></i></button>
+                        <button class="btn btn-xs btn-info btn-circle" data-placement="bottom" data-toggle="tooltip" title="Wants another date!" type="button" th:if="${profile.wantsMore}"><i class="fa fa-thumbs-up"></i></button>
+                        <button class="btn btn-xs btn-danger btn-circle" data-placement="bottom" data-toggle="tooltip" title="Does not want another date!" type="button" th:unless="${profile.wantsMore}"><i class="fa fa-thumbs-down"></i></button>
+                        <button class="btn btn-xs btn-info btn-circle" data-placement="bottom" data-toggle="tooltip" title="You have an active date!" type="button" th:if="${profile.hasActiveDate}"><i class="fa fa-calendar"></i></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+</html>
