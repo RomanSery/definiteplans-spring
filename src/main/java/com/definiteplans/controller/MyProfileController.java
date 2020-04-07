@@ -19,8 +19,6 @@ import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.User;
-import com.definiteplans.dom.enumerations.EnumValueType;
-import com.definiteplans.dom.enumerations.State;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
 import com.definiteplans.util.Utils;
@@ -50,22 +48,8 @@ public class MyProfileController {
         }
 
         ModelAndView m = new ModelAndView("my_profile");
-        m.addObject("user", currUser);
-        m.addObject("curr_user_id", currUser.getId());
+        Utils.addEnumValues(m, enumValueRepository, currUser);
         m.addObject("selectedLanguages", currUser.getLanguageIds());
-        m.addObject("genders", enumValueRepository.findByType(EnumValueType.GENDER.getId()));
-        m.addObject("states", State.values());
-        m.addObject("ethnicities", enumValueRepository.findByType(EnumValueType.ETHNICITY.getId()));
-        m.addObject("heights", Utils.getHeightValues());
-        m.addObject("maritalStatuses", enumValueRepository.findByType(EnumValueType.MARITAL_STATUS.getId()));
-        m.addObject("kidTypes", enumValueRepository.findByType(EnumValueType.KIDS.getId()));
-        m.addObject("wantKidTypes", enumValueRepository.findByType(EnumValueType.WANTS_KIDS.getId()));
-        m.addObject("languageTypes", enumValueRepository.findByType(EnumValueType.LANGUAGE.getId()));
-        m.addObject("religions", enumValueRepository.findByType(EnumValueType.RELIGION.getId()));
-        m.addObject("educations", enumValueRepository.findByType(EnumValueType.EDUCATION.getId()));
-        m.addObject("incomeTypes", enumValueRepository.findByType(EnumValueType.INCOME.getId()));
-        m.addObject("smokeTypes", enumValueRepository.findByType(EnumValueType.SMOKES.getId()));
-        m.addObject("ages", Utils.getAgeValues());
         m.addObject("user_pics", userImageRepository.findByUserId(currUser.getId()));
         return m;
     }

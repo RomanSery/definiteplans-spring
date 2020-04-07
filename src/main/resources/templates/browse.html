@@ -14,6 +14,27 @@
                 }
             });
 
+            $("#filtersForm").submit(function (event) {
+                $.ajax({
+                    type: "POST", url: 'domisc?action=updatefilter', data: $('#filtersForm').serialize(),
+                    error: function () {
+                        alert('Sorry, there was some error. Please try again.');
+                    },
+                    success: function (data) {
+                        location.reload();
+                    },
+                    beforeSend: function () {
+                        $('#btnSearchFilter').hide();
+                        $('#ajaxloaderGif').show();
+                    },
+                    complete: function () {
+                        $('#btnSearchFilter').show();
+                        $('#ajaxloaderGif').hide();
+                    }
+                });
+                return false;
+            });
+
             // $('.contact-box').each(function () {
             //     animationHover(this, 'pulse');
             // });

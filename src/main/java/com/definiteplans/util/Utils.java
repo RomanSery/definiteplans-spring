@@ -1,18 +1,58 @@
 package com.definiteplans.util;
 
-import java.net.URI;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.definiteplans.dao.EnumValueRepository;
 import com.definiteplans.dom.EnumValue;
+import com.definiteplans.dom.User;
+import com.definiteplans.dom.enumerations.EnumValueType;
+import com.definiteplans.dom.enumerations.State;
 
 
 public class Utils {
+
+    public static final List<Integer> ageValues;
+    public static final List<EnumValue> heightValues;
+
+    static {
+        ageValues = new ArrayList<>();
+        for (int i = 18; i <= 100; i++) {
+            ageValues.add(Integer.valueOf(i));
+        }
+
+        heightValues = new ArrayList<>();
+        for (int f = 1; f <= 8; f++) {
+            for (int i = 1; i <= 11; i++) {
+                int numInches = f * 12 + i;
+                heightValues.add(new EnumValue(numInches, f + "' " + i + "\""));
+            }
+        }
+    }
+
+    public static void addEnumValues(ModelAndView m, EnumValueRepository enumValueRepository, User currUser) {
+
+        m.addObject("user", currUser);
+        m.addObject("curr_user_id", currUser.getId());
+        m.addObject("genders", enumValueRepository.findByType(EnumValueType.GENDER.getId()));
+        m.addObject("states", State.values());
+        m.addObject("ethnicities", enumValueRepository.findByType(EnumValueType.ETHNICITY.getId()));
+        m.addObject("heights", heightValues);
+        m.addObject("maritalStatuses", enumValueRepository.findByType(EnumValueType.MARITAL_STATUS.getId()));
+        m.addObject("kidTypes", enumValueRepository.findByType(EnumValueType.KIDS.getId()));
+        m.addObject("wantKidTypes", enumValueRepository.findByType(EnumValueType.WANTS_KIDS.getId()));
+        m.addObject("languageTypes", enumValueRepository.findByType(EnumValueType.LANGUAGE.getId()));
+        m.addObject("religions", enumValueRepository.findByType(EnumValueType.RELIGION.getId()));
+        m.addObject("educations", enumValueRepository.findByType(EnumValueType.EDUCATION.getId()));
+        m.addObject("incomeTypes", enumValueRepository.findByType(EnumValueType.INCOME.getId()));
+        m.addObject("smokeTypes", enumValueRepository.findByType(EnumValueType.SMOKES.getId()));
+        m.addObject("ages", ageValues);
+    }
 
     public static String getVariable(String name) {
         String result = System.getProperty(name);
@@ -20,27 +60,6 @@ public class Utils {
             result = System.getenv(name);
         }
         return result;
-    }
-
-
-    public static List<Integer> getAgeValues() {
-        List<Integer> arr = new ArrayList<>();
-        for (int i = 18; i <= 100; i++)
-            arr.add(Integer.valueOf(i));
-        return arr;
-    }
-
-    public static List<EnumValue> getHeightValues() {
-        List<EnumValue> arr = new ArrayList<>();
-
-        for (int f = 1; f <= 8; f++) {
-            for (int i = 1; i <= 11; i++) {
-                int numInches = f * 12 + i;
-                arr.add(new EnumValue(numInches, f + "' " + i + "\""));
-            }
-        }
-
-        return arr;
     }
 
 //    public static Integer getFilterIntValue(IRequestParameters postData, String key) {
@@ -117,56 +136,4 @@ public class Utils {
 //        }
 //    }
 
-    public static boolean isInt(String sv) {
-        try {
-            Integer.parseInt(sv);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    public static Long toLong(String s) {
-        try {
-            return Long.valueOf(s);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    public static Integer toInt(String s) {
-        try {
-            return Integer.valueOf(s);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    public static String formatNumber(int n) {
-        try {
-            return NumberFormat.getIntegerInstance().format(n);
-        } catch (Exception e) {
-            return String.valueOf(n);
-        }
-    }
-
-    public static String formatCurrency(double n) {
-        try {
-            return NumberFormat.getCurrencyInstance().format(n);
-        } catch (Exception e) {
-            return String.valueOf(n);
-        }
-    }
-
-    public static boolean isValidUrl(String url) {
-        if (url == null || url.length() == 0) return false;
-
-        try {
-            URI.create(url);
-        } catch (Exception e) {
-            return false;
-        }
-
-        return true;
-    }
 }

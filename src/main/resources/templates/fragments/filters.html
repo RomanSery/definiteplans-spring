@@ -1,3 +1,81 @@
-<div th:fragment="browse-filters" class="row">
+<form th:fragment="browse-filters" id="filtersForm" name="filtersForm">
 
-</div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>Age:</label>
+            <select class="form-control input-sm doit-select2" name="ageFrom" id="ageFrom"></select> - <select class="form-control input-sm doit-select2" name="ageTo" id="ageTo"></select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Height:</label>
+            <select class="form-control input-sm doit-select2" name="heightFrom" id="heightFrom"></select> - <select class="form-control input-sm doit-select2" name="heightTo" id="heightTo"></select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>Gender</label>
+            <select class="form-control chosen-select doit-select2" data-placeholder="Gender" multiple name="gender" id="gender"></select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>Ethnicity:</label>
+            <select class="form-control chosen-select doit-select2" data-placeholder="Ethnicity" multiple name="ethnicity" id="ethnicity"></select>
+        </div>
+        <wicket:enclosure child="distanceFrom">
+            <div class="form-group col-md-4">
+                <label>Distance from me:</label>
+                <select class="form-control input-sm doit-select2" name="distanceFrom" id="distanceFrom"></select>
+            </div>
+        </wicket:enclosure>
+        <div class="form-group col-md-4">
+            <label>State:</label>
+            <select class="form-control input-sm doit-select2" name="state" id="state"></select>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label>Marital Status:</label>
+            <select class="form-control chosen-select doit-select2" data-placeholder="Marital Status" multiple name="maritalStatus" id="maritalStatus"></select>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Kids:</label>
+            <select class="form-control chosen-select doit-select2" data-placeholder="Kids" multiple name="kids" id="kids"></select>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Wants Kids:</label>
+            <select class="form-control chosen-select doit-select2" data-placeholder="Wants Kids" multiple name="wantsKids" id="wantsKids"></select>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Languages:</label>
+            <select class="form-control chosen-select doit-select2" data-placeholder="Languages" multiple name="languages" id="languages"></select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label>Religion:</label>
+            <select class="form-control chosen-select doit-select2" data-placeholder="Religion" multiple name="religion" id="religion"></select>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Education:</label>
+            <select class="form-control chosen-select doit-select2" data-placeholder="Education" multiple name="education" id="education"></select>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Income:</label>
+            <select class="form-control chosen-select doit-select2" data-placeholder="Income" multiple name="income" id="income"></select>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Smokes:</label>            
+            <select class="form-control doit-select2" data-placeholder="Smokes" id="smokes" name="smokes" multiple>
+                <option th:each="o : ${smokeTypes}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedSmokeTypes.contains(o.id)}"></option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn btn-primary btn-md" id="btnSearchFilter" type="submit">Filter</button>
+    <div id="ajaxloaderGif" style="display:none;"><img src="img/ajax-loader.gif"/></div>
+
+</form>

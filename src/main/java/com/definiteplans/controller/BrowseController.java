@@ -40,22 +40,8 @@ public class BrowseController {
         }
 
         ModelAndView m = new ModelAndView("browse");
-        m.addObject("user", currUser);
-        m.addObject("curr_user_id", currUser.getId());
-        m.addObject("selectedLanguages", currUser.getLanguageIds());
-        m.addObject("genders", enumValueRepository.findByType(EnumValueType.GENDER.getId()));
-        m.addObject("states", State.values());
-        m.addObject("ethnicities", enumValueRepository.findByType(EnumValueType.ETHNICITY.getId()));
-        m.addObject("heights", Utils.getHeightValues());
-        m.addObject("maritalStatuses", enumValueRepository.findByType(EnumValueType.MARITAL_STATUS.getId()));
-        m.addObject("kidTypes", enumValueRepository.findByType(EnumValueType.KIDS.getId()));
-        m.addObject("wantKidTypes", enumValueRepository.findByType(EnumValueType.WANTS_KIDS.getId()));
-        m.addObject("languageTypes", enumValueRepository.findByType(EnumValueType.LANGUAGE.getId()));
-        m.addObject("religions", enumValueRepository.findByType(EnumValueType.RELIGION.getId()));
-        m.addObject("educations", enumValueRepository.findByType(EnumValueType.EDUCATION.getId()));
-        m.addObject("incomeTypes", enumValueRepository.findByType(EnumValueType.INCOME.getId()));
-        m.addObject("smokeTypes", enumValueRepository.findByType(EnumValueType.SMOKES.getId()));
-        m.addObject("ages", Utils.getAgeValues());
+        Utils.addEnumValues(m, enumValueRepository, currUser);
+        m.addObject("selectedSmokeTypes", currUser.getMultiPref("smokes"));
 
         List<User> profiles = userService.getSearchResults(currUser);
         List<SearchResult> searchResults = new ArrayList<>(profiles.size());
