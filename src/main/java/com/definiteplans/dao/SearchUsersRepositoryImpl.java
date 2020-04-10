@@ -23,8 +23,8 @@ public class SearchUsersRepositoryImpl implements SearchUsersRepository {
         hql = hql + " and u.id not in (select bu.blockedUserId from BlockedUser bu where bu.userId = " + currUser.getId() + ")";
         hql = hql + " and " + currUser.getId() + " not in (select bu.blockedUserId from BlockedUser bu where bu.userId = u.id)";
 
-        if (currUser.getDob() != null) hql = hql + " and " + DateUtil.getAge(currUser.getDob()) + " between u.ageMin and u.ageMax";
-
+//        if (currUser.getDob() != null) hql = hql + " and " + DateUtil.getAge(currUser.getDob()) + " between u.ageMin and u.ageMax";
+//
         hql = hql + " and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) between " + currUser.getAgeMin() + " and " + currUser.getAgeMax();
 
         if (ageFrom != null && ageFrom.intValue() > 0)

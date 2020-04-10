@@ -52,6 +52,7 @@ public class Utils {
         m.addObject("incomeTypes", enumValueRepository.findByType(EnumValueType.INCOME.getId()));
         m.addObject("smokeTypes", enumValueRepository.findByType(EnumValueType.SMOKES.getId()));
         m.addObject("ages", ageValues);
+        m.addObject("distances", List.of(10, 15, 25));
     }
 
     public static String getVariable(String name) {

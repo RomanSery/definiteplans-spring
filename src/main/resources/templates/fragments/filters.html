@@ -3,7 +3,9 @@
     <div class="form-row">
         <div class="form-group col-md-4">
             <label>Age:</label>
-            <select class="form-control input-sm doit-select2" name="ageFrom" id="ageFrom"></select> - <select class="form-control input-sm doit-select2" name="ageTo" id="ageTo"></select>
+            <select class="form-control input-sm doit-select2" name="ageFrom" id="ageFrom"></select>
+            -
+            <select class="form-control input-sm doit-select2" name="ageTo" id="ageTo"></select>
         </div>
         <div class="form-group col-md-4">
             <label>Height:</label>
@@ -11,24 +13,28 @@
         </div>
         <div class="form-group col-md-4">
             <label>Gender</label>
-            <select class="form-control chosen-select doit-select2" data-placeholder="Gender" multiple name="gender" id="gender"></select>
+            <select class="form-control doit-select2" data-placeholder="Gender" id="gender" name="gender">
+                <option th:each="o : ${genders}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedGenderTypes.contains(o.id)}"></option>
+            </select>
         </div>
     </div>
 
     <div class="form-row">
         <div class="form-group col-md-4">
-            <label>Ethnicity:</label>
-            <select class="form-control chosen-select doit-select2" data-placeholder="Ethnicity" multiple name="ethnicity" id="ethnicity"></select>
+            <select class="form-control doit-select2" data-placeholder="Ethnicity" id="ethnicity" name="ethnicity" multiple>
+                <option th:each="o : ${ethnicities}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedEthnicityTypes.contains(o.id)}"></option>
+            </select>
         </div>
-        <wicket:enclosure child="distanceFrom">
-            <div class="form-group col-md-4">
-                <label>Distance from me:</label>
-                <select class="form-control input-sm doit-select2" name="distanceFrom" id="distanceFrom"></select>
-            </div>
-        </wicket:enclosure>
         <div class="form-group col-md-4">
-            <label>State:</label>
-            <select class="form-control input-sm doit-select2" name="state" id="state"></select>
+            <select class="form-control doit-select2" data-placeholder="Distance from me" id="distanceFrom" name="distanceFrom">
+                <option value="0">Distance from me</option>
+                <option th:each="d : ${distances}" th:value="${d}" th:text="${d}" th:selected="${selectedDistance != null && selectedDistance == d}"></option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <select class="form-control doit-select2" data-placeholder="State" id="state" name="state" multiple>
+                <option th:each="o : ${states}" th:value="${o.abbreviation}" th:text="${o.abbreviation}" th:selected="${selectedStates.contains(o.abbreviation)}"></option>
+            </select>
         </div>
     </div>
 
@@ -37,38 +43,44 @@
 
     <div class="form-row">
         <div class="form-group col-md-3">
-            <label>Marital Status:</label>
-            <select class="form-control chosen-select doit-select2" data-placeholder="Marital Status" multiple name="maritalStatus" id="maritalStatus"></select>
+            <select class="form-control doit-select2" data-placeholder="Marital Status" id="maritalStatus" name="maritalStatus" multiple>
+                <option th:each="o : ${maritalStatuses}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedMaritalStatusTypes.contains(o.id)}"></option>
+            </select>
         </div>
         <div class="form-group col-md-3">
-            <label>Kids:</label>
-            <select class="form-control chosen-select doit-select2" data-placeholder="Kids" multiple name="kids" id="kids"></select>
+            <select class="form-control doit-select2" data-placeholder="Kids" id="kids" name="kids" multiple>
+                <option th:each="o : ${kidTypes}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedKidsTypes.contains(o.id)}"></option>
+            </select>
         </div>
         <div class="form-group col-md-3">
-            <label>Wants Kids:</label>
-            <select class="form-control chosen-select doit-select2" data-placeholder="Wants Kids" multiple name="wantsKids" id="wantsKids"></select>
+            <select class="form-control doit-select2" data-placeholder="Wants Kids" id="wantsKids" name="wantsKids" multiple>
+                <option th:each="o : ${wantKidTypes}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedWantsKidsTypes.contains(o.id)}"></option>
+            </select>
         </div>
         <div class="form-group col-md-3">
-            <label>Languages:</label>
-            <select class="form-control chosen-select doit-select2" data-placeholder="Languages" multiple name="languages" id="languages"></select>
+            <select class="form-control doit-select2" data-placeholder="Languages" id="languages" name="languages" multiple>
+                <option th:each="o : ${languageTypes}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedLanguagesTypes.contains(o.id)}"></option>
+            </select>
         </div>
     </div>
 
     <div class="form-row">
         <div class="form-group col-md-3">
-            <label>Religion:</label>
-            <select class="form-control chosen-select doit-select2" data-placeholder="Religion" multiple name="religion" id="religion"></select>
+            <select class="form-control doit-select2" data-placeholder="Religion" id="religion" name="religion" multiple>
+                <option th:each="o : ${religions}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedReligionTypes.contains(o.id)}"></option>
+            </select>
         </div>
         <div class="form-group col-md-3">
-            <label>Education:</label>
-            <select class="form-control chosen-select doit-select2" data-placeholder="Education" multiple name="education" id="education"></select>
+            <select class="form-control doit-select2" data-placeholder="Education" id="education" name="education" multiple>
+                <option th:each="o : ${educations}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedEducationTypes.contains(o.id)}"></option>
+            </select>
         </div>
         <div class="form-group col-md-3">
-            <label>Income:</label>
-            <select class="form-control chosen-select doit-select2" data-placeholder="Income" multiple name="income" id="income"></select>
+            <select class="form-control doit-select2" data-placeholder="Income" id="income" name="income" multiple>
+                <option th:each="o : ${incomeTypes}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedIncomeTypes.contains(o.id)}"></option>
+            </select>
         </div>
         <div class="form-group col-md-3">
-            <label>Smokes:</label>            
             <select class="form-control doit-select2" data-placeholder="Smokes" id="smokes" name="smokes" multiple>
                 <option th:each="o : ${smokeTypes}" th:value="${o.id}" th:text="${o.enumValue}" th:selected="${selectedSmokeTypes.contains(o.id)}"></option>
             </select>

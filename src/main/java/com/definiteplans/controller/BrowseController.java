@@ -1,6 +1,7 @@
 package com.definiteplans.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -13,9 +14,8 @@ import com.definiteplans.controller.model.SearchResult;
 import com.definiteplans.dao.EnumValueRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
-import com.definiteplans.dom.enumerations.EnumValueType;
-import com.definiteplans.dom.enumerations.State;
 import com.definiteplans.service.DefiniteDateService;
+import com.definiteplans.service.SearchService;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
 import com.definiteplans.util.Utils;
@@ -23,11 +23,13 @@ import com.definiteplans.util.Utils;
 @Controller
 public class BrowseController {
     private final UserService userService;
+    private final SearchService searchService;
     private final EnumValueRepository enumValueRepository;
     private final DefiniteDateService definiteDateService;
 
-    public BrowseController(UserService userService, EnumValueRepository enumValueRepository, DefiniteDateService definiteDateService) {
+    public BrowseController(UserService userService, SearchService searchService, EnumValueRepository enumValueRepository, DefiniteDateService definiteDateService) {
         this.userService = userService;
+        this.searchService = searchService;
         this.enumValueRepository = enumValueRepository;
         this.definiteDateService = definiteDateService;
     }
@@ -41,9 +43,22 @@ public class BrowseController {
 
         ModelAndView m = new ModelAndView("browse");
         Utils.addEnumValues(m, enumValueRepository, currUser);
-        m.addObject("selectedSmokeTypes", currUser.getMultiPref("smokes"));
 
-        List<User> profiles = userService.getSearchResults(currUser);
+        m.addObject("selectedEthnicityTypes", currUser.getMultiPref("ethnicity"));
+        m.addObject("selectedMaritalStatusTypes", currUser.getMultiPref("maritalStatus"));
+        m.addObject("selectedKidsTypes", currUser.getMultiPref("kids"));
+        m.addObject("selectedWantsKidsTypes", currUser.getMultiPref("wantsKids"));
+        m.addObject("selectedLanguagesTypes", currUser.getMultiPref("languages"));
+        m.addObject("selectedReligionTypes", currUser.getMultiPref("religion"));
+        m.addObject("selectedEducationTypes", currUser.getMultiPref("education"));
+        m.addObject("selectedIncomeTypes", currUser.getMultiPref("income"));
+        m.addObject("selectedSmokeTypes", currUser.getMultiPref("smokes"));
+        m.addObject("selectedGenderTypes", currUser.getMultiPref("gender"));
+
+        m.addObject("selectedStates", Collections.emptyList());
+        m.addObject("selectedDistance", null);
+
+        List<User> profiles = searchService.getSearchResults(currUser);
         List<SearchResult> searchResults = new ArrayList<>(profiles.size());
         for(User u : profiles) {
 
@@ -54,7 +69,8 @@ public class BrowseController {
             DefiniteDate activeDate = definiteDateService.getActiveDate(currUser, u);
             Boolean b = wantsMore(currUser, u, activeDate);
 
-            SearchResult sr = new SearchResult(userService.getProfileImg(u, true), name, userService.getAddrDesc(u), u.getNumNoShows(), BooleanUtils.isTrue(b), activeDate != null);
+            SearchResult sr = new SearchResult(u.getId(), userService.getProfileImg(u, true), name, userService.getAddrDesc(u), u.getNumNoShows(),
+                    BooleanUtils.isTrue(b), b != null && !b.booleanValue(), activeDate != null);
             searchResults.add(sr);
         }
 

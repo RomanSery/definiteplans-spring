@@ -12,13 +12,11 @@ import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.DateParticipantStatus;
-import com.definiteplans.email.DateLetterManager;
 import com.definiteplans.email.EmailService;
 import com.definiteplans.util.DateUtil;
 
 @Service
 public class DefiniteDateService {
-    @Autowired private DateLetterManager dateLetterManager;
     @Autowired private DefiniteDateRepository definiteDateRepository;
     @Autowired private EmailService emailService;
     @Autowired private ZipCodeService zipCodeService;
@@ -70,8 +68,8 @@ public class DefiniteDateService {
                 boolean bothGaveFeedback = (dd.isOwnerGaveFeedback() && dd.isDateeGaveFeedback());
 
                 if (bothApproved && isTooLateToAccept && !bothGaveFeedback) {
-                    if (!dd.isOwnerGaveFeedback()) this.dateLetterManager.sendReminder(dd, true, true);
-                    if (!dd.isDateeGaveFeedback()) this.dateLetterManager.sendReminder(dd, false, true);
+                    //if (!dd.isOwnerGaveFeedback()) this.dateLetterManager.sendReminder(dd, true, true);
+                    //if (!dd.isDateeGaveFeedback()) this.dateLetterManager.sendReminder(dd, false, true);
 
                     dd.setPostDateEmailSent(true);
                     definiteDateRepository.save(dd);
@@ -92,8 +90,8 @@ public class DefiniteDateService {
                 boolean isInThePast = (dd.getDoingWhen() != null && DateUtil.isInThePast(dd.getDoingWhen(), dd.getTimezone()));
 
                 if (isTooLateToModify && !isInThePast) {
-                    this.dateLetterManager.sendReminder(dd, true, false);
-                    this.dateLetterManager.sendReminder(dd, false, false);
+                    //this.dateLetterManager.sendReminder(dd, true, false);
+                    //this.dateLetterManager.sendReminder(dd, false, false);
 
                     dd.setEmailReminderSent(true);
                     definiteDateRepository.save(dd);

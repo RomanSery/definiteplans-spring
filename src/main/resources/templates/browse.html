@@ -61,17 +61,17 @@
         <div class="col-lg-3" th:each="profile: ${profiles}">
             <div class="contact-box center-version">
 
-                <a href="#" name="viewProfileLink">
+                <a th:href="@{/profiles/{id}(id=${profile.userId})}" name="viewProfileLink">
                     <img class="rounded-circle" th:src="${profile.profileImgSrc}" />
                     <h3 class="m-b-xs"><strong th:text="${profile.firstName}"></strong></h3>
-                    <address><span th:text="${profile.location}"></span></address>
+                    <address><span th:utext="${profile.location}"></span></address>
                 </a>
                 <div class="contact-box-footer">
                     <div class="m-t-xs btn-group">
                         <button class="btn btn-xs btn-primary btn-circle" data-placement="bottom" data-toggle="tooltip" title="0 No-Shows" type="button" th:if="${profile.numNoShows == 0}"><i class="fa fa-check"></i></button>
                         <button class="btn btn-xs btn-danger btn-circle" data-placement="bottom" data-toggle="tooltip" type="button" th:if="${profile.numNoShows > 0}"><i class="fa fa-warning"></i></button>
                         <button class="btn btn-xs btn-info btn-circle" data-placement="bottom" data-toggle="tooltip" title="Wants another date!" type="button" th:if="${profile.wantsMore}"><i class="fa fa-thumbs-up"></i></button>
-                        <button class="btn btn-xs btn-danger btn-circle" data-placement="bottom" data-toggle="tooltip" title="Does not want another date!" type="button" th:unless="${profile.wantsMore}"><i class="fa fa-thumbs-down"></i></button>
+                        <button class="btn btn-xs btn-danger btn-circle" data-placement="bottom" data-toggle="tooltip" title="Does not want another date!" type="button" th:if="${profile.wantsNoMore}"><i class="fa fa-thumbs-down"></i></button>
                         <button class="btn btn-xs btn-info btn-circle" data-placement="bottom" data-toggle="tooltip" title="You have an active date!" type="button" th:if="${profile.hasActiveDate}"><i class="fa fa-calendar"></i></button>
                     </div>
                 </div>
