@@ -55,6 +55,7 @@ public class ViewProfileController {
         }
 
 
+        boolean isViewingSelf = currUser.getId() == profile.getId();
         Integer age = (profile.getDob() != null) ? DateUtil.getAge(profile.getDob()) : null;
         if (age != null && age.intValue() < 18) age = Integer.valueOf(18);
 
@@ -66,6 +67,7 @@ public class ViewProfileController {
         }
 
         ModelAndView m = new ModelAndView("view_profile");
+        m.addObject("isViewingSelf", isViewingSelf);
         m.addObject("profile", profile);
         m.addObject("loc", userService.getAddrDesc(profile));
         m.addObject("profileThumbImg", userService.getProfileImg(profile, true));

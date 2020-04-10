@@ -10,7 +10,7 @@
         <div class="ibox-content profile-content">
             <h4><strong th:text="${profile.displayName}"></strong>, <span th:text="${age}" th:remove="tag"></span> <span th:text="${gender}" th:remove="tag"></span></h4>
             <p th:utext="${loc}"></p>
-            <div class="user-button" wicket:id="actionButtonsContainer">
+            <div class="user-button" wicket:id="actionButtonsContainer"  th:if="${!isViewingSelf}">
                 <div class="row">
                     <div class="col-md-6">
                         <button type="button" class="btn btn-success btn-sm btn-block" id="btnMakePlans"><i class="fa fa-envelope"></i> Make Plans</button>
