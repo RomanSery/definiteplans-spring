@@ -10,16 +10,24 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 
 @Entity
 @Table(name = "zip_code")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "dp")
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ZipCode implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "zip")
+    @EqualsAndHashCode.Include
     private String zip;
 
     @Column(name = "primary_city")
@@ -39,64 +47,5 @@ public class ZipCode implements Serializable {
 
     public ZipCode() {
 
-    }
-
-    public String getZip() {
-        return this.zip;
-    }
-
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
-
-    public String getPrimaryCity() {
-        return this.primaryCity;
-    }
-
-
-    public void setPrimaryCity(String primaryCity) {
-        this.primaryCity = primaryCity;
-    }
-
-
-    public String getState() {
-        return this.state;
-    }
-
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-
-    public String getTimezone() {
-        return this.timezone;
-    }
-
-
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
-    }
-
-
-    public float getLatitude() {
-        return this.latitude;
-    }
-
-
-    public void setLatitude(float latitude) {
-        this.latitude = latitude;
-    }
-
-
-    public float getLongitude() {
-        return this.longitude;
-    }
-
-
-    public void setLongitude(float longitude) {
-        this.longitude = longitude;
     }
 }
