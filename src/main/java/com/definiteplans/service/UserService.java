@@ -2,6 +2,8 @@ package com.definiteplans.service;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -12,14 +14,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.definiteplans.controller.model.PwdUpdate;
+import com.definiteplans.dao.BlockedUserRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
+import com.definiteplans.dom.BlockedUser;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.State;
 import com.definiteplans.dom.enumerations.UserStatus;
+import com.definiteplans.util.DateUtil;
 
 @Service
 public class UserService {
@@ -27,17 +32,17 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ZipCodeService zipCodeService;
     private final EnumValueService enumValueService;
     private final ZipCodeRepository zipCodeRepository;
+    private final BlockedUserRepository blockedUserRepository;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ZipCodeService zipCodeService,
-                       EnumValueService enumValueService, ZipCodeRepository zipCodeRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+                       EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, BlockedUserRepository blockedUserRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.zipCodeService = zipCodeService;
         this.enumValueService = enumValueService;
         this.zipCodeRepository = zipCodeRepository;
+        this.blockedUserRepository = blockedUserRepository;
     }
 
     public boolean changeUserPassword(final User user, final PwdUpdate pwdUpdate) {
@@ -119,7 +124,7 @@ public class UserService {
     }
 
     public String getAddrDesc(User u) {
-        String s = (u.getState() != null) ? State.valueOfAbbreviation(u.getState()).toString() : "";
+        String s = (u.getState() != null) ? Objects.requireNonNull(State.valueOfAbbreviation(u.getState())).toString() : "";
         String c = (u.getCity() != null) ? u.getCity() : "";
         String n = (u.getNeighborhood() != null) ? u.getNeighborhood() : "";
 
@@ -135,4 +140,35 @@ public class UserService {
         return addr;
     }
 
+
+    public boolean canViewProfile(User currUser, User profile) {
+        boolean isViewingSelf = currUser.getId() == profile.getId();
+        if(isViewingSelf) {
+            return true;
+        }
+
+        List<BlockedUser> arr = blockedUserRepository.findByUserId(profile.getId());
+        for (BlockedUser bu : arr) {
+            if (bu.getBlockedUserId() == currUser.getId()) {
+                return false;
+            }
+        }
+        arr = blockedUserRepository.findByUserId(currUser.getId());
+        for (BlockedUser bu : arr) {
+            if (bu.getBlockedUserId() == profile.getId()) {
+                return false;
+            }
+        }
+
+        int myAge = DateUtil.getAge(currUser.getDob());
+        if (myAge > profile.getAgeMax() || myAge < profile.getAgeMin()) {
+            return false;
+        }
+        int profileAge = DateUtil.getAge(profile.getDob());
+        if (profileAge > currUser.getAgeMax() || profileAge < currUser.getAgeMin()) {
+            return false;
+        }
+
+        return true;
+    }
 }

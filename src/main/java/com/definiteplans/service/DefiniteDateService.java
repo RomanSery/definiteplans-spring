@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.definiteplans.dao.DefiniteDateRepository;
+import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.ZipCode;
@@ -17,9 +17,15 @@ import com.definiteplans.util.DateUtil;
 
 @Service
 public class DefiniteDateService {
-    @Autowired private DefiniteDateRepository definiteDateRepository;
-    @Autowired private EmailService emailService;
-    @Autowired private ZipCodeService zipCodeService;
+    private final DefiniteDateRepository definiteDateRepository;
+    private final EmailService emailService;
+    private final ZipCodeRepository zipCodeRepository;
+
+    public DefiniteDateService(DefiniteDateRepository definiteDateRepository, EmailService emailService, ZipCodeRepository zipCodeRepository) {
+        this.definiteDateRepository = definiteDateRepository;
+        this.emailService = emailService;
+        this.zipCodeRepository = zipCodeRepository;
+    }
 
     public DefiniteDate getById(int dateId) {
         if (dateId <= 0) {
@@ -53,8 +59,8 @@ public class DefiniteDateService {
     }
 
     public DefiniteDate createNew(User currUser) {
-        ZipCode zip = this.zipCodeService.getById(currUser.getPostalCode());
-        return new DefiniteDate((zip != null) ? zip.getTimezone() : "America/New_York");
+        Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
+        return new DefiniteDate(zip.isPresent() ? zip.get().getTimezone() : "America/New_York");
     }
 
 
