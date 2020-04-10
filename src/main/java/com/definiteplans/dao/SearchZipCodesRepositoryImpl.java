@@ -15,13 +15,11 @@ public class SearchZipCodesRepositoryImpl implements SearchZipCodesRepository {
 
     @Override
     public List<ZipCode> getZipCodesByRadius(ZipCode zip, int radius) {
-        String sql = "SELECT * FROM zip_code WHERE (3958*3.1415926*sqrt((Latitude-?)*(Latitude-?) + cos(Latitude/57.29578)*cos(?/57.29578)*(Longitude-?)*(Longitude-?))/180) <= ?";
+        String sql = "SELECT * FROM zip_code WHERE (3958*3.1415926*sqrt((Latitude- :latitude)*(Latitude- :latitude) + cos(Latitude/57.29578)*cos(:latitude/57.29578)*(Longitude- :longitude)*(Longitude- :longitude))/180) <= ?";
 
         Query q = entityManager.createNativeQuery(sql, ZipCode.class);
+        q.setParameter("latitude", zip.getLatitude());
+        q.setParameter("longitude", zip.getLongitude());
         return q.getResultList();
-
-//        new Object[]{Float.valueOf(zip.getLatitude()), Float.valueOf(zip.getLatitude()),
-//                Float.valueOf(zip.getLatitude()), Float.valueOf(zip.getLongitude()),
-//                Float.valueOf(zip.getLongitude()), Integer.valueOf(radius)}
     }
 }

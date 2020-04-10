@@ -1,0 +1,89 @@
+<div th:fragment="box" class="ibox ">
+    <div class="ibox-title">
+        <h5>Profile Detail</h5>
+    </div>
+    <div>
+        <div class="ibox-content no-padding border-left-right">
+            <img alt="image" class="img-fluid" th:src="${profileThumbImg}">
+            <a class="btn btn-primary btn-sm fancybox" href="#" wicket:id="profilePicZoomIn"><i class="glyphicon glyphicon-zoom-in"></i> Zoom in</a>
+        </div>
+        <div class="ibox-content profile-content">
+            <h4><strong th:text="${profile.displayName}"></strong>, <span th:text="${age}" th:remove="tag"></span> <span th:text="${gender}" th:remove="tag"></span></h4>
+            <p th:utext="${loc}"></p>
+            <div class="user-button" wicket:id="actionButtonsContainer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-success btn-sm btn-block" id="btnMakePlans"><i class="fa fa-envelope"></i> Make Plans</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-danger btn-sm btn-block"><i class="fa fa-times"></i> Block</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<table th:fragment="basicInfo" class="table">
+    <tbody>
+    <tr>
+        <td>Age</td>
+        <td th:text="${age}"></td>
+    </tr>
+    <tr>
+        <td>Gender</td>
+        <td th:text="${gender}"></td>
+    </tr>
+    <tr>
+        <td>Height</td>
+        <td th:text="${height}"></td>
+    </tr>
+    <tr>
+        <td>Ethnicity</td>
+        <td th:text="${ethnicity}"></td>
+    </tr>
+    <tr>
+        <td>Marital Status</td>
+        <td th:text="${maritalStatus}"></td>
+    </tr>
+    <tr>
+        <td>Kids</td>
+        <td th:text="${kids}"></td>
+    </tr>
+    <tr>
+        <td>Wants kids</td>
+        <td th:text="${wantsKids}"></td>
+    </tr>
+    <tr>
+        <td>Languages</td>
+        <td th:text="${languages}"></td>
+    </tr>
+    <tr>
+        <td>Religion</td>
+        <td th:text="${religion}"></td>
+    </tr>
+    <tr>
+        <td>Education</td>
+        <td th:text="${education}"></td>
+    </tr>
+    <tr>
+        <td>Income</td>
+        <td th:text="${income}"></td>
+    </tr>
+    <tr>
+        <td>Smokes</td>
+        <td th:text="${smokes}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+<div th:fragment="aboutMe" th:remove="tag">
+    <h3>About Me</h3>
+    <p th:text="${aboutMe}"></p>
+    <div class="hr-line-dashed"></div>
+    <h3>Interests</h3>
+    <p th:text="${interests}"></p>
+</div>

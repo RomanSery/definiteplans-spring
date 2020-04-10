@@ -5,144 +5,49 @@
 
 </head>
 
-<section th:fragment="view_profile" class="gray-section contact">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="wrapper wrapper-content">
-                    <div wicket:id="missingFieldsFeedback"></div>
+<div th:fragment="view_profile" class="row">
+    <div class="col-md-4">
+        <div th:replace="view_profile/profile_frags::box"></div>
+    </div>
 
-                    <div class="col-md-4">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-content no-padding border-left-right">
-                                <span wicket:id="profilePicDiv"></span>
-                                <a class="btn btn-primary btn-sm fancybox" href="#" wicket:id="profilePicZoomIn"><i
-                                        class="glyphicon glyphicon-zoom-in"></i> Zoom in</a>
+    <div class="col-md-8">
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>Activites</h5>
+            </div>
+            <div class="ibox-content">
+                <div>
+                    <div class="panel blank-panel">
+                        <div class="panel-heading">
+                            <div class="panel-options">
+                                <ul class="nav nav-tabs" id="profileTabsDiv">
+                                    <li class="active"><a data-toggle="tab" href="#profile-tab-1">Basic Info</a></li>
+                                    <li><a data-toggle="tab" href="#profile-tab-2">In my own words</a></li>
+                                    <li wicket:id="makePlansTab"><a data-toggle="tab" href="#profile-tab-3">Make Plans</a></li>
+                                </ul>
                             </div>
-                            <div class="ibox-content profile-content">
-                                <h4><strong wicket:id="userFirstName"></strong></h4>
-                                <p><span wicket:id="loc"></span></p>
-
-                                <div class="user-button" wicket:id="actionButtonsContainer">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <a class="btn btn-success btn-sm btn-block" href="#"
-                                               id="btnMakePlans"><i class="fa fa-envelope"></i> Make Plans</a>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <a class="btn btn-danger btn-sm btn-block" data-on-confirm="DOIT.onBlockUser"
-                                               data-singleton="true" data-toggle="confirmation"
-                                               href=""><i class="fa fa-times"></i> Block</a>
-                                        </div>
-                                    </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="profile-tab-1">
+                                    <div th:replace="view_profile/profile_frags::basicInfo" th:remove="tag"></div>
+                                </div>
+                                <div class="tab-pane" id="profile-tab-2">
+                                    <div th:replace="view_profile/profile_frags::aboutMe" th:remove="tag"></div>
+                                </div>
+                                <div class="tab-pane" id="profile-tab-3">
+                                    <span wicket:id="datePanel"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-md-8">
-                        <div class="ibox float-e-margins">
-
-                            <div class="ibox-content">
-
-                                <div class="panel blank-panel">
-                                    <div class="panel-heading">
-                                        <div class="panel-options">
-                                            <ul class="nav nav-tabs" id="profileTabsDiv">
-                                                <li class="active"><a data-toggle="tab" href="#profile-tab-1">Basic
-                                                    Info</a></li>
-                                                <li><a data-toggle="tab" href="#profile-tab-2">In my own words</a>
-                                                </li>
-                                                <li wicket:id="makePlansTab"><a data-toggle="tab"
-                                                                                href="#profile-tab-3">Make Plans</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="tab-content">
-
-                                            <div class="tab-pane active" id="profile-tab-1">
-                                                <table class="table">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td>Age</td>
-                                                        <td><span wicket:id="age"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Gender</td>
-                                                        <td><span wicket:id="gender"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Height</td>
-                                                        <td><span wicket:id="height"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Ethnicity</td>
-                                                        <td><span wicket:id="ethnicity"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Marital Status</td>
-                                                        <td><span wicket:id="maritalStatus"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Kids</td>
-                                                        <td><span wicket:id="kids"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Wants kids</td>
-                                                        <td><span wicket:id="wantsKids"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Languages</td>
-                                                        <td><span wicket:id="languages"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Religion</td>
-                                                        <td><span wicket:id="religion"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Education</td>
-                                                        <td><span wicket:id="education"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Income</td>
-                                                        <td><span wicket:id="income"></span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Smokes</td>
-                                                        <td><span wicket:id="smokes"></span></td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-                                            <div class="tab-pane" id="profile-tab-2">
-                                                <h3>About Me</h3>
-                                                <p wicket:id="aboutMe"></p>
-                                                <div class="hr-line-dashed"></div>
-                                                <h3>Interests</h3>
-                                                <p wicket:id="interests"></p>
-                                            </div>
-
-                                            <wicket:enclosure child="datePanel">
-                                                <div class="tab-pane" id="profile-tab-3">
-                                                    <span wicket:id="datePanel"></span>
-                                                </div>
-                                            </wicket:enclosure>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>   <!-- CLOSE -->
-
                 </div>
             </div>
         </div>
+
     </div>
-</section>
+</div>
+
 
 
 </html>
