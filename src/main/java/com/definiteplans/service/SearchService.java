@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.definiteplans.dao.SearchUsersRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.User;
@@ -23,12 +22,10 @@ public class SearchService {
 
     private final UserRepository userRepository;
     private final ZipCodeRepository zipCodeRepository;
-    private final SearchUsersRepository searchUsersRepository;
 
-    public SearchService(UserRepository userRepository, ZipCodeRepository zipCodeRepository, SearchUsersRepository searchUsersRepository) {
+    public SearchService(UserRepository userRepository, ZipCodeRepository zipCodeRepository) {
         this.userRepository = userRepository;
         this.zipCodeRepository = zipCodeRepository;
-        this.searchUsersRepository = searchUsersRepository;
     }
 
     public List<User> browsePagedResults(User currUser, long first, long count, Integer ageFrom, Integer ageTo, Integer heightFrom,
@@ -65,7 +62,7 @@ public class SearchService {
         if (distance != null && distance.intValue() > 0 && currUser.getPostalCode() != null && currUser.getPostalCode().length() > 0) {
             Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
             if (zip.isPresent()) {
-                List<ZipCode> arr = searchUsersRepository.getZipCodesByRadius(zip.get(), distance.intValue());
+                List<ZipCode> arr = zipCodeRepository.getZipCodesByRadius(zip.get(), distance.intValue());
                 for (ZipCode z : arr) {
                     distanceFrom.add('\'' + z.getZip() + '\'');
                 }

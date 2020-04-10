@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.definiteplans.dom.ZipCode;
 
 @Repository
-public interface ZipCodeRepository extends JpaRepository<ZipCode, String> {
+public interface ZipCodeRepository extends JpaRepository<ZipCode, String>, SearchZipCodesRepository {
 
 
 }

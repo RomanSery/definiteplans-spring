@@ -40,13 +40,10 @@ public class ViewProfileController {
         if(currUser == null) {
             return new ModelAndView(new RedirectView("/"));
         }
-
-
         Optional<User> found = userRepository.findById(userId);
         if(found.isEmpty()) {
             return new ModelAndView(new RedirectView("/browse"));
         }
-
         User profile = found.get();
         if(!userService.canViewProfile(currUser, profile)) {
             return new ModelAndView(new RedirectView("/browse"));
