@@ -17,7 +17,6 @@ import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.enumerations.EnumValueType;
-import com.definiteplans.email.LetterManager;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
 
@@ -27,14 +26,12 @@ public class RegisterController {
     private final UserService userService;
     private final ZipCodeRepository zipCodeRepository;
     private final EnumValueRepository enumValueRepository;
-    private final LetterManager letterManager;
 
-    public RegisterController(UserRepository userRepository, UserService userService, ZipCodeRepository zipCodeRepository, EnumValueRepository enumValueRepository, LetterManager letterManager) {
+    public RegisterController(UserRepository userRepository, UserService userService, ZipCodeRepository zipCodeRepository, EnumValueRepository enumValueRepository) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.zipCodeRepository = zipCodeRepository;
         this.enumValueRepository = enumValueRepository;
-        this.letterManager = letterManager;
     }
 
     @GetMapping("/register")

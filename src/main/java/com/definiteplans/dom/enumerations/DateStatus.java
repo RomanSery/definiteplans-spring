@@ -5,7 +5,7 @@ import java.util.List;
 public enum DateStatus implements GenericEnum {
     NEGOTIATION(1, "Negotiation"),
     APPROVED(2, "Approved"),
-    OCCURED(3, "Occured"),
+    OCCURRED(3, "Occurred"),
     DELETED(4, "Deleted");
 
     public static final List<DateStatus> VALUES = List.of(DateStatus.values());

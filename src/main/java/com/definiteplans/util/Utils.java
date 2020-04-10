@@ -128,13 +128,6 @@ public class Utils {
 //        return sv.toString().replace("\r", "").replace("\n", "");
 //    }
 //
-//    public static boolean isInt(StringValue sv) {
-//        try {
-//            sv.toInt();
-//            return true;
-//        } catch (StringValueConversionException e) {
-//            return false;
-//        }
-//    }
+
 
 }
