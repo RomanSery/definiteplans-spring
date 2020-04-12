@@ -3,6 +3,11 @@ package com.definiteplans.controller.model;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class SearchResult implements Serializable {
     private static final long serialVersionUID=1L;
 
@@ -24,37 +29,5 @@ public class SearchResult implements Serializable {
         this.wantsMore = wantsMore;
         this.wantsNoMore = wantsNoMore;
         this.hasActiveDate = hasActiveDate;
-    }
-
-    public String getProfileImgSrc() {
-        return profileImgSrc;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public int getNumNoShows() {
-        return numNoShows;
-    }
-
-    public boolean isWantsMore() {
-        return wantsMore;
-    }
-
-    public boolean isHasActiveDate() {
-        return hasActiveDate;
-    }
-
-    public boolean isWantsNoMore() {
-        return wantsNoMore;
-    }
-
-    public int getUserId() {
-        return userId;
     }
 }

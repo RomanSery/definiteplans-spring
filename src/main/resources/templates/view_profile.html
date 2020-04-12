@@ -23,7 +23,8 @@
                                 <ul class="nav nav-tabs" id="profileTabsDiv">
                                     <li class="active"><a data-toggle="tab" href="#profile-tab-1">Basic Info</a></li>
                                     <li><a data-toggle="tab" href="#profile-tab-2">In my own words</a></li>
-                                    <li wicket:id="makePlansTab"><a data-toggle="tab" href="#profile-tab-3">Make Plans</a></li>
+                                    <li><a data-toggle="tab" href="#profile-tab-3">Pictures</a></li>
+                                    <li wicket:id="makePlansTab"><a data-toggle="tab" href="#profile-tab-4">Make Plans</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -35,8 +36,12 @@
                                 <div class="tab-pane" id="profile-tab-2">
                                     <div th:replace="view_profile/profile_frags::aboutMe" th:remove="tag"></div>
                                 </div>
-                                <div class="tab-pane" id="profile-tab-3">
-                                    <div th:replace="view_profile/dates::panel" th:remove="tag"></div>
+                                <div class="tab-pane" id="profile-tab-2">
+                                    <div th:replace="view_profile/profile_frags::pics" th:remove="tag"></div>
+                                </div>
+                                <div class="tab-pane" id="profile-tab-4">
+                                    <div th:replace="view_profile/date::panel" th:remove="tag"></div>
+                                    <div th:replace="view_profile/date::pastDates" th:remove="tag"></div>
                                 </div>
                             </div>
                         </div>
