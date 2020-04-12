@@ -1,8 +1,12 @@
 package com.definiteplans.email;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.definiteplans.dom.User;
 
@@ -15,20 +19,25 @@ public class EmailService {
         this.smtpService = smtpService;
     }
 
+    private String getBaseUrl() {
+        return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+    }
+
 
 
     public void sendEmailValidationLetter(User myUser) {
         try {
-            //Map<String, String> context = new HashMap<>();
-            //context.put("name", myUser.getDisplayName());
+            Map<String, String> context = new HashMap<>();
+            context.put("name", myUser.getDisplayName());
 
-            //String validationString = "";//this.userService.createEncryptedExpiringUserValidationString(myUser);
+
+            String validationString = "";//this.userService.createEncryptedExpiringUserValidationString(myUser);
 
             //Url relativeUrl = RequestCycle.get().mapUrlFor(ValidateEmailPage.class, (new PageParameters()).add("q", validationString));
-            //context.put("emailValidationUrl", RequestCycle.get().getUrlRenderer().renderFullUrl(relativeUrl));
+            context.put("emailValidationUrl", validationString);
 
             String subject = "Confirm your email now to activate your account";
-            smtpService.sendEmail(subject, myUser.getEmail(), "Please go to the below url to verify your email address and activate your account:");
+            smtpService.sendEmail("confirm_email.fmt", subject, myUser.getEmail(), context);
         } catch (Exception e) {
             logger.error("failed to send email validation letter", e);
         }

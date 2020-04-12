@@ -1,0 +1,5 @@
+Welcome ${name}.
+
+Please go to the below url to verify your email address and activate your account:
+
+${emailValidationUrl}
