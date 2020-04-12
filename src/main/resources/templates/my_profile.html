@@ -2,40 +2,18 @@
 <html th:replace="~{fragments/layout::authenticatedLayout(~{::edit-my-profile}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="header-content" th:remove="tag">
-    <script>
+    <script type="text/javascript">
         definitePlansScripts.curr_user_id = [[${curr_user_id}]];
     </script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dropzone@5.7.0/dist/basic.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dropzone@5.7.0/dist/dropzone.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/dropzone@5.7.0/dist/dropzone.min.js"></script>
-    <script th:src="@{/js/edit_profile.js}"></script>
-
-
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js"></script>
-
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-         https://firebase.google.com/docs/web/setup#available-libraries -->
     <script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-storage.js"></script>
-
-    <script>
-        // Your web app's Firebase configuration
-        var firebaseConfig = {
-            apiKey: "AIzaSyBJxI3c-hcRfiEdaNHkqhTkeZovbR1RoLw",
-            authDomain: "ultra-compound-851.firebaseapp.com",
-            databaseURL: "https://ultra-compound-851.firebaseio.com",
-            projectId: "ultra-compound-851",
-            storageBucket: "ultra-compound-851.appspot.com",
-            messagingSenderId: "947515066542",
-            appId: "1:947515066542:web:413c40377db4022467453f",
-            measurementId: "G-8LRFEF2NGM"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        firebase.analytics();
-    </script>
+    <script th:src="@{/js/edit_profile.js}"></script>
 </head>
 
 <div class="row" th:fragment="edit-my-profile">
@@ -80,12 +58,15 @@
                         </div>
                     </form>
 
-                    <div class="col-lg-12 animated fadeInRight">
-                        <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row" id="profile-light-gallery">
                             <div class="col-lg-3" th:each="pic : ${user_pics}">
                                 <div class="contact-box center-version">
-                                    <a href="profile.html">
-                                        <img alt="image" class="img-fluid" th:src="${pic.getThumbImgUrl()}">
+                                    <a th:href="${pic.getFullImgUrl()}" class="lg-img">
+                                        <img alt="image" class="img-fluid img-responsive" th:src="${pic.getThumbImgUrl()}" />
+                                        <div class="demo-gallery-poster">
+                                            <img th:src="@{/img/zoom.png}">
+                                        </div>
                                     </a>
                                     <div class="text-center">
                                         <div class="btn-group">
@@ -100,6 +81,17 @@
 
                         </div>
                     </div>
+
+
+
+
+
+
+
+
+
+
+
             </div>
         </div>
     </div>

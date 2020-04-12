@@ -36,6 +36,7 @@ definitePlansScripts.initImageUpload = function () {
         headers: { 'X-CSRF-TOKEN': $('#_csrf').attr('content') },
         createImageThumbnails: true, thumbnailHeight: 120, thumbnailWidth: 120,
         error: function (file, errorMessage) {
+            console.log(errorMessage);
             $('#uploadErrDiv').html(errorMessage);
             $('#uploadErrDiv').show();
             this.removeAllFiles();
@@ -52,6 +53,7 @@ definitePlansScripts.initImageUpload = function () {
             thumbImgUploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                 function(snapshot) { },
                 function(error) {
+                    console.log(error);
                     $('#uploadErrDiv').html(error);
                     $('#uploadErrDiv').show();
                 }, function() {
@@ -67,6 +69,8 @@ definitePlansScripts.initImageUpload = function () {
             const fileName = file.upload.filename;
             const dataUrl = file.dataURL;
 
+            console.log("full upload start");
+
             var storage = firebase.storage();
             var storageRef = storage.ref();
             var fullImgMetadata = { contentType: mimeType, userId: definitePlansScripts.curr_user_id, fileName: fileName };
@@ -75,6 +79,7 @@ definitePlansScripts.initImageUpload = function () {
             fullImgUploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                 function(snapshot) { },
                 function(error) {
+                    console.log(error);
                     $('#uploadErrDiv').html(error);
                     $('#uploadErrDiv').show();
                 }, function() {
@@ -150,9 +155,31 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
 definitePlansScripts.timestamp = Date.now();
 
 $(document).ready(function() {
+    lightGallery(document.getElementById('profile-light-gallery'), {
+        selector: '.lg-img'
+    });
+
+
+
     definitePlansScripts.basicInfo();
     definitePlansScripts.initImageUpload();
     definitePlansScripts.initImgScripts();
 
     $('[data-toggle="popover"]').popover();
 });
+
+
+// Your web app's Firebase configuration
+var firebaseConfig = {
+    apiKey: "AIzaSyBJxI3c-hcRfiEdaNHkqhTkeZovbR1RoLw",
+    authDomain: "ultra-compound-851.firebaseapp.com",
+    databaseURL: "https://ultra-compound-851.firebaseio.com",
+    projectId: "ultra-compound-851",
+    storageBucket: "ultra-compound-851.appspot.com",
+    messagingSenderId: "947515066542",
+    appId: "1:947515066542:web:413c40377db4022467453f",
+    measurementId: "G-8LRFEF2NGM"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();

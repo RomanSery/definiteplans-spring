@@ -91,11 +91,19 @@
 
 
 
-<div th:fragment="pics" id="profile-light-gallery">
-    <div th:each="pic : ${user_pics}" th:remove="tag">
-        <a th:href="${pic.getFullImgUrl()}">
-            <img th:src="${pic.getThumbImgUrl()}" />
-        </a>
+<div th:fragment="pics">
+    <div class="demo-gallery">
+
+        <ul id="profile-light-gallery">
+            <li th:each="pic : ${user_pics}" th:data-src="${pic.getFullImgUrl()}">
+                <a href="">
+                    <img class="img-responsive" th:src="${pic.getThumbImgUrl()}">
+                    <div class="demo-gallery-poster">
+                        <img th:src="@{/img/zoom.png}">
+                    </div>
+                </a>
+            </li>
+        </ul>
+
     </div>
 </div>
-
