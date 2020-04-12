@@ -24,6 +24,7 @@ import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.State;
 import com.definiteplans.dom.enumerations.UserStatus;
+import com.definiteplans.email.EmailService;
 import com.definiteplans.util.DateUtil;
 
 @Service
@@ -35,14 +36,16 @@ public class UserService {
     private final EnumValueService enumValueService;
     private final ZipCodeRepository zipCodeRepository;
     private final BlockedUserRepository blockedUserRepository;
+    private final EmailService emailService;
 
     public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                       EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, BlockedUserRepository blockedUserRepository) {
+                       EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, BlockedUserRepository blockedUserRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.enumValueService = enumValueService;
         this.zipCodeRepository = zipCodeRepository;
         this.blockedUserRepository = blockedUserRepository;
+        this.emailService = emailService;
     }
 
     public boolean changeUserPassword(final User user, final PwdUpdate pwdUpdate) {
@@ -76,7 +79,7 @@ public class UserService {
         user.setUserStatus(UserStatus.ACTIVE.getId());
         user = userRepository.save(user);
 
-        //letterManager.sendEmailValidationLetter(user);
+        emailService.sendEmailValidationLetter(user);
         return user;
     }
 

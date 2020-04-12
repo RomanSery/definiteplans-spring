@@ -1,113 +1,72 @@
 package com.definiteplans.email;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.definiteplans.dom.User;
 
 @Service
 public class EmailService {
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+    private final SmtpService smtpService;
 
-    private String from;
+    public EmailService(SmtpService smtpService) {
+        this.smtpService = smtpService;
+    }
 
-    private String bugSupportEmail;
-    private String bccAuditEmail;
 
 
-    public void sendAlertMail(String alert) {
+    public void sendEmailValidationLetter(User myUser) {
+        try {
+            //Map<String, String> context = new HashMap<>();
+            //context.put("name", myUser.getDisplayName());
+
+            //String validationString = "";//this.userService.createEncryptedExpiringUserValidationString(myUser);
+
+            //Url relativeUrl = RequestCycle.get().mapUrlFor(ValidateEmailPage.class, (new PageParameters()).add("q", validationString));
+            //context.put("emailValidationUrl", RequestCycle.get().getUrlRenderer().renderFullUrl(relativeUrl));
+
+            String subject = "Confirm your email now to activate your account";
+            smtpService.sendEmail(subject, myUser.getEmail(), "Please go to the below url to verify your email address and activate your account:");
+        } catch (Exception e) {
+            logger.error("failed to send email validation letter", e);
+        }
+    }
+
+    public void sendEmailResetPasswordLetter(User myUser) {
 //        try {
-//            SimpleMailMessage mailMessage = new SimpleMailMessage(this.alertMailMessage);
-//            mailMessage.setText(alert);
-//            this.mailSender.send(mailMessage);
+//            Map<String, String> context = new HashMap<>();
+//            context.put("name", myUser.getDisplayName());
+//            String validationString = this.userService.createEncryptedExpiringUserValidationString(myUser);
+//
+//            Url relativeUrl = RequestCycle.get().mapUrlFor(ResetPasswordPage.class, (new PageParameters()).add("q", validationString));
+//            context.put("resetPasswordUrl", RequestCycle.get().getUrlRenderer().renderFullUrl(relativeUrl));
+//
+//            String[] recipients = {myUser.getEmail()};
+//            String subject = Application.get().getResourceSettings().getLocalizer().getString("resetPassword.subject", null, "Reset your password");
+//
+//            this.emailService.sendEmail("emailResetPassword_template.vm", getServerAbsoluteUrlPrefix(), subject, context, recipients, null);
 //        } catch (Exception e) {
+//
+//            logger.error("failed to send reset password letter", e);
 //        }
     }
 
-
-    public void sendEmail(String template, String serverAbsoluteUrlPrefix, String subject, Map<String, String> context, String[] toRecipients, String[] ccRecipients) throws Exception {
-        String contents = doTemplating(template, context);
-//        SimpleMailMessage msg = new SimpleMailMessage();
-//
-//        msg.setTo(toRecipients);
-//        if (ccRecipients != null) msg.setCc(ccRecipients);
-//        msg.setSubject(subject);
-//        msg.setFrom(this.from);
-//        msg.setText(contents);
-//        msg.setBcc(getBccAuditEmail());
-
+    public void sendFeedback(Integer userId, String url, String msg) {
 //        try {
-//            this.mailSender.send(msg);
+//            Map<String, String> context = new HashMap<>();
+//            context.put("date", DateUtil.printDateTime(DateUtil.getCurrentServerTime(), null));
+//            context.put("userId", (userId != null) ? String.valueOf(userId) : "Not-Logged in");
+//            context.put("url", url);
+//            context.put("msg", msg);
+//
+//            String[] recipients = {this.emailService.getBugSupportEmail()};
+//            this.emailService.sendEmail("emailFeedback_template.vm", getServerAbsoluteUrlPrefix(), "Feedback form submission", context, recipients, null);
 //        } catch (Exception e) {
-//            logger.debug("failed message text: {}", contents);
-//            throw e;
+//
+//            logger.error("failed to send sendFeedback", e);
 //        }
-    }
-
-
-    public void sendHtmlEmail(String template, String serverAbsoluteUrlPrefix, String subject, Map<String, String> context, String[] toRecipients, String[] ccRecipients) throws Exception {
-        String middleContent = doTemplating(template, context);
-
-        context.put("urlPrefix", serverAbsoluteUrlPrefix + "images");
-        context.put("middleContent", middleContent);
-
-//        MimeMessage message = this.mailSender.createMimeMessage();
-//        MimeMessageHelper helper = new MimeMessageHelper(message);
-//        String htmlContent = doTemplating("transactional.build.html", context);
-//
-//
-//        helper.setTo(toRecipients);
-//        if (ccRecipients != null) helper.setCc(ccRecipients);
-//        helper.setSubject(subject);
-//        helper.setFrom(this.from);
-//        helper.setText(htmlContent, true);
-//        helper.setBcc(getBccAuditEmail());
-//
-//        try {
-//            this.mailSender.send(message);
-//        } catch (Exception e) {
-//            logger.debug("failed message text: {}", htmlContent);
-//            throw e;
-//        }
-    }
-
-
-    String doTemplating(String content, Map<String, String> ctx) throws Exception {
-
-//        Configuration cfg = freeMarkerConfiguration;
-//        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.IGNORE_HANDLER);
-//        try {
-//            Template temp = new Template("emailTemplate", new StringReader(content), cfg);
-//            StringWriter aWriter = new StringWriter();
-//            temp.process(ctx, aWriter);
-//            return aWriter.toString();
-//        } catch (Exception e) {
-//            logger.error("doTemplating {}", e.getMessage());
-//
-//        }
-        return "";
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public String getBugSupportEmail() {
-        return this.bugSupportEmail;
-    }
-
-    public void setBugSupportEmail(String bugSupportEmail) {
-        this.bugSupportEmail = bugSupportEmail;
-    }
-
-    public String getBccAuditEmail() {
-        return this.bccAuditEmail;
-    }
-
-    public void setBccAuditEmail(String bccAuditEmail) {
-        this.bccAuditEmail = bccAuditEmail;
     }
 
 }

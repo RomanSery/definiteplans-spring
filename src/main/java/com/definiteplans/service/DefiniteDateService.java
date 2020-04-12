@@ -12,16 +12,16 @@ import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.DateParticipantStatus;
-import com.definiteplans.email.EmailService;
+import com.definiteplans.email.SmtpService;
 import com.definiteplans.util.DateUtil;
 
 @Service
 public class DefiniteDateService {
     private final DefiniteDateRepository definiteDateRepository;
-    private final EmailService emailService;
+    private final SmtpService emailService;
     private final ZipCodeRepository zipCodeRepository;
 
-    public DefiniteDateService(DefiniteDateRepository definiteDateRepository, EmailService emailService, ZipCodeRepository zipCodeRepository) {
+    public DefiniteDateService(DefiniteDateRepository definiteDateRepository, SmtpService emailService, ZipCodeRepository zipCodeRepository) {
         this.definiteDateRepository = definiteDateRepository;
         this.emailService = emailService;
         this.zipCodeRepository = zipCodeRepository;
@@ -81,7 +81,7 @@ public class DefiniteDateService {
                     definiteDateRepository.save(dd);
                 }
             } catch (Exception e) {
-                this.emailService.sendAlertMail(String.format("FAILED sendPostDateFeedbackReminders(%s)", dd) + e);
+                //this.emailService.sendAlertMail(String.format("FAILED sendPostDateFeedbackReminders(%s)", dd) + e);
             }
         }
     }
@@ -103,7 +103,7 @@ public class DefiniteDateService {
                     definiteDateRepository.save(dd);
                 }
             } catch (Exception e) {
-                this.emailService.sendAlertMail(String.format("FAILED sendDayOfReminders(%s)", dd) + e);
+                //this.emailService.sendAlertMail(String.format("FAILED sendDayOfReminders(%s)", dd) + e);
             }
         }
     }
