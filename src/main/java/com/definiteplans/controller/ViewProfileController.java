@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.dao.EnumValueRepository;
+import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
@@ -25,12 +26,14 @@ public class ViewProfileController {
     private final UserRepository userRepository;
     private final EnumValueRepository enumValueRepository;
     private final DefiniteDateService definiteDateService;
+    private final UserImageRepository userImageRepository;
 
-    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueRepository enumValueRepository, DefiniteDateService definiteDateService) {
+    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueRepository enumValueRepository, DefiniteDateService definiteDateService, UserImageRepository userImageRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.enumValueRepository = enumValueRepository;
         this.definiteDateService = definiteDateService;
+        this.userImageRepository = userImageRepository;
     }
 
     @GetMapping("/profiles/")
@@ -71,6 +74,7 @@ public class ViewProfileController {
         m.addObject("profile", profile);
         m.addObject("loc", userService.getAddrDesc(profile));
         m.addObject("profileThumbImg", userService.getProfileImg(profile, true));
+        m.addObject("profileFullImg", userService.getProfileImg(profile, false));
         m.addObject("age", age);
         m.addObject("gender", getProfileVal(profile.getGender()));
         m.addObject("height", getProfileVal(profile.getHeight()));
@@ -85,6 +89,8 @@ public class ViewProfileController {
         m.addObject("smokes", getProfileVal(profile.getSmokes()));
         m.addObject("aboutMe", profile.getAboutMePretty());
         m.addObject("interests", profile.getInterestsPretty());
+
+        m.addObject("user_pics", userImageRepository.findByUserId(profile.getId()));
         return m;
     }
 

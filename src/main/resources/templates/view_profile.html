@@ -3,6 +3,16 @@
 
 <head th:fragment="header-content" th:remove="tag">
 
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            lightGallery(document.getElementById('profile-light-gallery'));
+            lightGallery(document.getElementById('main-profile-pic'));
+        });
+    </script>
+
+
+
 </head>
 
 <div th:fragment="view_profile" class="row">
@@ -36,7 +46,7 @@
                                 <div class="tab-pane" id="profile-tab-2">
                                     <div th:replace="view_profile/profile_frags::aboutMe" th:remove="tag"></div>
                                 </div>
-                                <div class="tab-pane" id="profile-tab-2">
+                                <div class="tab-pane" id="profile-tab-3">
                                     <div th:replace="view_profile/profile_frags::pics" th:remove="tag"></div>
                                 </div>
                                 <div class="tab-pane" id="profile-tab-4">

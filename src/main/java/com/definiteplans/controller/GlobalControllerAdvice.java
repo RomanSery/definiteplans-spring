@@ -27,13 +27,7 @@ public class GlobalControllerAdvice {
     @ModelAttribute("currUserImg")
     public String populateUserImg() {
         User currUser = userService.getCurrentUser();
-        if(currUser != null) {
-            String img = "<a href=\"viewProfile?id={currUserId}\"><img class=\"img-circle\" width=\"48\" src=\"{imgSrc}\" /></a>";
-            img = img.replace("{currUserId}", String.valueOf(currUser.getId()));
-            img = img.replace("{imgSrc}", userService.getCurrUserProfileImg());
-            return img;
-        }
-        return null;
+        return userService.getProfileImg(currUser, true);
     }
 
     @ModelAttribute("currUserId")

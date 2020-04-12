@@ -43,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // These pages do not require login
-        http.authorizeRequests().antMatchers("/login", "/logout", "/register", "/webjars/**").permitAll();
+        http.authorizeRequests().antMatchers("/login", "/logout", "/register", "/webjars/**", "/fonts/**").permitAll();
 
         http.authorizeRequests().anyRequest().authenticated();
 
@@ -65,7 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web
                 .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/webjars/**");
+                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/img/**", "/fonts/**", "/webjars/**");
     }
 
 }

@@ -3,9 +3,10 @@
         <h5>Profile Detail</h5>
     </div>
     <div>
-        <div class="ibox-content no-padding border-left-right">
-            <img alt="image" class="img-fluid" th:src="${profileThumbImg}">
-            <a class="btn btn-primary btn-sm fancybox" href="#" wicket:id="profilePicZoomIn"><i class="glyphicon glyphicon-zoom-in"></i> Zoom in</a>
+        <div class="ibox-content no-padding border-left-right text-center" id="main-profile-pic">
+            <a th:href="${profileFullImg}">
+                <img alt="image" class="img-fluid" th:src="${profileThumbImg}" />
+            </a>
         </div>
         <div class="ibox-content profile-content">
             <h4><strong th:text="${profile.displayName}"></strong>, <span th:text="${age}" th:remove="tag"></span> <span th:text="${gender}" th:remove="tag"></span></h4>
@@ -89,10 +90,12 @@
 </div>
 
 
-<div th:fragment="pics" th:remove="tag">
-    <h3>About Me</h3>
-    <p th:text="${aboutMe}"></p>
-    <div class="hr-line-dashed"></div>
-    <h3>Interests</h3>
-    <p th:text="${interests}"></p>
+
+<div th:fragment="pics" id="profile-light-gallery">
+    <div th:each="pic : ${user_pics}" th:remove="tag">
+        <a th:href="${pic.getFullImgUrl()}">
+            <img th:src="${pic.getThumbImgUrl()}" />
+        </a>
+    </div>
 </div>
+
