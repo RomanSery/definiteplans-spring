@@ -1,0 +1,5 @@
+Hi ${name},
+
+To reset your password, please use the below url:
+
+${resetPasswordUrl}

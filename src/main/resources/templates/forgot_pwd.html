@@ -1,0 +1,33 @@
+<!doctype html>
+<html th:replace="~{fragments/layout::guestLayout(~{::forgotPwd}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="header-content" th:remove="tag">
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#forgotPwdForm').parsley();
+        });
+    </script>
+</head>
+
+
+<div class="row" th:fragment="forgotPwd">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4 text-center">
+
+        <p>Forgot your password?  <br> Enter your email address and we'll send you instructions to reset your password.</p>
+
+        <form id="forgotPwdForm" role="form" th:action="@{/forgotpwd}" method="POST" data-parsley-validate>
+
+            <div class="form-group">
+                <input class="form-control" id="loginemail" name="loginemail" placeholder="Email" type="email" required data-parsley-type="email">
+            </div>
+            <button class="btn btn-primary block full-width" type="submit">Send</button>
+
+
+            <a href="@{/login}"><small>Back to login</small></a>
+        </form>
+    </div>
+    <div class="col-lg-4"></div>
+</div>
+
+</html>

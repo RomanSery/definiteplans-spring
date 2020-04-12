@@ -1,0 +1,20 @@
+$toName,
+
+$otherPersonName has declined the following date:  
+
+"$greeting"
+
+What: $what
+
+Where: 
+$whereName
+$whereLocation
+
+When:
+$dateWhen
+
+At least you won't be wasting each others time!  Keep making more dates.
+You have to get through the no's to get to the yeses,  good luck!
+
+To unsubscribe from all future emails, use the below link:
+${unsubLink}

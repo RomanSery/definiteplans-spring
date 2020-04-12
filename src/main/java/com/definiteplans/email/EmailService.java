@@ -55,7 +55,7 @@ public class EmailService {
 //            String[] recipients = {myUser.getEmail()};
 //            String subject = Application.get().getResourceSettings().getLocalizer().getString("resetPassword.subject", null, "Reset your password");
 //
-//            this.emailService.sendEmail("emailResetPassword_template.vm", getServerAbsoluteUrlPrefix(), subject, context, recipients, null);
+//            this.emailService.sendEmail("reset_pwd.fmt", getServerAbsoluteUrlPrefix(), subject, context, recipients, null);
 //        } catch (Exception e) {
 //
 //            logger.error("failed to send reset password letter", e);
