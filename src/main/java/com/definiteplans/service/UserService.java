@@ -79,7 +79,7 @@ public class UserService {
         user.setUserStatus(UserStatus.ACTIVE.getId());
         user = userRepository.save(user);
 
-        emailService.sendEmailValidationLetter(user);
+        emailService.sendEmailValidationEmail(user);
         return user;
     }
 

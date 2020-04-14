@@ -1,21 +1,24 @@
 package com.definiteplans.controller;
 
-import java.time.LocalDateTime;
 import java.util.Map;
-import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.definiteplans.dom.User;
+import com.definiteplans.email.EmailService;
 
 @Controller
 public class LoginController {
+    private final EmailService emailService;
+
+    public LoginController(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
     @GetMapping("/login")
     public ModelAndView login() {
@@ -32,11 +35,16 @@ public class LoginController {
     }
 
     @PostMapping("/forgotpwd")
-    public ModelAndView forgotPassword(String loginemail) {
-        
+    public ModelAndView forgotPassword(@RequestParam("loginemail") String loginEmail) {
+        emailService.sendResetPasswordEmail(loginEmail);
+        return new ModelAndView(new RedirectView("/forgotpwdthanks"), Map.of("email", loginEmail));
+    }
 
-        ModelAndView m = new ModelAndView("forgot_pwd");
-        m.addObject("title", "Forgot Password");
+    @GetMapping("/forgotpwdthanks")
+    public ModelAndView forgotPasswordThanks(Model model, @RequestParam String email) {
+        ModelAndView m = new ModelAndView("forgot_pwd_confirm");
+        m.addObject("title", "Thanks - Email Sent");
+        m.addObject("email", email);
         return m;
     }
 }
