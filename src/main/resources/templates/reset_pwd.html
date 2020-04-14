@@ -1,0 +1,57 @@
+<!doctype html>
+<html th:replace="~{fragments/layout::guestLayout(~{::reset-my-pwd}, ~{::header-content}, false)}" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="header-content" th:remove="tag">
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#forgotPwdForm').parsley();
+        });
+    </script>
+</head>
+
+
+
+<div class="row" th:fragment="reset-my-pwd">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title"><h5>Reset my password</h5></div>
+            <div class="ibox-content">
+
+                <form role="form" id="resetPasswordForm" th:action="@{/resetpwd}" th:object="${user}" method="post" data-parsley-validate>
+
+                    <ul th:if="${#fields.hasErrors('*')}">
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                    </ul>
+
+                    <input type="hidden" th:value="${tokenId}" th:field="*{tokenId}" name="tokenId">
+                    <input type="hidden" th:value="${tokenUserId}" th:field="*{tokenUserId}" name="tokenUserId">
+                    <input type="hidden" th:value="${token}" th:field="*{token}" name="token">
+
+                    <div class="form-group row">
+                        <label for="newpwd1" class="col-sm-2 col-form-label">New Password</label>
+                        <div class="col-sm-3">
+                            <input type="password" class="form-control" id="newpwd1" name="newpwd1" th:field="*{password1}" required data-parsley-minlength="8">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="newpwd2" class="col-sm-2 col-form-label">Confirm New Password</label>
+                        <div class="col-sm-3">
+                            <input type="password" class="form-control" id="newpwd2" name="newpwd2" th:field="*{password2}"
+                                   required data-parsley-minlength="8" data-parsley-equalto="#newpwd1" data-parsley-equalto-message="The 2 passwords must match">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</html>

@@ -14,6 +14,10 @@
     <div class="col-lg-4"></div>
     <div class="col-lg-4 text-center">
 
+        <div class="alert alert-success" th:if="${was_pwd_reset}">
+            Your password was successfully reset, please continue to login.
+        </div>
+
         <p>Login in. To see it in action.</p>
 
         <form id="loginForm" role="form" th:action="@{/login}" method="POST" data-parsley-validate>

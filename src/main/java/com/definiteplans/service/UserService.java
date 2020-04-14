@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -16,10 +17,12 @@ import org.springframework.stereotype.Service;
 import com.definiteplans.controller.model.PwdUpdate;
 import com.definiteplans.dao.BlockedUserRepository;
 import com.definiteplans.dao.UserRepository;
+import com.definiteplans.dao.UserTokenRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.BlockedUser;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
+import com.definiteplans.dom.UserToken;
 import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.State;
@@ -37,21 +40,29 @@ public class UserService {
     private final ZipCodeRepository zipCodeRepository;
     private final BlockedUserRepository blockedUserRepository;
     private final EmailService emailService;
+    private final UserTokenRepository userTokenRepository;
 
     public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                       EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, BlockedUserRepository blockedUserRepository, EmailService emailService) {
+                       EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, BlockedUserRepository blockedUserRepository, EmailService emailService, UserTokenRepository userTokenRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.enumValueService = enumValueService;
         this.zipCodeRepository = zipCodeRepository;
         this.blockedUserRepository = blockedUserRepository;
         this.emailService = emailService;
+        this.userTokenRepository = userTokenRepository;
     }
 
     public boolean changeUserPassword(final User user, final PwdUpdate pwdUpdate) {
         if(!isCorrectPwd(pwdUpdate.getCurrPwd(), user)) {
             return false;
         }
+        user.setPassword(bCryptPasswordEncoder.encode(pwdUpdate.getPassword1()));
+        userRepository.save(user);
+        return true;
+    }
+
+    public boolean resetForgottenPwd(final User user, final PwdUpdate pwdUpdate) {
         user.setPassword(bCryptPasswordEncoder.encode(pwdUpdate.getPassword1()));
         userRepository.save(user);
         return true;
@@ -173,5 +184,27 @@ public class UserService {
         }
 
         return true;
+    }
+
+    public Integer getUserIdFromToken(Integer id, Integer uid, String tokenStr) {
+        if(id == null || uid == null || StringUtils.isBlank(tokenStr)) {
+            return null;
+        }
+
+        Optional<UserToken> found = userTokenRepository.findById(id);
+        if(found.isEmpty()) {
+            return null;
+        }
+
+        UserToken token = found.get();
+        if(!Objects.equals(token.getUserId(), uid) || !token.getToken().equalsIgnoreCase(tokenStr)) {
+            return null;
+        }
+
+        if(token.getExpiration() != null && token.getExpiration().isBefore(LocalDateTime.now())) {
+            return null;
+        }
+
+        return token.getUserId();
     }
 }

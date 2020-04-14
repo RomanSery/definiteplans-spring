@@ -11,23 +11,36 @@
 
 
 <div class="row" th:fragment="forgotPwd">
-    <div class="col-lg-4"></div>
-    <div class="col-lg-4 text-center">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title"><h5>Forgot your password?</h5></div>
+            <div class="ibox-content">
 
-        <p>Forgot your password?  <br> Enter your email address and we'll send you instructions to reset your password.</p>
+                <p>Enter your email address and we'll send you instructions to reset your password.</p>
 
-        <form id="forgotPwdForm" role="form" th:action="@{/forgotpwd}" method="POST" data-parsley-validate>
+                <form role="form" id="forgotPwdForm" th:action="@{/forgotpwd}" method="post" data-parsley-validate>
 
-            <div class="form-group">
-                <input class="form-control" id="loginemail" name="loginemail" placeholder="Email" type="email" required data-parsley-type="email">
+                    <div class="form-group row">
+
+                        <div class="col-sm-3">
+                            <input class="form-control" id="loginemail" name="loginemail" placeholder="Email" type="email" required data-parsley-type="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                </form>
+
+                <p><a href="@{/login}">Back to login</a></p>
+
             </div>
-            <button class="btn btn-primary block full-width" type="submit">Send</button>
-
-
-            <a href="@{/login}"><small>Back to login</small></a>
-        </form>
+        </div>
     </div>
-    <div class="col-lg-4"></div>
 </div>
+
+
 
 </html>

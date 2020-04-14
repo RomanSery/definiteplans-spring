@@ -15,7 +15,17 @@ public class PwdUpdate implements Serializable {
     private String password1;
     private String password2;
 
+    private Integer tokenId;
+    private Integer tokenUserId;
+    private String token;
+
     public PwdUpdate() {
 
+    }
+
+    public PwdUpdate(Integer tokenId, Integer tokenUserId, String token) {
+        this.tokenId = tokenId;
+        this.tokenUserId = tokenUserId;
+        this.token = token;
     }
 }
