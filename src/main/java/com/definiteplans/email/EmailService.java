@@ -37,13 +37,24 @@ public class EmailService {
 
 
     public void sendEmailValidationEmail(User user) {
+
+        if(user == null) {
+            return;
+        }
+
+        UserToken token = new UserToken();
+        token.setUserId(user.getId());
+        token.setCreationDate(LocalDateTime.now());
+        token.setToken(UUID.randomUUID().toString());
+        token = userTokenRepository.save(token);
+
         try {
             Map<String, String> context = new HashMap<>();
             context.put("name", user.getDisplayName());
 
             UriComponents uriComponents = UriComponentsBuilder.fromPath(getBaseUrl() + "/confirmemail")
-                    .query("uid={uid}")
-                    .buildAndExpand(String.valueOf(user.getId()));
+                    .query("id={tokenId}&uid={uid}&token={token}")
+                    .buildAndExpand(String.valueOf(token.getId()), String.valueOf(token.getUserId()), token.getToken());
 
             String emailValidationUrl = uriComponents.toUriString();
             context.put("emailValidationUrl", emailValidationUrl);

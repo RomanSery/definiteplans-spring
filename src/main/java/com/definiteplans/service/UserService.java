@@ -75,19 +75,16 @@ public class UserService {
     public User createUser(User user) {
 
         Optional<ZipCode> zip = zipCodeRepository.findById(user.getPostalCode());
-
-        user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-
         if(zip.isPresent()) {
             user.setCity(zip.get().getPrimaryCity());
             user.setState(zip.get().getState());
         }
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setSendNotifications(true);
         user.setNotificationsEmail(user.getEmail());
         user.setCreationDate(LocalDateTime.now());
         user.setLastModifiedDate(LocalDateTime.now());
-        user.setUserStatus(UserStatus.ACTIVE.getId());
+        user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());
         user = userRepository.save(user);
 
         emailService.sendEmailValidationEmail(user);

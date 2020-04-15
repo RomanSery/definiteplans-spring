@@ -1,0 +1,21 @@
+<!doctype html>
+<html th:replace="~{fragments/layout::guestLayout(~{::invalid-link}, ~{::header-content}, false)}" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="header-content" th:remove="tag">
+
+</head>
+
+<div class="row" th:fragment="invalid-link">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title"><h5>Sorry!</h5></div>
+            <div class="ibox-content">
+                <p>You've arrived from an invalid and/or expired link. Please try again.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</html>

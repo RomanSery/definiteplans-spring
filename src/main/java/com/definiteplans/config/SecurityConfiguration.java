@@ -1,6 +1,7 @@
 package com.definiteplans.config;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,6 +10,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.definiteplans.service.DpUserDetailsService;
@@ -17,9 +21,11 @@ import com.definiteplans.service.DpUserDetailsService;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final DpUserDetailsService dpUserDetailsService;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
 
-    public SecurityConfiguration(DpUserDetailsService dpUserDetailsService) {
+    public SecurityConfiguration(DpUserDetailsService dpUserDetailsService, AuthenticationFailureHandler authenticationFailureHandler) {
         this.dpUserDetailsService = dpUserDetailsService;
+        this.authenticationFailureHandler = authenticationFailureHandler;
     }
 
     @Bean
@@ -44,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // These pages do not require login
         http.authorizeRequests().antMatchers("/login", "/logout", "/forgotpwd",
-                "/forgotpwdthanks", "/register", "/resetpwd", "/webjars/**", "/fonts/**").permitAll();
+                "/forgotpwdthanks", "/register", "/resetpwd", "/confirmemail", "/webjars/**", "/fonts/**").permitAll();
 
         http.authorizeRequests().anyRequest().authenticated();
 
@@ -53,6 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/login?error=true")
+                .failureHandler(authenticationFailureHandler)
                 .usernameParameter("loginemail").passwordParameter("loginpassword")
                 // Config for Logout Page
                 .and().logout().invalidateHttpSession(true).clearAuthentication(true)

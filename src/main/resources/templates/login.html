@@ -18,6 +18,12 @@
             Your password was successfully reset, please continue to login.
         </div>
 
+        <div class="alert alert-success" th:if="${was_confirmed}">
+            Thanks for confirming your email, please continue to login.
+        </div>
+
+        <div th:if="${param.error != null}" class="alert alert-danger" th:utext="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
+
         <p>Login in. To see it in action.</p>
 
         <form id="loginForm" role="form" th:action="@{/login}" method="POST" data-parsley-validate>

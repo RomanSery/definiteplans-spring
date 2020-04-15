@@ -1,5 +1,6 @@
 package com.definiteplans.controller;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.definiteplans.controller.model.PwdUpdate;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.User;
+import com.definiteplans.dom.enumerations.UserStatus;
 import com.definiteplans.email.EmailService;
 import com.definiteplans.service.UserService;
 
@@ -35,10 +37,11 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public ModelAndView login(@RequestParam(required = false, name = "reset") Integer reset) {
+    public ModelAndView login(@RequestParam(required = false, name = "reset") Integer reset, @RequestParam(required = false, name = "confirmed") Integer confirmed) {
         ModelAndView m = new ModelAndView("login");
         m.addObject("title", "Login");
         m.addObject("was_pwd_reset", reset != null && reset == 1);
+        m.addObject("was_confirmed", confirmed != null && confirmed == 1);
         return m;
     }
 
@@ -66,8 +69,8 @@ public class LoginController {
     @GetMapping("/resetpwd")
     public ModelAndView resetPassword(@RequestParam("id") Integer id, @RequestParam("uid") Integer uid, @RequestParam("token") String token) {
         if(userService.getUserIdFromToken(id, uid, token) == null) {
-            ModelAndView m = new ModelAndView("reset_pwd_invalid");
-            m.addObject("title", "Reset my Password");
+            ModelAndView m = new ModelAndView("invalid_link");
+            m.addObject("title", "Invalid Link");
             return m;
         }
 
@@ -99,6 +102,30 @@ public class LoginController {
 
         return new ModelAndView(new RedirectView("/login?reset=1"));
     }
+
+
+    @GetMapping("/confirmemail")
+    public ModelAndView confirmEmail(@RequestParam("id") Integer id, @RequestParam("uid") Integer uid, @RequestParam("token") String token) {
+        Integer userId = userService.getUserIdFromToken(id, uid, token);
+        if(userId == null) {
+            ModelAndView m = new ModelAndView("invalid_link");
+            m.addObject("title", "Invalid Link");
+            return m;
+        }
+
+        Optional<User> found = userRepository.findById(userId);
+        if(found.isPresent()) {
+            User u = found.get();
+            if(u.getUserStatus() != UserStatus.ACTIVE.getId()) {
+                u.setLastModifiedDate(LocalDateTime.now());
+                u.setUserStatus(UserStatus.ACTIVE.getId());
+                userRepository.save(u);
+            }
+        }
+
+        return new ModelAndView(new RedirectView("/login?confirmed=1"));
+    }
+
 
 
     private static class ProfileValidator {

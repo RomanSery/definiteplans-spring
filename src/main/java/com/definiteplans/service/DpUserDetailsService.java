@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.User;
+import com.definiteplans.dom.enumerations.UserStatus;
 
 @Service
 public class DpUserDetailsService implements UserDetailsService {
@@ -25,6 +26,9 @@ public class DpUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found.");
+        }
+        if(user.getUserStatus() != UserStatus.ACTIVE.getId()) {
+            throw new UserLockedException("You have not confirmed your email address yet, please do that first.");
         }
 
 
