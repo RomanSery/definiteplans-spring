@@ -105,6 +105,12 @@
             <version>1.6.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+
 
     </dependencies>
 

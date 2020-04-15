@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,8 +144,9 @@ public class User implements Serializable {
     @Column(name = "num_no_shows")
     private int numNoShows;
 
+    @Type(type= "com.definiteplans.dao.hibernate.JsonStringType")
     @Column(name = "search_prefs")
-    private String searchPrefs;
+    private SearchPrefs searchPrefs;
 
     public User() {
         super();
@@ -152,10 +154,6 @@ public class User implements Serializable {
 
     public boolean hasPwd() {
         return !StringUtils.isBlank(password);
-    }
-
-    public boolean hasEmailAndPwdLogin() {
-        return (password != null && password.length() > 0);
     }
 
     public String getAboutMePretty() {
@@ -192,76 +190,16 @@ public class User implements Serializable {
                 gender > 0 && hasProfilePic() && state != null && State.valueOfAbbreviation(state) != null && !StringUtils.isBlank(postalCode);
     }
 
-    public State getSinglePrefState(String name) {
-//        JSONObject obj = getSinglePrefObj(name);
-//        try {
-//            return (obj != null) ? State.valueOfAbbreviation(obj.getString("state")) : null;
-//        } catch (JSONException e) {
-//            return null;
-//        }
-        return null;
+
+    public SearchPrefs getSearchPrefs() {
+        if(searchPrefs == null) {
+            searchPrefs = new SearchPrefs();
+        }
+        return searchPrefs;
     }
 
-    public EnumValue getSinglePrefEnumVal(String name) {
-//        JSONArray arr = getSinglePref(name);
-//        try {
-//            return (arr != null && arr.length() > 0) ? new EnumValue(arr.getInt(0), "") : null;
-//        } catch (JSONException e) {
-//            return null;
-//        }
-        return null;
-    }
-
-    public Integer getSinglePrefIntVal(String name) {
-//        JSONArray arr = getSinglePref(name);
-//        try {
-//            return (arr != null && arr.length() > 0) ? Integer.valueOf(arr.getInt(0)) : null;
-//        } catch (JSONException e) {
-//            return null;
-//        }
-        return null;
-    }
-
-
-    public List<EnumValue> getMultiPref(String name) {
-        //JSONArray arr = getSinglePref(name);
-        ArrayList<EnumValue> lst = new ArrayList<>();
-//        if (arr == null) return lst;
-//        for (int i = 0; i < arr.length(); i++) {
-//            try {
-//                lst.add(new EnumValue(arr.getInt(i), ""));
-//            } catch (JSONException e) {
-//            }
-//        }
-
-        return lst;
-    }
-
-    private JSONObject getSinglePrefObj(String name) {
-        if (getSearchPrefs() == null || getSearchPrefs().length() == 0) return null;
-
-//        try {
-//            return new JSONObject(getSearchPrefs());
-//        } catch (JSONException e) {
-//            logger.error("FAILED prefilling search prefs", e);
-//
-//            return null;
-//        }
-        return null;
-    }
-
-    private JSONArray getSinglePref(String name) {
-//        if (getSearchPrefs() == null || getSearchPrefs().length() == 0) return null;
-//
-//        try {
-//            JSONObject jsonObj = new JSONObject(getSearchPrefs());
-//            return jsonObj.has(name) ? jsonObj.getJSONArray(name) : null;
-//        } catch (JSONException e) {
-//            logger.error("FAILED prefilling search prefs", e);
-//
-//            return null;
-//        }
-        return null;
+    public void setSearchPrefs(SearchPrefs searchPrefs) {
+        this.searchPrefs = searchPrefs;
     }
 
 }

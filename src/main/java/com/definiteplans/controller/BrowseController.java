@@ -43,22 +43,9 @@ public class BrowseController {
 
         ModelAndView m = new ModelAndView("browse");
         Utils.addEnumValues(m, enumValueRepository, currUser);
-
-        m.addObject("selectedEthnicityTypes", currUser.getMultiPref("ethnicity"));
-        m.addObject("selectedMaritalStatusTypes", currUser.getMultiPref("maritalStatus"));
-        m.addObject("selectedKidsTypes", currUser.getMultiPref("kids"));
-        m.addObject("selectedWantsKidsTypes", currUser.getMultiPref("wantsKids"));
-        m.addObject("selectedLanguagesTypes", currUser.getMultiPref("languages"));
-        m.addObject("selectedReligionTypes", currUser.getMultiPref("religion"));
-        m.addObject("selectedEducationTypes", currUser.getMultiPref("education"));
-        m.addObject("selectedIncomeTypes", currUser.getMultiPref("income"));
-        m.addObject("selectedSmokeTypes", currUser.getMultiPref("smokes"));
-        m.addObject("selectedGenderTypes", currUser.getMultiPref("gender"));
-
-        m.addObject("selectedStates", Collections.emptyList());
-        m.addObject("selectedDistance", null);
-
-        List<User> profiles = searchService.getSearchResults(currUser);
+        m.addObject("prefs", currUser.getSearchPrefs());
+        
+        List<User> profiles = searchService.getSearchResults(currUser, 0, 0);
         List<SearchResult> searchResults = new ArrayList<>(profiles.size());
         for(User u : profiles) {
 

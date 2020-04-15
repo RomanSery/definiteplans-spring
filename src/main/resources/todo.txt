@@ -1,0 +1,1 @@
+when logging and user is not active, it shows error message but also need to show link to resent email with confirmation link
