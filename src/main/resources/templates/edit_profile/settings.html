@@ -3,23 +3,23 @@
         <div class="form-group col-md-6">
             <label>Email notifications</label>
             <div class="radio">
-                <div class="checkbox"><label> <input type="checkbox" id="sendNotifications" th:field="*{sendNotifications}"> <i></i> Enabled </label></div>
+                <div class="checkbox"><label> <input type="checkbox" th:field="*{sendNotifications}"> <i></i> Enabled </label></div>
             </div>
         </div>
         <div class="form-group col-md-6" id="sendToContainerDiv">
             <label>Send to</label>
-            <input class="form-control" type="text" id="notificationsEmail" th:field="*{notificationsEmail}">
+            <input class="form-control" type="text" th:field="*{notificationsEmail}">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-12">
             <label>Visible to ages</label>
-            <select class="form-control" name="ageMin" th:field="*{ageMin}">
+            <select class="form-control" th:field="*{ageMin}">
                 <option value="0">Select</option>
                 <option th:each="g : ${ages}" th:value="${g}" th:text="${g}"></option>
             </select>
             -
-            <select class="form-control" name="ageMax" th:field="*{ageMax}">
+            <select class="form-control" th:field="*{ageMax}">
                 <option value="0">Select</option>
                 <option th:each="g : ${ages}" th:value="${g}" th:text="${g}"></option>
             </select>

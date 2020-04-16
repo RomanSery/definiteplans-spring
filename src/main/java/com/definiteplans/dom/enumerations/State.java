@@ -32,8 +32,8 @@ public enum State {
         }
     }
 
-    private String name;
-    private String abbreviation;
+    private final String name;
+    private final String abbreviation;
 
 
     State(String name, String abbreviation) {
@@ -56,6 +56,10 @@ public enum State {
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getAbbreviation() {

@@ -21,25 +21,25 @@
             </ul>
 
             <div class="form-group">
-                <input class="form-control" placeholder="First name" type="text" name="displayName" th:field="*{displayName}"
+                <input class="form-control" placeholder="First name" type="text" th:field="*{displayName}"
                        required data-parsley-length="[2, 15]">
             </div>
             <div class="form-group">
-                <input class="form-control" data-mask="99/99/9999" placeholder="Date of birth (mm/dd/yyyy)" type="text" name="dob" th:field="*{dob}" required>
+                <input class="form-control" data-mask="99/99/9999" placeholder="Date of birth (mm/dd/yyyy)" type="text" th:field="*{dob}" required>
             </div>
             <div class="form-group">
-                <select class="form-control m-b" name="gender" th:field="*{gender}" required>
+                <select class="form-control m-b" th:field="*{gender}" required>
                     <option th:each="g : ${genders}" th:value="${g.id}" th:text="${g.enumValue}"></option>
                 </select>
             </div>
             <div class="form-group">
-                <input class="form-control" data-mask="99999" placeholder="Zip Code" type="text" name="postalCode" th:field="*{postalCode}" required>
+                <input class="form-control" data-mask="99999" placeholder="Zip Code" type="text" th:field="*{postalCode}" required>
             </div>
             <div class="form-group">
-                <input class="form-control" placeholder="Email" type="email" name="email"  th:field="*{email}" required data-parsley-type="email">
+                <input class="form-control" placeholder="Email" type="email" th:field="*{email}" required data-parsley-type="email">
             </div>
             <div class="form-group">
-                <input class="form-control" placeholder="Password" type="password" name="password"  th:field="*{password}" required data-parsley-minlength="8">
+                <input class="form-control" placeholder="Password" type="password" th:field="*{password}" required data-parsley-minlength="8">
             </div>
             <button class="btn btn-primary block full-width" type="submit">Register</button>
 

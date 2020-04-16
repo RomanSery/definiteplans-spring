@@ -19,16 +19,16 @@ public class Utils {
     public static final List<EnumValue> heightValues;
 
     static {
-        ageValues = new ArrayList<>();
+        ageValues = new ArrayList<>(100);
         for (int i = 18; i <= 100; i++) {
             ageValues.add(Integer.valueOf(i));
         }
 
-        heightValues = new ArrayList<>();
+        heightValues = new ArrayList<>(100);
         for (int f = 1; f <= 8; f++) {
             for (int i = 1; i <= 11; i++) {
                 int numInches = f * 12 + i;
-                heightValues.add(new EnumValue(numInches, f + "' " + i + "\""));
+                heightValues.add(new EnumValue(numInches, f + "' " + i + '"'));
             }
         }
     }
@@ -60,30 +60,4 @@ public class Utils {
         }
         return result;
     }
-
-//    public static Integer getFilterIntValue(IRequestParameters postData, String key) {
-//        return (postData.getParameterValue(key) != null && isInt(postData.getParameterValue(key))) ? toInt(postData.getParameterValue(key).toString()) : null;
-//    }
-//
-//    public static List<Integer> getFilterValues(List<StringValue> arr) {
-//        List<Integer> arrParam = new ArrayList<>();
-//        if (arr != null && arr.size() > 0) {
-//            for (StringValue sv : arr) {
-//                if (!isInt(sv))
-//                    continue;
-//                arrParam.add(toInt(sv.toString()));
-//            }
-//        }
-//        return arrParam;
-//    }
-
-    public static List<Integer> getFilterValues2(List<EnumValue> arr) {
-        List<Integer> arrParam = new ArrayList<>();
-        if (arr != null && arr.size() > 0)
-            for (EnumValue sv : arr) arrParam.add(Integer.valueOf(sv.getId()));
-
-        return arrParam;
-    }
-
-
 }

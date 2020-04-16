@@ -2,18 +2,18 @@
     <div class="form-row">
         <div class="form-group col-md-4">
             <label>Display Name</label>
-            <input class="form-control" placeholder="First name" type="text" name="displayName" th:field="*{displayName}" required data-parsley-length="[2, 15]">
+            <input class="form-control" placeholder="First name" type="text" th:field="*{displayName}" required data-parsley-length="[2, 15]">
         </div>
         <div class="form-group col-md-4">
             <label>Gender</label>
-            <select class="form-control" name="gender" th:field="*{gender}" required>
+            <select class="form-control" th:field="*{gender}" required>
                 <option value="0">Select</option>
                 <option th:each="g : ${genders}" th:value="${g.id}" th:text="${g.enumValue}"></option>
             </select>
         </div>
         <div class="form-group col-md-4">
             <label>Date of birth</label>
-            <input class="form-control" data-mask="99/99/9999" placeholder="" type="text" id="dob" th:field="*{dob}" required>
+            <input class="form-control" data-mask="99/99/9999" placeholder="" type="text" th:field="*{dob}" required>
             <span class="help-block m-b-none">mm/dd/yyyy</span>
         </div>
     </div>
@@ -21,25 +21,25 @@
     <div class="form-row">
         <div class="form-group col-md-4">
             <label>City</label>
-            <input class="form-control" type="text" id="city" th:field="*{city}">
+            <input class="form-control" type="text" th:field="*{city}">
         </div>
         <div class="form-group col-md-4">
             <label>State</label>
-            <select class="form-control doit-select2" data-placeholder="Select" name="state" th:field="*{state}" required>
+            <select class="form-control doit-select2" data-placeholder="Select" th:field="*{state}" required>
                 <option value="0">Select</option>
                 <option th:each="s : ${states}" th:value="${s.abbreviation}" th:text="${s}"></option>
             </select>
         </div>
         <div class="form-group col-md-2">
             <label>Zip code</label>
-            <input class="form-control" data-mask="99999" type="text" id="postalCode" th:field="*{postalCode}" required>
+            <input class="form-control" data-mask="99999" type="text" th:field="*{postalCode}" required>
         </div>
     </div>
 
     <div class="form-row">
         <div class="form-group col-md-4">
             <label>Neighborhood <a class="fa fa-question-circle tooltip-icon-test" data-content="Enter your neighborhood to make planning the location of the date easier" data-toggle="popover" data-trigger="focus" role="button" tabindex="0" title="Neighborhood"></a></label>
-            <input class="form-control" type="text" id="neighborhood" th:field="*{neighborhood}">
+            <input class="form-control" type="text" th:field="*{neighborhood}">
         </div>
     </div>
 

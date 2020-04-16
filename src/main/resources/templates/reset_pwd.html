@@ -23,9 +23,9 @@
                         <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
                     </ul>
 
-                    <input type="hidden" th:value="${tokenId}" th:field="*{tokenId}" name="tokenId">
-                    <input type="hidden" th:value="${tokenUserId}" th:field="*{tokenUserId}" name="tokenUserId">
-                    <input type="hidden" th:value="${token}" th:field="*{token}" name="token">
+                    <input type="hidden" th:value="${tokenId}" th:field="*{tokenId}">
+                    <input type="hidden" th:value="${tokenUserId}" th:field="*{tokenUserId}">
+                    <input type="hidden" th:value="${token}" th:field="*{token}">
 
                     <div class="form-group row">
                         <label for="newpwd1" class="col-sm-2 col-form-label">New Password</label>
