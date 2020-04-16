@@ -2,18 +2,36 @@
 
     <div class="form-row">
         <div class="form-group col-md-4">
-            <label>Age:</label>
-            <select class="form-control input-sm doit-select2" name="ageFrom" id="ageFrom"></select>
-            -
-            <select class="form-control input-sm doit-select2" name="ageTo" id="ageTo"></select>
-        </div>
-        <div class="form-group col-md-4">
-            <label>Height:</label>
-            <select class="form-control input-sm doit-select2" name="heightFrom" id="heightFrom"></select> - <select class="form-control input-sm doit-select2" name="heightTo" id="heightTo"></select>
-        </div>
-        <div class="form-group col-md-4">
             <select class="form-control doit-select2" data-placeholder="Gender" multiple th:field="*{genders}">
                 <option th:each="o : ${genders}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+        </div>
+        <div class="form-group col-md-8">
+            <label>Age:</label>
+            <select class="form-control doit-select2 col-md-2" th:field="*{ageFrom}">
+                <option value="0">Any</option>
+                <option th:each="g : ${ages}" th:value="${g}" th:text="${g}"></option>
+            </select>
+            -
+            <select class="form-control doit-select2 col-md-2" th:field="*{ageTo}">
+                <option value="0">Any</option>
+                <option th:each="g : ${ages}" th:value="${g}" th:text="${g}"></option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label>Height:</label>
+            <select class="form-control doit-select2 col-md-2" th:field="*{heightFrom}">
+                <option value="0">Any</option>
+                <option th:each="o : ${heights}" th:value="${o.id}" th:text="${o.enumValue}"></option>
+            </select>
+            -
+            <select class="form-control doit-select2 col-md-2" th:field="*{heightTo}">
+                <option value="0">Any</option>
+                <option th:each="o : ${heights}" th:value="${o.id}" th:text="${o.enumValue}"></option>
             </select>
         </div>
     </div>
@@ -33,13 +51,11 @@
         </div>
         <div class="form-group col-md-4">
             <select class="form-control doit-select2" data-placeholder="State" th:field="*{state}">
+                <option value="0">Any State</option>
                 <option th:each="o : ${states}" th:value="${o.abbreviation}" th:text="${o.name}"></option>
             </select>
         </div>
     </div>
-
-    <div class="hr-line-dashed"></div>
-
 
     <div class="form-row">
         <div class="form-group col-md-3">

@@ -12,25 +12,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.dao.EnumValueRepository;
-import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.UserStatus;
+import com.definiteplans.service.UserService;
 import com.definiteplans.util.Utils;
 import com.github.javafaker.Faker;
 
 @Controller
 public class AdminController {
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EnumValueRepository enumValueRepository;
     private final ZipCodeRepository zipCodeRepository;
 
-    public AdminController(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, EnumValueRepository enumValueRepository, ZipCodeRepository zipCodeRepository) {
-        this.userRepository = userRepository;
+    public AdminController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, EnumValueRepository enumValueRepository, ZipCodeRepository zipCodeRepository) {
+        this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.enumValueRepository = enumValueRepository;
         this.zipCodeRepository = zipCodeRepository;
@@ -55,7 +55,7 @@ public class AdminController {
         List<EnumValue> heights = Utils.heightValues;
         List<Integer> ageValues = Utils.ageValues;
 
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 50; i++) {
 
             ZipCode zip = zipCodes.get(rndIndex(zipCodes));
 
@@ -85,8 +85,7 @@ public class AdminController {
             u.setLanguages(String.valueOf(languages.get(rndIndex(languages)).getId()));
 
             u.setPassword(bCryptPasswordEncoder.encode(pwd));
-            userRepository.save(u);
-
+            userService.saveUser(u);
         }
 
         return new AjaxResponse("OK", "created");

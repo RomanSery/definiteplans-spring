@@ -58,13 +58,13 @@ public class UserService {
             return false;
         }
         user.setPassword(bCryptPasswordEncoder.encode(pwdUpdate.getPassword1()));
-        userRepository.save(user);
+        saveUser(user);
         return true;
     }
 
     public boolean resetForgottenPwd(final User user, final PwdUpdate pwdUpdate) {
         user.setPassword(bCryptPasswordEncoder.encode(pwdUpdate.getPassword1()));
-        userRepository.save(user);
+        saveUser(user);
         return true;
     }
 
@@ -85,7 +85,7 @@ public class UserService {
         user.setCreationDate(LocalDateTime.now());
         user.setLastModifiedDate(LocalDateTime.now());
         user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());
-        user = userRepository.save(user);
+        user = saveUser(user);
 
         emailService.sendEmailValidationEmail(user);
         return user;
@@ -203,5 +203,12 @@ public class UserService {
         }
 
         return token.getUserId();
+    }
+
+    public User saveUser(User u) {
+        u.setComplete(u.isCompleteProfile());
+        u.setLastModifiedDate(LocalDateTime.now());
+        u = userRepository.save(u);
+        return u;
     }
 }

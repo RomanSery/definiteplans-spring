@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.dao.UserImageRepository;
-import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.UserImage;
 import com.definiteplans.service.UserService;
@@ -22,12 +21,10 @@ import com.definiteplans.service.UserService;
 @Controller
 public class UserImgsController {
     private final UserService userService;
-    private final UserRepository userRepository;
     private final UserImageRepository userImageRepository;
 
-    public UserImgsController(UserService userService, UserRepository userRepository, UserImageRepository userImageRepository) {
+    public UserImgsController(UserService userService, UserImageRepository userImageRepository) {
         this.userService = userService;
-        this.userRepository = userRepository;
         this.userImageRepository = userImageRepository;
     }
 
@@ -91,7 +88,8 @@ public class UserImgsController {
 
         currUser.setThumbImgUrl(img.get().getThumbImgUrl());
         currUser.setFullImgUrl(img.get().getFullImgUrl());
-        userRepository.save(currUser);
+        userService.saveUser(currUser);
+
         return new AjaxResponse("OK", "img deleted");
     }
 

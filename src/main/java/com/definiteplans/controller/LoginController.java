@@ -1,6 +1,5 @@
 package com.definiteplans.controller;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -117,9 +116,8 @@ public class LoginController {
         if(found.isPresent()) {
             User u = found.get();
             if(u.getUserStatus() != UserStatus.ACTIVE.getId()) {
-                u.setLastModifiedDate(LocalDateTime.now());
                 u.setUserStatus(UserStatus.ACTIVE.getId());
-                userRepository.save(u);
+                userService.saveUser(u);
             }
         }
 

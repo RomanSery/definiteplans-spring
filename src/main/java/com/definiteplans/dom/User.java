@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.definiteplans.dom.enumerations.State;
+import com.definiteplans.dom.enumerations.UserStatus;
 import com.definiteplans.util.DateUtil;
 
 import lombok.EqualsAndHashCode;
@@ -144,6 +145,9 @@ public class User implements Serializable {
     @Column(name = "num_no_shows")
     private int numNoShows;
 
+    @Column(name = "is_complete")
+    private boolean isComplete;
+
     @Type(type= "com.definiteplans.dao.hibernate.JsonStringType")
     @Column(name = "search_prefs")
     private SearchPrefs searchPrefs;
@@ -177,17 +181,14 @@ public class User implements Serializable {
         return Arrays.stream(languages.split(",")).map(Integer::parseInt).collect(Collectors.toSet());
     }
 
-
-
-
     public boolean hasProfilePic() {
         return (this.thumbImgUrl != null && this.thumbImgUrl.length() > 0);
     }
 
 
     public boolean isCompleteProfile() {
-        return dob != null && DateUtil.getAge(dob) >= 18 &&
-                gender > 0 && hasProfilePic() && state != null && State.valueOfAbbreviation(state) != null && !StringUtils.isBlank(postalCode);
+        return dob != null && DateUtil.getAge(dob) >= 18 && userStatus == UserStatus.ACTIVE.getId() &&
+                gender > 0 && state != null && State.valueOfAbbreviation(state) != null && !StringUtils.isBlank(postalCode);
     }
 
 

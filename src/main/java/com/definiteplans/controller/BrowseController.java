@@ -14,7 +14,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.SearchResult;
 import com.definiteplans.dao.EnumValueRepository;
-import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.SearchPrefs;
 import com.definiteplans.dom.User;
@@ -30,14 +29,12 @@ public class BrowseController {
     private final SearchService searchService;
     private final EnumValueRepository enumValueRepository;
     private final DefiniteDateService definiteDateService;
-    private final UserRepository userRepository;
 
-    public BrowseController(UserService userService, SearchService searchService, EnumValueRepository enumValueRepository, DefiniteDateService definiteDateService, UserRepository userRepository) {
+    public BrowseController(UserService userService, SearchService searchService, EnumValueRepository enumValueRepository, DefiniteDateService definiteDateService) {
         this.userService = userService;
         this.searchService = searchService;
         this.enumValueRepository = enumValueRepository;
         this.definiteDateService = definiteDateService;
-        this.userRepository = userRepository;
     }
 
     @GetMapping("/browse")
@@ -96,7 +93,7 @@ public class BrowseController {
         }
 
         currUser.setSearchPrefs(prefs);
-        userRepository.save(currUser);
+        userService.saveUser(currUser);
 
         return new ModelAndView(new RedirectView("/browse"));
     }

@@ -1,6 +1,5 @@
 package com.definiteplans.controller;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import javax.validation.Valid;
 
@@ -74,9 +73,7 @@ public class MyProfileController {
         currUser.setState(update.getState());
         currUser.setPostalCode(update.getPostalCode());
         currUser.setNeighborhood(update.getNeighborhood());
-
-        currUser.setLastModifiedDate(LocalDateTime.now());
-        userRepository.save(currUser);
+        userService.saveUser(currUser);
         return new ModelAndView(new RedirectView("/me/profile"));
     }
 
@@ -100,8 +97,7 @@ public class MyProfileController {
         currUser.setInterests(update.getInterests());
         currUser.setHeight(update.getHeight());
 
-        currUser.setLastModifiedDate(LocalDateTime.now());
-        userRepository.save(currUser);
+        userService.saveUser(currUser);
         return new ModelAndView(new RedirectView("/me/profile"));
     }
 
@@ -117,8 +113,7 @@ public class MyProfileController {
         currUser.setAgeMax(update.getAgeMax());
         currUser.setAgeMin(update.getAgeMin());
 
-        currUser.setLastModifiedDate(LocalDateTime.now());
-        userRepository.save(currUser);
+        userService.saveUser(currUser);
         return new ModelAndView(new RedirectView("/me/profile"));
     }
 
