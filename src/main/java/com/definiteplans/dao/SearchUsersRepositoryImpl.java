@@ -29,7 +29,7 @@ public class SearchUsersRepositoryImpl implements SearchUsersRepository {
 
         //TODO - this doesnt work if ageMin or ageMax = 0
         if (currUser.getDob() != null) {
-            hql = hql + " and " + DateUtil.getAge(currUser.getDob()) + " between u.ageMin and u.ageMax";
+            //hql = hql + " and " + DateUtil.getAge(currUser.getDob()) + " between u.ageMin and u.ageMax";
         }
 
         if(currUser.getAgeMin() > 0 || currUser.getAgeMax() > 0) {

@@ -5,17 +5,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.SearchResult;
 import com.definiteplans.dao.EnumValueRepository;
 import com.definiteplans.dom.DefiniteDate;
-import com.definiteplans.dom.SearchPrefs;
 import com.definiteplans.dom.User;
 import com.definiteplans.service.DefiniteDateService;
 import com.definiteplans.service.SearchService;
@@ -43,6 +39,7 @@ public class BrowseController {
         if(currUser == null) {
             return new ModelAndView(new RedirectView("/"));
         }
+
 
         ModelAndView m = new ModelAndView("browse");
         Utils.addEnumValues(m, enumValueRepository, currUser);
@@ -82,21 +79,5 @@ public class BrowseController {
         }
         return null;
     }
-
-
-    @PostMapping("/browse/filter")
-    public ModelAndView applyFilters(@ModelAttribute("prefs") SearchPrefs prefs, BindingResult bindingResult) {
-
-        User currUser = userService.getCurrentUser();
-        if(currUser == null) {
-            return new ModelAndView(new RedirectView("/"));
-        }
-
-        currUser.setSearchPrefs(prefs);
-        userService.saveUser(currUser);
-
-        return new ModelAndView(new RedirectView("/browse"));
-    }
-
 
 }
