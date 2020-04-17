@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,30 +47,13 @@ public class BrowseController {
             return new ModelAndView(new RedirectView("/"));
         }
 
-
         ModelAndView m = new ModelAndView("browse");
         Utils.addEnumValues(m, enumValueRepository, currUser);
         m.addObject("prefs", currUser.getSearchPrefs());
 
-        List<User> profiles = searchService.getSearchResults(currUser, 0, 0);
-        List<SearchResult> searchResults = new ArrayList<>(profiles.size());
-        for(User u : profiles) {
-
-            Integer age = (u.getDob() != null) ? DateUtil.getAge(u.getDob()) : null;
-            if (age != null && age.intValue() < 18) age = null;
-            String name = u.getDisplayName() + ((age != null) ? (", " + age) : "");
-
-            DefiniteDate activeDate = definiteDateService.getActiveDate(currUser, u);
-            Boolean b = wantsMore(currUser, u, activeDate);
-
-            SearchResult sr = new SearchResult(u.getId(), userService.getProfileImg(u, true), name, userService.getAddrDesc(u), u.getNumNoShows(),
-                    BooleanUtils.isTrue(b), b != null && !b.booleanValue(), activeDate != null);
-            searchResults.add(sr);
-        }
-
-        m.addObject("profiles", searchResults);
-
-
+        List<SearchResult> results = getSearchResults(currUser);
+        m.addObject("profiles", results);
+        m.addObject("numResults", results.size());
         return m;
     }
 
@@ -90,20 +72,28 @@ public class BrowseController {
 
 
     @PostMapping("/browse/filter")
-    public @ResponseBody
-    AjaxResponse applyFilters(@ModelAttribute("prefs") SearchPrefs prefs) {
+    public @ResponseBody AjaxResponse applyFilters(@ModelAttribute("prefs") SearchPrefs prefs) {
 
         User currUser = userService.getCurrentUser();
-        currUser.setSearchPrefs(prefs);
-        userService.saveUser(currUser);
+        if(currUser != null) {
+            currUser.setSearchPrefs(prefs);
+            userService.saveUser(currUser);
+        }
 
         return new AjaxResponse("OK", "saved");
     }
 
 
-    @RequestMapping("/showContentPart")
-    public String showContentPart(Model model) {
+    @RequestMapping("/refresh-browse-results")
+    public String refreshBrowsingResults(Model m) {
         User currUser = userService.getCurrentUser();
+        List<SearchResult> results = getSearchResults(currUser);
+        m.addAttribute("profiles", results);
+        m.addAttribute("numResults", results.size());
+        return "browse :: search-results";
+    }
+
+    private List<SearchResult> getSearchResults( User currUser) {
 
         List<User> profiles = searchService.getSearchResults(currUser, 0, 0);
         List<SearchResult> searchResults = new ArrayList<>(profiles.size());
@@ -121,9 +111,6 @@ public class BrowseController {
             searchResults.add(sr);
         }
 
-        model.addAttribute("profiles", searchResults);
-
-        return "browse :: search-results";
+        return searchResults;
     }
-
 }
