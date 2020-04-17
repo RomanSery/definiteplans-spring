@@ -9963,3 +9963,6 @@ body.md-skin {
 .demo-gallery.dark > ul > li a {
   border: 3px solid #04070a;
 }
+
+
+.select2-container{ width: 100% !important; }

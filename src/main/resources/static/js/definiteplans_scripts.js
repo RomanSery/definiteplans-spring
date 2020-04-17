@@ -7,11 +7,13 @@ let definitePlansScripts = {
 
 	initSelect2: function () {
 		$("select.doit-select2").select2({
+
 			placeholder: 'Select one',
 			allowClear: true
 		});
 
 		$("select.doit-select2-noclear").select2({
+
 			placeholder: 'Select one',
 			allowClear: false
 		});

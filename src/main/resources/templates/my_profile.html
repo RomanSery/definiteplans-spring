@@ -23,84 +23,72 @@
     </div>
 
     <div class="col-lg-12">
-        <div class="ibox">
-            <div class="ibox-title"><h5>Basic Info</h5></div>
-            <div class="ibox-content">
-                <p th:replace="edit_profile/basic_info::basic-info"></p>
-            </div>
-        </div>
-    </div>
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li><a class="nav-link active" data-toggle="tab" href="#tab-3"> <i class="fas fa-user fa-lg"></i></a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-4"><i class="fas fa-sliders-h fa-lg"></i></a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-5"><i class="fas fa-cog fa-lg"></i></a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-6"><i class="far fa-images fa-lg"></i></a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab-3" class="tab-pane active">
+                    <div class="panel-body">
+                        <strong>Basic Info</strong>
+                        <p th:replace="edit_profile/basic_info::basic-info"></p>
+                    </div>
+                </div>
+                <div id="tab-4" class="tab-pane">
+                    <div class="panel-body">
+                        <strong>Details</strong>
+                        <p th:replace="edit_profile/details::detail-info"></p>
+                    </div>
+                </div>
+                <div id="tab-5" class="tab-pane">
+                    <div class="panel-body">
+                        <strong>Settings</strong>
+                        <p th:replace="edit_profile/settings::settings"></p>
+                    </div>
+                </div>
+                <div id="tab-6" class="tab-pane">
+                    <div class="panel-body">
+                        <strong>Profile Pictures</strong>
 
-    <div class="col-lg-12">
-        <div class="ibox">
-            <div class="ibox-title"><h5>Details</h5></div>
-            <div class="ibox-content">
-                <p th:replace="edit_profile/details::detail-info"></p>
-            </div>
-        </div>
-    </div>
+                        <form id="editProfilePicForm">
+                            <div class="form-row">
+                                <div class="form-group col-lg-12">
+                                    <div id="previewsContainer" style="display:none;"></div>
+                                    <div class="alert alert-danger" id="uploadErrDiv" style="display:none;"></div>
+                                    <div class="alert alert-success" id="uploadSuccessDiv" style="display:none;">Saved!</div>
 
-    <div class="col-lg-12">
-        <div class="ibox">
-            <div class="ibox-title"><h5>Profile Pictures</h5></div>
-            <div class="ibox-content">
-
-                    <form id="editProfilePicForm">
-                        <div class="form-row">
-                            <div class="form-group col-lg-12">
-                                <div id="previewsContainer" style="display:none;"></div>
-                                <div class="alert alert-danger" id="uploadErrDiv" style="display:none;"></div>
-                                <div class="alert alert-success" id="uploadSuccessDiv" style="display:none;">Saved!</div>
-
-                                <button class="btn btn-success " id="btnUploadPic" type="button"><i class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">Upload new profile picture</span></button>
-                                <a class="fa fa-question-circle tooltip-icon-test" data-content="Use a picture that clearly shows your face and body type" data-toggle="popover" data-trigger="focus" role="button" tabindex="0" title="Tips"></a>
+                                    <button class="btn btn-success " id="btnUploadPic" type="button"><i class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">Upload new profile picture</span></button>
+                                    <a class="fa fa-question-circle tooltip-icon-test" data-content="Use a picture that clearly shows your face and body type" data-toggle="popover" data-trigger="focus" role="button" tabindex="0" title="Tips"></a>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
 
-                    <div class="col-lg-12">
-                        <div class="row" id="profile-light-gallery">
-                            <div class="col-lg-3" th:each="pic : ${user_pics}">
-                                <div class="contact-box center-version">
-                                    <a th:href="${pic.getFullImgUrl()}" class="lg-img">
-                                        <img alt="image" class="img-fluid img-responsive" th:src="${pic.getThumbImgUrl()}" />
-                                        <div class="demo-gallery-poster">
-                                            <img th:src="@{/img/zoom.png}">
-                                        </div>
-                                    </a>
-                                    <div class="text-center">
-                                        <div class="btn-group">
-
-                                            <button class="btn btn-xs btn-outline btn-info set-as-profile-img" type="button" id="updateProfileImgBtn" th:img-id="${pic.id}"><i class="fa fa-user-check"></i>Use</button>
-                                            <button class="btn btn-xs btn-outline btn-danger delete-profile-img" type="button" id="deleteImgBtn" th:img-id="${pic.id}"><i class="fa fa-trash-alt"></i>Delete</button>
-
+                        <div class="col-lg-12">
+                            <div class="row" id="profile-light-gallery">
+                                <div class="col-lg-3" th:each="pic : ${user_pics}">
+                                    <div class="contact-box center-version">
+                                        <a th:href="${pic.getFullImgUrl()}" class="lg-img">
+                                            <img alt="image" class="img-fluid img-responsive" th:src="${pic.getThumbImgUrl()}" />
+                                            <div class="demo-gallery-poster">
+                                                <img th:src="@{/img/zoom.png}">
+                                            </div>
+                                        </a>
+                                        <div class="text-center">
+                                            <div class="btn-group">
+                                                <button class="btn btn-xs btn-outline btn-info set-as-profile-img" type="button" id="updateProfileImgBtn" th:img-id="${pic.id}"><i class="fa fa-user-check"></i>Use</button>
+                                                <button class="btn btn-xs btn-outline btn-danger delete-profile-img" type="button" id="deleteImgBtn" th:img-id="${pic.id}"><i class="fa fa-trash-alt"></i>Delete</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-12">
-        <div class="ibox">
-            <div class="ibox-title"><h5>Settings</h5></div>
-            <div class="ibox-content">
-                <p th:replace="edit_profile/settings::settings"></p>
+                </div>
             </div>
         </div>
     </div>
