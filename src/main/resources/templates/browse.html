@@ -22,7 +22,17 @@
                         alert('Sorry, there was some error. Please try again.');
                     },
                     success: function (data) {
-                       console.log(data);
+
+                        $.ajax({
+                            type: "GET", url: '/showContentPart',
+                            error: function () {
+                                alert('Sorry, there was some error. Please try again.');
+                            },
+                            success: function (data) {
+                                $("#search-results-cont").html(data);
+                            }
+                        });
+
                     }
                 });
                 return false;
@@ -55,7 +65,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="search-results-cont">
         <div th:replace="browse::search-results"></div>
     </div>
 </div>
