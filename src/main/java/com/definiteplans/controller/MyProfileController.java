@@ -17,11 +17,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.AjaxResponse;
-import com.definiteplans.dao.EnumValueRepository;
 import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.User;
+import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
 import com.definiteplans.util.Utils;
@@ -32,14 +32,14 @@ public class MyProfileController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final ZipCodeRepository zipCodeRepository;
-    private final EnumValueRepository enumValueRepository;
+    private final EnumValueService enumValueService;
     private final UserImageRepository userImageRepository;
 
-    public MyProfileController(UserService userService, UserRepository userRepository, ZipCodeRepository zipCodeRepository, EnumValueRepository enumValueRepository, UserImageRepository userImageRepository) {
+    public MyProfileController(UserService userService, UserRepository userRepository, ZipCodeRepository zipCodeRepository, EnumValueService enumValueService, UserImageRepository userImageRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.zipCodeRepository = zipCodeRepository;
-        this.enumValueRepository = enumValueRepository;
+        this.enumValueService = enumValueService;
         this.userImageRepository = userImageRepository;
     }
 
@@ -51,7 +51,7 @@ public class MyProfileController {
         }
 
         ModelAndView m = new ModelAndView("my_profile");
-        Utils.addEnumValues(m, enumValueRepository, currUser);
+        Utils.addEnumValues(m, enumValueService, currUser);
         m.addObject("selectedLanguages", currUser.getLanguageIds());
         m.addObject("user_pics", userImageRepository.findByUserId(currUser.getId()));
         return m;

@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.definiteplans.controller.model.AjaxResponse;
-import com.definiteplans.dao.EnumValueRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.UserStatus;
+import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.Utils;
 import com.github.javafaker.Faker;
@@ -26,13 +26,13 @@ import com.github.javafaker.Faker;
 public class AdminController {
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final EnumValueRepository enumValueRepository;
+    private final EnumValueService enumValueService;
     private final ZipCodeRepository zipCodeRepository;
 
-    public AdminController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, EnumValueRepository enumValueRepository, ZipCodeRepository zipCodeRepository) {
+    public AdminController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, EnumValueService enumValueService, ZipCodeRepository zipCodeRepository) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.enumValueRepository = enumValueRepository;
+        this.enumValueService = enumValueService;
         this.zipCodeRepository = zipCodeRepository;
     }
 
@@ -41,16 +41,16 @@ public class AdminController {
         String pwd = "test";
         Faker faker = new Faker();
 
-        List<EnumValue> languages = enumValueRepository.findByType(EnumValueType.LANGUAGE.getId());
-        List<EnumValue> ethnicities = enumValueRepository.findByType(EnumValueType.ETHNICITY.getId());
-        List<EnumValue> smokes = enumValueRepository.findByType(EnumValueType.SMOKES.getId());
-        List<EnumValue> religions = enumValueRepository.findByType(EnumValueType.RELIGION.getId());
-        List<EnumValue> educations = enumValueRepository.findByType(EnumValueType.EDUCATION.getId());
-        List<EnumValue> incomes = enumValueRepository.findByType(EnumValueType.INCOME.getId());
-        List<EnumValue> kids = enumValueRepository.findByType(EnumValueType.KIDS.getId());
-        List<EnumValue> wantsKids = enumValueRepository.findByType(EnumValueType.WANTS_KIDS.getId());
-        List<EnumValue> maritalStatuses = enumValueRepository.findByType(EnumValueType.MARITAL_STATUS.getId());
-        List<EnumValue> genders = enumValueRepository.findByType(EnumValueType.GENDER.getId());
+        List<EnumValue> languages = enumValueService.findByType(EnumValueType.LANGUAGE);
+        List<EnumValue> ethnicities = enumValueService.findByType(EnumValueType.ETHNICITY);
+        List<EnumValue> smokes = enumValueService.findByType(EnumValueType.SMOKES);
+        List<EnumValue> religions = enumValueService.findByType(EnumValueType.RELIGION);
+        List<EnumValue> educations = enumValueService.findByType(EnumValueType.EDUCATION);
+        List<EnumValue> incomes = enumValueService.findByType(EnumValueType.INCOME);
+        List<EnumValue> kids = enumValueService.findByType(EnumValueType.KIDS);
+        List<EnumValue> wantsKids = enumValueService.findByType(EnumValueType.WANTS_KIDS);
+        List<EnumValue> maritalStatuses = enumValueService.findByType(EnumValueType.MARITAL_STATUS);
+        List<EnumValue> genders = enumValueService.findByType(EnumValueType.GENDER);
         List<ZipCode> zipCodes = zipCodeRepository.findAll();
         List<EnumValue> heights = Utils.heightValues;
         List<Integer> ageValues = Utils.ageValues;

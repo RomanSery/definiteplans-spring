@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.definiteplans.dao.EnumValueRepository;
 import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
 import com.definiteplans.service.DefiniteDateService;
+import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
 
@@ -24,14 +24,14 @@ import com.definiteplans.util.DateUtil;
 public class ViewProfileController {
     private final UserService userService;
     private final UserRepository userRepository;
-    private final EnumValueRepository enumValueRepository;
+    private final EnumValueService enumValueService;
     private final DefiniteDateService definiteDateService;
     private final UserImageRepository userImageRepository;
 
-    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueRepository enumValueRepository, DefiniteDateService definiteDateService, UserImageRepository userImageRepository) {
+    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueService enumValueService, DefiniteDateService definiteDateService, UserImageRepository userImageRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
-        this.enumValueRepository = enumValueRepository;
+        this.enumValueService = enumValueService;
         this.definiteDateService = definiteDateService;
         this.userImageRepository = userImageRepository;
     }
@@ -99,8 +99,8 @@ public class ViewProfileController {
         if(n == 0) {
             return "";
         }
-        Optional<EnumValue> enumValue = enumValueRepository.findById(n);
-        return enumValue.isPresent() ? enumValue.get().getEnumValue() : "";
+        EnumValue enumValue = enumValueService.findById(n);
+        return enumValue != null ? enumValue.getEnumValue() : "";
     }
 
 }

@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.definiteplans.dao.EnumValueRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.enumerations.EnumValueType;
+import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
 
@@ -25,13 +25,13 @@ public class RegisterController {
     private final UserRepository userRepository;
     private final UserService userService;
     private final ZipCodeRepository zipCodeRepository;
-    private final EnumValueRepository enumValueRepository;
+    private final EnumValueService enumValueService;
 
-    public RegisterController(UserRepository userRepository, UserService userService, ZipCodeRepository zipCodeRepository, EnumValueRepository enumValueRepository) {
+    public RegisterController(UserRepository userRepository, UserService userService, ZipCodeRepository zipCodeRepository, EnumValueService enumValueService) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.zipCodeRepository = zipCodeRepository;
-        this.enumValueRepository = enumValueRepository;
+        this.enumValueService = enumValueService;
     }
 
     @GetMapping("/register")
@@ -39,7 +39,7 @@ public class RegisterController {
         ModelAndView m = new ModelAndView("register");
         m.addObject("title", "Register");
         m.addObject("user", new User());
-        m.addObject("genders", enumValueRepository.findByType(EnumValueType.GENDER.getId()));
+        m.addObject("genders", enumValueService.findByType(EnumValueType.GENDER));
         return m;
     }
 

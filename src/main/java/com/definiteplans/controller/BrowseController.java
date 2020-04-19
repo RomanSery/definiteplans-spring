@@ -16,11 +16,11 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.controller.model.SearchResult;
-import com.definiteplans.dao.EnumValueRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.SearchPrefs;
 import com.definiteplans.dom.User;
 import com.definiteplans.service.DefiniteDateService;
+import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.SearchService;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
@@ -30,13 +30,13 @@ import com.definiteplans.util.Utils;
 public class BrowseController {
     private final UserService userService;
     private final SearchService searchService;
-    private final EnumValueRepository enumValueRepository;
+    private final EnumValueService enumValueService;
     private final DefiniteDateService definiteDateService;
 
-    public BrowseController(UserService userService, SearchService searchService, EnumValueRepository enumValueRepository, DefiniteDateService definiteDateService) {
+    public BrowseController(UserService userService, SearchService searchService, EnumValueService enumValueService, DefiniteDateService definiteDateService) {
         this.userService = userService;
         this.searchService = searchService;
-        this.enumValueRepository = enumValueRepository;
+        this.enumValueService = enumValueService;
         this.definiteDateService = definiteDateService;
     }
 
@@ -48,7 +48,7 @@ public class BrowseController {
         }
 
         ModelAndView m = new ModelAndView("browse");
-        Utils.addEnumValues(m, enumValueRepository, currUser);
+        Utils.addEnumValues(m, enumValueService, currUser);
         m.addObject("prefs", currUser.getSearchPrefs());
 
         List<SearchResult> results = getSearchResults(currUser);
