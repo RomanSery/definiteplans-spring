@@ -88,7 +88,7 @@ public class AdminController {
             userService.saveUser(u);
         }
 
-        return new AjaxResponse("OK", "created");
+        return AjaxResponse.success("created");
     }
 
 

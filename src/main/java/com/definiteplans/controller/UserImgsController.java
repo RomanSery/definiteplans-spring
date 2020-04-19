@@ -1,6 +1,7 @@
 package com.definiteplans.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
@@ -55,7 +56,7 @@ public class UserImgsController {
             userImageRepository.save(img);
         }
 
-        return new AjaxResponse("OK", "done");
+        return AjaxResponse.success("Done");
     }
 
 
@@ -63,34 +64,33 @@ public class UserImgsController {
     public @ResponseBody AjaxResponse deleteProfileImg(Model model, @PathVariable int imageId) {
         User user = userService.getCurrentUser();
         if(user == null) {
-            return new AjaxResponse("ERR", "user not found");
+            return AjaxResponse.error(List.of("Invalid request"));
         }
 
         Optional<UserImage> img = userImageRepository.findById(imageId);
         if (img.isEmpty()) {
-            return new AjaxResponse("ERR", "img not found");
+            return AjaxResponse.error(List.of("Invalid request"));
         }
         userImageRepository.delete(img.get());
-        return new AjaxResponse("OK", "img deleted");
+        return AjaxResponse.success("Deleted");
     }
 
     @GetMapping("/profile/img/set/{imageId}")
     public @ResponseBody AjaxResponse updateProfileImg(Model model, @PathVariable int imageId) {
         User currUser = userService.getCurrentUser();
         if(currUser == null) {
-            return new AjaxResponse("ERR", "user not found");
+            return AjaxResponse.error(List.of("Invalid request"));
         }
 
         Optional<UserImage> img = userImageRepository.findById(imageId);
         if (img.isEmpty()) {
-            return new AjaxResponse("ERR", "img not found");
+            return AjaxResponse.error(List.of("Invalid request"));
         }
 
         currUser.setThumbImgUrl(img.get().getThumbImgUrl());
         currUser.setFullImgUrl(img.get().getFullImgUrl());
         userService.saveUser(currUser);
-
-        return new AjaxResponse("OK", "img deleted");
+        return AjaxResponse.success("Deleted");
     }
 
 }

@@ -11,6 +11,27 @@ definitePlansScripts.basicInfo = function () {
             definitePlansScripts.updateCityState(zip);
         }, 1000);
     });
+
+    $("#basicInfoForm").submit(function (event) {
+        $.ajax({
+            type: "POST", url: '/me/basic', data: $('#basicInfoForm').serialize(),
+            error: function () {
+                alert('Sorry, there was some error. Please try again.');
+            },
+            success: function (data) {
+                if(data.status == 'OK') {
+                    $('#basic-info-saved').show();
+                    $('#basic-info-saved').html(data.msg);
+                    $('#basic-info-errors').hide();
+                } else {
+                    $('#basic-info-saved').hide();
+                    $('#basic-info-errors').show();
+                    $('#basic-info-errors').html(data.msg);
+                }
+            }
+        });
+        return false;
+    });
 };
 
 definitePlansScripts.updateCityState = function () {

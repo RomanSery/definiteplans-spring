@@ -1,8 +1,9 @@
 package com.definiteplans.controller;
 
-import java.util.Map;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.dao.EnumValueRepository;
 import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
@@ -54,28 +57,30 @@ public class MyProfileController {
         return m;
     }
 
+
     @PostMapping("/basic")
-    public ModelAndView saveBasicInfo(@ModelAttribute("user") @Valid User update, BindingResult bindingResult) {
+    public @ResponseBody AjaxResponse saveBasicInfo(@ModelAttribute("user") @Valid User update, BindingResult bindingResult) {
         ProfileValidator.validateBasicInfo(update, bindingResult, userRepository, zipCodeRepository);
         if (bindingResult.hasErrors()) {
-            return new ModelAndView("my_profile", Map.of("user", update));
+            return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
         }
 
         User currUser = userService.getCurrentUser();
-        if(currUser == null) {
-            return new ModelAndView(new RedirectView("/"));
+        if(currUser != null) {
+            currUser.setDisplayName(update.getDisplayName());
+            currUser.setGender(update.getGender());
+            currUser.setDob(update.getDob());
+            currUser.setCity(update.getCity());
+            currUser.setState(update.getState());
+            currUser.setPostalCode(update.getPostalCode());
+            currUser.setNeighborhood(update.getNeighborhood());
+            userService.saveUser(currUser);
         }
 
-        currUser.setDisplayName(update.getDisplayName());
-        currUser.setGender(update.getGender());
-        currUser.setDob(update.getDob());
-        currUser.setCity(update.getCity());
-        currUser.setState(update.getState());
-        currUser.setPostalCode(update.getPostalCode());
-        currUser.setNeighborhood(update.getNeighborhood());
-        userService.saveUser(currUser);
-        return new ModelAndView(new RedirectView("/me/profile"));
+        return AjaxResponse.success("Saved");
     }
+
+
 
     @PostMapping("/details")
     public ModelAndView saveDetails(@ModelAttribute("user") User update, BindingResult bindingResult) {

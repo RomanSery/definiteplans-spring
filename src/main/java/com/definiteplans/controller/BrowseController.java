@@ -80,7 +80,7 @@ public class BrowseController {
             userService.saveUser(currUser);
         }
 
-        return new AjaxResponse("OK", "saved");
+        return AjaxResponse.success("Saved");
     }
 
 
