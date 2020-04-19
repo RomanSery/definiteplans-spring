@@ -1,9 +1,7 @@
 
 <form id="basicInfoForm" th:fragment="basic-info" th:action="@{/me/basic}" th:object="${user}" method="POST" data-parsley-validate>
-    <div class="alert alert-primary" role="alert" id="basic-info-saved" style="display:none;">
-    </div>
-    <div class="alert alert-danger" role="alert" id="basic-info-errors" style="display:none;">
-    </div>
+    <div class="alert alert-primary" role="alert" id="basic-info-saved" style="display:none;"></div>
+    <div class="alert alert-danger" role="alert" id="basic-info-errors" style="display:none;"></div>
 
     <div class="form-row">
         <div class="form-group col-md-4">

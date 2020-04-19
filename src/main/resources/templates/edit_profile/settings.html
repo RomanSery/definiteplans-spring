@@ -1,4 +1,7 @@
 <form id="settingsForm" th:fragment="settings" th:action="@{/me/settings}" th:object="${user}" method="POST" data-parsley-validate>
+    <div class="alert alert-primary" role="alert" id="settings-info-saved" style="display:none;"></div>
+    <div class="alert alert-danger" role="alert" id="settings-info-errors" style="display:none;"></div>
+
     <div class="form-row">
         <div class="form-group col-md-6">
             <label>Email notifications</label>

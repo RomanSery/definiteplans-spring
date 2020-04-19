@@ -1,4 +1,7 @@
 <form id="detailInfoForm" th:fragment="detail-info" th:action="@{/me/details}" th:object="${user}" method="POST" data-parsley-validate>
+    <div class="alert alert-primary" role="alert" id="detail-info-saved" style="display:none;"></div>
+    <div class="alert alert-danger" role="alert" id="detail-info-errors" style="display:none;"></div>
+
     <div class="form-row">
         <div class="form-group col-md-4">
             <label>Ethnicity</label>

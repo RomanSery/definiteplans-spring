@@ -19,19 +19,49 @@ definitePlansScripts.basicInfo = function () {
                 alert('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
-                if(data.status == 'OK') {
-                    $('#basic-info-saved').show();
-                    $('#basic-info-saved').html(data.msg);
-                    $('#basic-info-errors').hide();
-                } else {
-                    $('#basic-info-saved').hide();
-                    $('#basic-info-errors').show();
-                    $('#basic-info-errors').html(data.msg);
-                }
+                definitePlansScripts.showSaveResult(data, 'basic');
             }
         });
         return false;
     });
+
+    $("#detailInfoForm").submit(function (event) {
+        $.ajax({
+            type: "POST", url: '/me/details', data: $('#detailInfoForm').serialize(),
+            error: function () {
+                alert('Sorry, there was some error. Please try again.');
+            },
+            success: function (data) {
+                definitePlansScripts.showSaveResult(data, 'detail');
+            }
+        });
+        return false;
+    });
+
+    $("#settingsForm").submit(function (event) {
+        $.ajax({
+            type: "POST", url: '/me/settings', data: $('#settingsForm').serialize(),
+            error: function () {
+                alert('Sorry, there was some error. Please try again.');
+            },
+            success: function (data) {
+                definitePlansScripts.showSaveResult(data, 'settings');
+            }
+        });
+        return false;
+    });
+};
+
+definitePlansScripts.showSaveResult = function (data, prefix) {
+    if(data.status == 'OK') {
+        $('#'+prefix+'-info-saved').show();
+        $('#'+prefix+'-info-saved').html(data.msg);
+        $('#'+prefix+'-info-errors').hide();
+    } else {
+        $('#'+prefix+'-info-saved').hide();
+        $('#'+prefix+'-info-errors').show();
+        $('#'+prefix+'-info-errors').html(data.msg);
+    }
 };
 
 definitePlansScripts.updateCityState = function () {

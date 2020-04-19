@@ -1,3 +1,5 @@
 when logging and user is not active, it shows error message but also need to show link to resent email with confirmation link
 
 store last_login_date, use for sorting in browse results, show when user was last online
+
+finish blocked users in profile settings

@@ -80,49 +80,43 @@ public class MyProfileController {
         return AjaxResponse.success("Saved");
     }
 
-
-
     @PostMapping("/details")
-    public ModelAndView saveDetails(@ModelAttribute("user") User update, BindingResult bindingResult) {
+    public @ResponseBody AjaxResponse saveDetails(@ModelAttribute("user") @Valid User update, BindingResult bindingResult) {
+
         User currUser = userService.getCurrentUser();
-        if(currUser == null) {
-            return new ModelAndView(new RedirectView("/"));
+        if(currUser != null) {
+            currUser.setLanguages(update.getLanguages());
+            currUser.setReligion(update.getReligion());
+            currUser.setIncome(update.getIncome());
+            currUser.setKids(update.getKids());
+            currUser.setWantsKids(update.getWantsKids());
+            currUser.setMaritalStatus(update.getMaritalStatus());
+            currUser.setEducation(update.getEducation());
+            currUser.setSmokes(update.getSmokes());
+            currUser.setEthnicity(update.getEthnicity());
+            currUser.setAboutMe(update.getAboutMe());
+            currUser.setInterests(update.getInterests());
+            currUser.setHeight(update.getHeight());
+
+            userService.saveUser(currUser);
         }
 
-        currUser.setLanguages(update.getLanguages());
-        currUser.setReligion(update.getReligion());
-        currUser.setIncome(update.getIncome());
-        currUser.setKids(update.getKids());
-        currUser.setWantsKids(update.getWantsKids());
-        currUser.setMaritalStatus(update.getMaritalStatus());
-        currUser.setEducation(update.getEducation());
-        currUser.setSmokes(update.getSmokes());
-        currUser.setEthnicity(update.getEthnicity());
-        currUser.setAboutMe(update.getAboutMe());
-        currUser.setInterests(update.getInterests());
-        currUser.setHeight(update.getHeight());
-
-        userService.saveUser(currUser);
-        return new ModelAndView(new RedirectView("/me/profile"));
+        return AjaxResponse.success("Saved");
     }
+
 
     @PostMapping("/settings")
-    public ModelAndView saveSettings(@ModelAttribute("user") @Valid User update, BindingResult bindingResult) {
+    public @ResponseBody AjaxResponse saveSettings(@ModelAttribute("user") @Valid User update, BindingResult bindingResult) {
         User currUser = userService.getCurrentUser();
-        if(currUser == null) {
-            return new ModelAndView(new RedirectView("/"));
+        if(currUser != null) {
+            currUser.setSendNotifications(update.isSendNotifications());
+            currUser.setNotificationsEmail(update.getNotificationsEmail());
+            currUser.setAgeMax(update.getAgeMax());
+            currUser.setAgeMin(update.getAgeMin());
+            userService.saveUser(currUser);
         }
-
-        currUser.setSendNotifications(update.isSendNotifications());
-        currUser.setNotificationsEmail(update.getNotificationsEmail());
-        currUser.setAgeMax(update.getAgeMax());
-        currUser.setAgeMin(update.getAgeMin());
-
-        userService.saveUser(currUser);
-        return new ModelAndView(new RedirectView("/me/profile"));
+        return AjaxResponse.success("Saved");
     }
-
-
 
     private static class ProfileValidator {
         private static void validateBasicInfo(User obj, Errors e, UserRepository userRepository, ZipCodeRepository zipCodeRepository) {
