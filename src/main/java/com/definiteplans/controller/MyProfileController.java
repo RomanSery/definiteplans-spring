@@ -1,10 +1,12 @@
 package com.definiteplans.controller;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.AjaxResponse;
+import com.definiteplans.controller.model.SearchResult;
 import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
@@ -55,6 +58,13 @@ public class MyProfileController {
         m.addObject("selectedLanguages", currUser.getLanguageIds());
         m.addObject("user_pics", userImageRepository.findByUserId(currUser.getId()));
         return m;
+    }
+
+    @RequestMapping("/refresh-user-pics")
+    public String refreshMyPics(Model m) {
+        User currUser = userService.getCurrentUser();
+        m.addAttribute("user_pics", userImageRepository.findByUserId(currUser.getId()));
+        return "edit_profile/imgs :: user-pics-list";
     }
 
 

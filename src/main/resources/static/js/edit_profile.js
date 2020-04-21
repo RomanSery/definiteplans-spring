@@ -80,17 +80,40 @@ definitePlansScripts.updateCityState = function () {
     });
 };
 
+definitePlansScripts.refreshUserPics = function () {
+    $.ajax({
+        type: "GET", url: '/me/refresh-user-pics',
+        error: function () {
+            alert('Sorry, there was some error. Please try again.');
+        },
+        beforeSend: function () {
+            $('#loading-indicator').show();
+        },
+        success: function (data) {
+            $('#loading-indicator').hide();
+            $("#profile-light-gallery").html(data);
+
+            definitePlansScripts.initImgScripts();
+            definitePlansScripts.initLg();
+        }
+    });
+};
+
+
+
 
 definitePlansScripts.initImageUpload = function () {
     $("#btnUploadPic").dropzone({
-        previewsContainer: '#previewsContainer', url: "/profile/img/upload", uploadMultiple: false, maxFiles: 1, maxFilesize: 3, acceptedFiles: '.jpg,.jpeg,.png,.bmp',
+        previewsContainer: '#previewsContainer', url: "/profile/img/upload", uploadMultiple: false, maxFiles: 1, maxFilesize: 5, acceptedFiles: '.jpg,.jpeg,.png,.bmp',
         headers: { 'X-CSRF-TOKEN': $('#_csrf').attr('content') },
-        createImageThumbnails: true, thumbnailHeight: 120, thumbnailWidth: 120,
+        createImageThumbnails: true, thumbnailHeight: 180, thumbnailWidth: 180,
         error: function (file, errorMessage) {
-            console.log(errorMessage);
-            $('#uploadErrDiv').html(errorMessage);
-            $('#uploadErrDiv').show();
+            definitePlansScripts.showUploadErr(errorMessage);
             this.removeAllFiles();
+        },
+        sending: function() {
+            definitePlansScripts.showUploadProgress('Sending...');
+            $('#loading-indicator').show();
         },
         thumbnail: function (file, dataUrl) {
             const mimeType = file.type;
@@ -102,14 +125,15 @@ definitePlansScripts.initImageUpload = function () {
             var thumbImgRef = storageRef.child('images/'+definitePlansScripts.curr_user_id+'/thumbs/' + definitePlansScripts.timestamp);
             var thumbImgUploadTask = thumbImgRef.putString(dataUrl, 'data_url', thumbImgMetadata);
             thumbImgUploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-                function(snapshot) { },
+                function(snapshot){
+                    var progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    definitePlansScripts.showUploadProgress('Uploading thumbnail: ' + progress + '% done');
+                },
                 function(error) {
-                    console.log(error);
-                    $('#uploadErrDiv').html(error);
-                    $('#uploadErrDiv').show();
+                    definitePlansScripts.showUploadErr(error);
                 }, function() {
                     thumbImgUploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                        console.log("thumb upload");
+                        definitePlansScripts.showUploadProgress('Saving thumbnail...');
                         definitePlansScripts.saveProfileImg('thumb', mimeType, fileName, downloadURL, definitePlansScripts.timestamp);
                     });
                 });
@@ -120,7 +144,6 @@ definitePlansScripts.initImageUpload = function () {
             const fileName = file.upload.filename;
             const dataUrl = file.dataURL;
 
-            console.log("full upload start");
 
             var storage = firebase.storage();
             var storageRef = storage.ref();
@@ -128,14 +151,15 @@ definitePlansScripts.initImageUpload = function () {
             var fullImgRef = storageRef.child('images/'+definitePlansScripts.curr_user_id+'/' + definitePlansScripts.timestamp);
             var fullImgUploadTask = fullImgRef.putString(dataUrl, 'data_url', fullImgMetadata);
             fullImgUploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-                function(snapshot) { },
+                function(snapshot){
+                    var progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    definitePlansScripts.showUploadProgress('Uploading full size image: ' + progress + '% done');
+                },
                 function(error) {
-                    console.log(error);
-                    $('#uploadErrDiv').html(error);
-                    $('#uploadErrDiv').show();
+                    showUploadErr(error);
                 }, function() {
                     fullImgUploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                        console.log("full upload");
+                        definitePlansScripts.showUploadProgress('Saving full size image...');
                         definitePlansScripts.saveProfileImg('full', mimeType, fileName, downloadURL, definitePlansScripts.timestamp);
                     });
                 });
@@ -158,10 +182,38 @@ definitePlansScripts.saveProfileImg = function (imgType, mimeType, fileName, img
             xhr.setRequestHeader(header, token);
         },
         error: function () {
-            $('#uploadErrDiv').empty().show();
-            $('#uploadErrDiv').html('Sorry, there was some error.');
+            definitePlansScripts.showUploadErr('Sorry, there was some error.');
+        }, success: function (data) {
+            if(imgType == 'full') {
+                $('#loading-indicator').hide();
+                definitePlansScripts.showSuccess('Done');
+                definitePlansScripts.refreshUserPics();
+            }
         }
     });
+};
+
+
+definitePlansScripts.showUploadErr = function (msg) {
+    $('#uploadProgressDiv').empty().hide();
+    $('#uploadSuccessDiv').empty().hide();
+
+    $('#uploadErrDiv').empty().show();
+    $('#uploadErrDiv').html(msg);
+};
+definitePlansScripts.showUploadProgress = function (msg) {
+    $('#uploadErrDiv').empty().hide();
+    $('#uploadSuccessDiv').empty().hide();
+
+    $('#uploadProgressDiv').empty().show();
+    $('#uploadProgressDiv').html(msg);
+};
+definitePlansScripts.showSuccess = function (msg) {
+    $('#uploadErrDiv').empty().hide();
+    $('#uploadProgressDiv').empty().hide();
+
+    $('#uploadSuccessDiv').empty().show();
+    $('#uploadSuccessDiv').html(msg);
 };
 
 definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, imgUrl, d) {
@@ -170,6 +222,7 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
         $.ajax({
             type: "GET", url: '/profile/img/delete/' + $(this).attr('img-id'),
             beforeSend: function (xhr) {
+                $('#loading-indicator').show();
                 var token = $('#_csrf').attr('content');
                 var header = $('#_csrf_header').attr('content');
                 xhr.setRequestHeader(header, token);
@@ -178,7 +231,8 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
                 alert('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
-
+                $('#loading-indicator').hide();
+                definitePlansScripts.refreshUserPics();
             }
         });
     });
@@ -187,6 +241,7 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
         $.ajax({
             type: "GET", url: '/profile/img/set/' + $(this).attr('img-id'),
             beforeSend: function (xhr) {
+                $('#loading-indicator').show();
                 var token = $('#_csrf').attr('content');
                 var header = $('#_csrf_header').attr('content');
                 xhr.setRequestHeader(header, token);
@@ -195,28 +250,34 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
                 alert('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
-
+                $('#nav-profile-pic').attr('src', data.msg);
+                $('#loading-indicator').hide();
+                definitePlansScripts.refreshUserPics();
             }
         });
     });
 
 };
 
+definitePlansScripts.initLg = function () {
+    if(definitePlansScripts.lg_profile_gallery != null) {
+        window.lgData[definitePlansScripts.lg_profile_gallery.getAttribute('lg-uid')].destroy(true);
+    }
+    definitePlansScripts.lg_profile_gallery = document.getElementById('profile-light-gallery');
 
+    lightGallery(definitePlansScripts.lg_profile_gallery, {
+        selector: '.lg-img'
+    });
+};
+
+definitePlansScripts.lg_profile_gallery = null;
 definitePlansScripts.timestamp = Date.now();
 
 $(document).ready(function() {
-    lightGallery(document.getElementById('profile-light-gallery'), {
-        selector: '.lg-img'
-    });
-
-
-
+    definitePlansScripts.initLg();
     definitePlansScripts.basicInfo();
     definitePlansScripts.initImageUpload();
     definitePlansScripts.initImgScripts();
-
-    $('[data-toggle="popover"]').popover();
 });
 
 

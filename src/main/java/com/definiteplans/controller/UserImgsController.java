@@ -90,7 +90,7 @@ public class UserImgsController {
         currUser.setThumbImgUrl(img.get().getThumbImgUrl());
         currUser.setFullImgUrl(img.get().getFullImgUrl());
         userService.saveUser(currUser);
-        return AjaxResponse.success("Deleted");
+        return AjaxResponse.success(userService.getProfileImg(currUser, true));
     }
 
 }
