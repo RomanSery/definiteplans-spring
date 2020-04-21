@@ -2,17 +2,12 @@
 <html th:replace="~{fragments/layout::authenticatedLayout(~{::view_profile}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="header-content" th:remove="tag">
-
-
     <script type="text/javascript">
         $(document).ready(function() {
             lightGallery(document.getElementById('profile-light-gallery'));
             lightGallery(document.getElementById('main-profile-pic'));
         });
     </script>
-
-
-
 </head>
 
 <div th:fragment="view_profile" class="row">

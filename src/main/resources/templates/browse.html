@@ -5,16 +5,10 @@
     <script th:src="@{/js/browse.js}"></script>
 </head>
 
-<div th:fragment="browse" th:remove="tag">
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div th:replace="fragments/filters::browse-filters"></div>
-                </div>
-            </div>
-        </div>
+<div th:fragment="browse" class="row">
+    <div class="col-md-3">
+        <div th:replace="fragments/filters::browse-filters"></div>
     </div>
 
     <div class="text-center" id="loading-indicator" style="display: none;">
@@ -23,9 +17,9 @@
         </div>
     </div>
 
-    <span id="search-results-cont">
+    <div class="col-md-9" id="search-results-cont">
         <div th:replace="browse::search-results"></div>
-    </span>
+    </div>
 </div>
 
 
