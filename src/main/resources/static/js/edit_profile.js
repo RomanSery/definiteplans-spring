@@ -106,7 +106,7 @@ definitePlansScripts.initImageUpload = function () {
     $("#btnUploadPic").dropzone({
         previewsContainer: '#previewsContainer', url: "/profile/img/upload", uploadMultiple: false, maxFiles: 1, maxFilesize: 5, acceptedFiles: '.jpg,.jpeg,.png,.bmp',
         headers: { 'X-CSRF-TOKEN': $('#_csrf').attr('content') },
-        createImageThumbnails: true, thumbnailHeight: 180, thumbnailWidth: 180,
+        createImageThumbnails: true, thumbnailHeight: 128, thumbnailWidth: 128,
         error: function (file, errorMessage) {
             definitePlansScripts.showUploadErr(errorMessage);
             this.removeAllFiles();
@@ -228,7 +228,7 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
                 xhr.setRequestHeader(header, token);
             },
             error: function () {
-                alert('Sorry, there was some error. Please try again.');
+                definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
                 $('#loading-indicator').hide();
@@ -247,7 +247,7 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
                 xhr.setRequestHeader(header, token);
             },
             error: function () {
-                alert('Sorry, there was some error. Please try again.');
+                definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
                 $('#nav-profile-pic').attr('src', data.msg);
