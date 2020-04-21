@@ -73,7 +73,6 @@ public class BrowseController {
 
     @PostMapping("/browse/filter")
     public @ResponseBody AjaxResponse applyFilters(@ModelAttribute("prefs") SearchPrefs prefs) {
-
         User currUser = userService.getCurrentUser();
         if(currUser != null) {
             currUser.setSearchPrefs(prefs);
@@ -81,6 +80,17 @@ public class BrowseController {
         }
 
         return AjaxResponse.success("Saved");
+    }
+
+    @GetMapping("/browse/reset")
+    public ModelAndView clearFilters() {
+        User currUser = userService.getCurrentUser();
+        if(currUser != null) {
+            currUser.setSearchPrefs(new SearchPrefs());
+            userService.saveUser(currUser);
+        }
+
+        return new ModelAndView(new RedirectView("/browse"));
     }
 
 

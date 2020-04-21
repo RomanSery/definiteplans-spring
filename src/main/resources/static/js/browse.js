@@ -27,6 +27,14 @@ definitePlansScripts.filterSearchResults = function () {
         });
         return false;
     });
+
+
+    $('#collapseTwo2, #collapseOne1').on('show.bs.collapse', function () {
+        definitePlansScripts.initClientSideScripts();
+    })
+    $('#collapseTwo2, #collapseOne1').on('shown.bs.collapse', function () {
+        definitePlansScripts.initClientSideScripts();
+    })
 };
 
 $(document).ready(function() {

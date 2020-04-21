@@ -9966,3 +9966,7 @@ body.md-skin {
 
 
 .select2-container{ width: 100% !important; }
+
+.browse-filter {
+  margin-bottom: 5px;
+}
