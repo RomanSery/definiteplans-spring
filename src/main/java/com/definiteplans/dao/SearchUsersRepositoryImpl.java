@@ -7,13 +7,11 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.definiteplans.dom.SearchPrefs;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.ZipCode;
-import com.definiteplans.util.DateUtil;
 
 public class SearchUsersRepositoryImpl implements SearchUsersRepository {
     @Autowired
@@ -23,72 +21,73 @@ public class SearchUsersRepositoryImpl implements SearchUsersRepository {
 
     @Override
     public List<User> browsePagedResults(User currUser, int first, int count, SearchPrefs prefs) {
-        String hql = "from User u where u.isComplete = 1 ";
-        hql = hql + " and u.id not in (select bu.blockedUserId from BlockedUser bu where bu.userId = " + currUser.getId() + ")";
-        hql = hql + " and " + currUser.getId() + " not in (select bu.blockedUserId from BlockedUser bu where bu.userId = u.id)";
+        StringBuilder hql = new StringBuilder();
+        hql.append("from User u where u.isComplete = 1 ");
+        hql.append(" and u.id not in (select bu.blockedUserId from BlockedUser bu where bu.userId = :currUsrId)");
+        hql.append(" and :currUsrId not in (select bu.blockedUserId from BlockedUser bu where bu.userId = u.id)");
 
         //TODO - this doesnt work if ageMin or ageMax = 0
         if (currUser.getDob() != null) {
             //hql = hql + " and " + DateUtil.getAge(currUser.getDob()) + " between u.ageMin and u.ageMax";
         }
 
-        if(currUser.getAgeMin() > 0 || currUser.getAgeMax() > 0) {
-            hql = hql + " and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) between " + currUser.getAgeMin() + " and " + currUser.getAgeMax();
+//        if(currUser.getAgeMin() > 0 || currUser.getAgeMax() > 0) {
+//            hql = hql + " and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) between " + currUser.getAgeMin() + " and " + currUser.getAgeMax();
+//        }
+//
+        if (prefs.hasAgeFrom()) {
+            hql.append(" and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) >= :ageFrom ");
+        }
+        if (prefs.hasAgeTo()) {
+            hql.append(" and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) <= :ageTo ");
         }
 
-        if (prefs.getAgeFrom() != null && prefs.getAgeFrom().intValue() > 0) {
-            hql = hql + " and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) >= " + prefs.getAgeFrom();
+        if (prefs.hasHeightFrom()) {
+            hql.append(" and u.height >= :heightFrom ");
         }
-        if (prefs.getAgeTo() != null && prefs.getAgeTo() > 0) {
-            hql = hql + " and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) <= " + prefs.getAgeTo();
-        }
-
-        if (prefs.getHeightFrom() != null && prefs.getHeightFrom() > 0) {
-            hql = hql + " and u.height >= " + prefs.getHeightFrom();
-        }
-        if (prefs.getHeightTo() != null && prefs.getHeightTo() > 0) {
-            hql = hql + " and u.height <= " + prefs.getHeightTo();
+        if (prefs.hasHeightTo()) {
+            hql.append(" and u.height <= :heightTo ");
         }
 
-        if (!StringUtils.isBlank(prefs.getState()) && !"0".equals(prefs.getState())) {
-            hql = hql + " and u.state = '" + prefs.getState() + "'";
+        if (prefs.hasState()) {
+            hql.append(" and u.state = :state ");
         }
 
-        if (prefs.getEthnicties() != null && !prefs.getEthnicties().isEmpty()) {
-            hql = hql + " and u.ethnicity in (" + StringUtils.join(prefs.getEthnicties(), ",") + ") ";
+        if (prefs.hasEthnicties()) {
+            hql.append(" and u.ethnicity in (:ethnicity) ");
         }
-        if (prefs.getMaritalStatuses() != null && !prefs.getMaritalStatuses().isEmpty()) {
-            hql = hql + " and u.maritalStatus in (" + StringUtils.join(prefs.getMaritalStatuses(), ",") + ") ";
+        if (prefs.hasMaritalStatus()) {
+            hql.append(" and u.maritalStatus in (:maritalStatus) ");
         }
-        if (prefs.getKids() != null && !prefs.getKids().isEmpty())  {
-            hql = hql + " and u.kids in (" + StringUtils.join(prefs.getKids(), ",") + ") ";
+        if (prefs.hasKids()) {
+            hql.append(" and u.kids in (:kids) ");
         }
-        if (prefs.getWantsKids() != null && !prefs.getWantsKids().isEmpty()) {
-            hql = hql + " and u.wantsKids in (" + StringUtils.join(prefs.getWantsKids(), ",") + ") ";
+        if (prefs.hasWantsKids()) {
+            hql.append(" and u.wantsKids in (:wantsKids) ");
         }
-        if (prefs.getLanguages() != null && !prefs.getLanguages().isEmpty()) {
-            hql = hql + " and u.languages in (" + StringUtils.join(prefs.getLanguages(), ",") + ") ";
-        }
-
-        if (prefs.getReligions() != null && !prefs.getReligions().isEmpty()) {
-            hql = hql + " and u.religion in (" + StringUtils.join(prefs.getReligions(), ",") + ") ";
-        }
-        if (prefs.getEducations() != null && !prefs.getEducations().isEmpty()) {
-            hql = hql + " and u.education in (" + StringUtils.join(prefs.getEducations(), ",") + ") ";
-        }
-        if (prefs.getIncomes() != null && !prefs.getIncomes().isEmpty()) {
-            hql = hql + " and u.income in (" + StringUtils.join(prefs.getIncomes(), ",") + ") ";
-        }
-        if (prefs.getSmokes() != null && !prefs.getSmokes().isEmpty()) {
-            hql = hql + " and u.smokes in (" + StringUtils.join(prefs.getSmokes(), ",") + ") ";
-        }
-        if (prefs.getGenders() != null && !prefs.getGenders().isEmpty()) {
-            hql = hql + " and u.gender in (" + StringUtils.join(prefs.getGenders(), ",") + ") ";
+        if (prefs.hasLanguage()) {
+            hql.append(" and u.languages in (:languages) ");
         }
 
-        if (prefs.getDistance() != null && prefs.getDistance() > 0 && currUser.getPostalCode() != null && currUser.getPostalCode().length() > 0) {
+        if (prefs.hasReligion()) {
+            hql.append(" and u.religion in (:religions) ");
+        }
+        if (prefs.hasEducation()) {
+            hql.append(" and u.education in (:educations) ");
+        }
+        if (prefs.hasIncome()) {
+            hql.append(" and u.income in (:incomes) ");
+        }
+        if (prefs.hasSmokes()) {
+            hql.append(" and u.smokes in (:smokes) ");
+        }
+        if (prefs.hasGender()) {
+            hql.append(" and u.gender in (:genders) ");
+        }
 
-            List<String> distanceFrom = new ArrayList<>();
+        boolean hasDistancePref = prefs.getDistance() != null && prefs.getDistance() > 0 && currUser.getPostalCode() != null && currUser.getPostalCode().length() > 0;
+        List<String> distanceFrom = new ArrayList<>();
+        if (hasDistancePref) {
             Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
             if (zip.isPresent()) {
                 List<ZipCode> arr = zipCodeRepository.getZipCodesByRadius(zip.get(), prefs.getDistance());
@@ -96,12 +95,70 @@ public class SearchUsersRepositoryImpl implements SearchUsersRepository {
                     distanceFrom.add('\'' + z.getZip() + '\'');
                 }
             }
-
-            hql = hql + " and u.postalCode in (" + StringUtils.join(distanceFrom, ",") + ") ";
+            hql.append(" and u.postalCode in (:distanceFrom) ");
         }
 
 
-        TypedQuery<User> q = entityManager.createQuery(hql, User.class);
+        TypedQuery<User> q = entityManager.createQuery(hql.toString(), User.class);
+        q.setParameter("currUsrId", currUser.getId());
+
+        if(hasDistancePref) {
+            q.setParameter("distanceFrom", distanceFrom);
+        }
+
+        if (prefs.hasAgeFrom()) {
+            q.setParameter("ageFrom", prefs.getAgeFrom());
+        }
+        if (prefs.hasAgeTo()) {
+            q.setParameter("ageTo", prefs.getAgeTo());
+        }
+
+        if (prefs.hasHeightFrom()) {
+            q.setParameter("heightFrom", prefs.getHeightFrom());
+        }
+        if (prefs.hasHeightTo()) {
+            q.setParameter("heightTo", prefs.getHeightTo());
+        }
+
+        if (prefs.hasState()) {
+            q.setParameter("state", prefs.getState());
+        }
+        if (prefs.hasEthnicties()) {
+            q.setParameter("ethnicity", prefs.getEthnicties());
+        }
+        if (prefs.hasMaritalStatus()) {
+            q.setParameter("maritalStatus", prefs.getMaritalStatuses());
+        }
+        if (prefs.hasKids()) {
+            q.setParameter("kids", prefs.getKids());
+        }
+        if (prefs.hasWantsKids()) {
+            q.setParameter("wantsKids", prefs.getWantsKids());
+        }
+        if (prefs.hasLanguage()) {
+            q.setParameter("languages", prefs.getLanguages());
+        }
+        if (prefs.hasReligion()) {
+            q.setParameter("religions", prefs.getReligions());
+        }
+        if (prefs.hasEducation()) {
+            q.setParameter("educations", prefs.getEducations());
+        }
+        if (prefs.hasIncome()) {
+            q.setParameter("incomes", prefs.getIncomes());
+        }
+        if (prefs.hasSmokes()) {
+            q.setParameter("smokes", prefs.getSmokes());
+        }
+        if (prefs.hasGender()) {
+            q.setParameter("genders", prefs.getGenders());
+        }
+
+
+
+
+
+
         if(first > 0) {
             q.setMaxResults(first);
         }

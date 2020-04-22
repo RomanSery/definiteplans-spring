@@ -203,4 +203,10 @@ public class User implements Serializable {
         this.searchPrefs = searchPrefs;
     }
 
+    public int getAgeMin() {
+        if(ageMin < 18) {
+            ageMin = 18;
+        }
+        return ageMin;
+    }
 }

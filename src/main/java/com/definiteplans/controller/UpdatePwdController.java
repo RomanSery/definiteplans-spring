@@ -33,7 +33,8 @@ public class UpdatePwdController {
         if(currUser == null) {
             return new ModelAndView(new RedirectView("/"));
         }
-        return new ModelAndView("update_pwd", Map.of("user", new PwdUpdate(), "hasPwd", currUser.hasPwd()));
+        return new ModelAndView("update_pwd",
+                Map.of("user", new PwdUpdate(), "hasPwd", currUser.hasPwd(), "title", "Update my Password"));
     }
 
     @PostMapping("/pwd")

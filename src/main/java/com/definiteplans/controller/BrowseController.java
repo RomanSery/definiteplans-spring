@@ -48,6 +48,7 @@ public class BrowseController {
         }
 
         ModelAndView m = new ModelAndView("browse");
+        m.addObject("title", "Browse Profiles");
         Utils.addEnumValues(m, enumValueService, currUser);
         m.addObject("prefs", currUser.getSearchPrefs());
 

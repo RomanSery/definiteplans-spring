@@ -55,6 +55,7 @@ public class MyProfileController {
 
         ModelAndView m = new ModelAndView("my_profile");
         Utils.addEnumValues(m, enumValueService, currUser);
+        m.addObject("title", "Edit my Profile");
         m.addObject("selectedLanguages", currUser.getLanguageIds());
         m.addObject("user_pics", userImageRepository.findByUserId(currUser.getId()));
         return m;

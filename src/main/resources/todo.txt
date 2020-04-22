@@ -9,3 +9,5 @@ domisc?action=findzip
 login with fb & google
 
 reset filters button in browse page
+
+browse page paging

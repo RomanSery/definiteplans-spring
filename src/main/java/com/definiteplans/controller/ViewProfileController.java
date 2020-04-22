@@ -70,6 +70,7 @@ public class ViewProfileController {
         }
 
         ModelAndView m = new ModelAndView("view_profile");
+        m.addObject("title", "View Profile - " + profile.getDisplayName());
         m.addObject("isViewingSelf", isViewingSelf);
         m.addObject("profile", profile);
         m.addObject("loc", userService.getAddrDesc(profile));
