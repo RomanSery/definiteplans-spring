@@ -13,4 +13,7 @@ import com.definiteplans.dom.BlockedUser;
 public interface BlockedUserRepository extends JpaRepository<BlockedUser, Integer> {
 
     List<BlockedUser> findByUserId(@Param("userId") int userId);
+    BlockedUser findByUserIdAndBlockedUserId(@Param("userId") int userId, @Param("blockedUserId") int blockedUserId);
+    long countByUserIdAndBlockedUserId(@Param("userId") int userId, @Param("blockedUserId") int blockedUserId);
+
 }

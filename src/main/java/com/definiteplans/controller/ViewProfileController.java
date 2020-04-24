@@ -6,11 +6,14 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.EnumValue;
@@ -95,6 +98,14 @@ public class ViewProfileController {
         return m;
     }
 
+
+    @GetMapping("/profiles/block/{userId}")
+    public @ResponseBody AjaxResponse blockUser(Model model, @PathVariable int userId) {
+        if(!userService.blockUser(userId)) {
+            return AjaxResponse.error(List.of("Invalid request"));
+        }
+        return AjaxResponse.success("Blocked");
+    }
 
     private String getProfileVal(int n) {
         if(n == 0) {

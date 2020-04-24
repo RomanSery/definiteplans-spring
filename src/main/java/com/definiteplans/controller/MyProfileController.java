@@ -12,6 +12,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.AjaxResponse;
-import com.definiteplans.controller.model.SearchResult;
 import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
@@ -58,6 +58,7 @@ public class MyProfileController {
         m.addObject("title", "Edit my Profile");
         m.addObject("selectedLanguages", currUser.getLanguageIds());
         m.addObject("user_pics", userImageRepository.findByUserId(currUser.getId()));
+        m.addObject("blocked_users", userService.getBlockedUserRows());
         return m;
     }
 
@@ -128,6 +129,23 @@ public class MyProfileController {
         }
         return AjaxResponse.success("Saved");
     }
+
+
+    @GetMapping("/unblock/{userId}")
+    public @ResponseBody AjaxResponse unblockUser(Model model, @PathVariable int userId) {
+        if(!userService.unBlockUser(userId)) {
+            return AjaxResponse.error(List.of("Invalid request"));
+        }
+        return AjaxResponse.success("UnBlocked");
+    }
+
+    @RequestMapping("/refresh-blocked-list")
+    public String refreshBlockedList(Model m) {
+        User currUser = userService.getCurrentUser();
+        m.addAttribute("blocked_users", userService.getBlockedUserRows());
+        return "edit_profile/settings :: blocked-list-frag";
+    }
+
 
     private static class ProfileValidator {
         private static void validateBasicInfo(User obj, Errors e, UserRepository userRepository, ZipCodeRepository zipCodeRepository) {

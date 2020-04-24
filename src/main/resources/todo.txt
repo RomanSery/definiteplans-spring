@@ -19,3 +19,5 @@ finish implementing user.isProfileCompleted
 
 
 clarify settings in edit profile - visible to ages, also means you wont be able to see them!
+
+update loading buttons the same way i do for block user on view profile page

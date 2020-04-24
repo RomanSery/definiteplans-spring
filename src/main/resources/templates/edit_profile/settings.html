@@ -29,21 +29,9 @@
         </div>
     </div>
 
-    <div class="form-row">
-        <div class="form-group col-md-12">
-            <label>Blocked users</label>
-            <table class="table">
-                <tbody>
-                <tr class="blocked-user-row" id="blockedUsersListView">
-                    <td><span id="displayName"></span></td>
-                    <td><a class="btn btn-danger unblockLink" href="#" title="Unblock" id="unblockLink"><i class="fa fa-trash"></i></a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+    <div id="blocked-users-list">
+        <div th:replace="edit_profile/settings::blocked-list-frag"></div>
     </div>
-
 
     <div class="form-row">
         <div class="form-group col-md-4">
@@ -52,3 +40,31 @@
     </div>
 
 </form>
+
+
+<div th:fragment="blocked-list-frag" th:remove="tag">
+
+    <div class="text-center" id="blocked-loading-indicator" style="display: none;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <div class="form-row" th:if="${blocked_users != null and !blocked_users.isEmpty()}">
+        <div class="form-group col-md-12">
+            <label><strong>Blocked users</strong></label>
+            <table class="table">
+                <tbody>
+                <tr class="blocked-user-row" th:each="bu : ${blocked_users}">
+                    <td><span th:text="${bu.displayName}"></span></td>
+                    <td>
+                        <button type="button" class="btn btn-danger unblockLink" th:id="${bu.getLinkId()}" th:profile-id="${bu.userId}">
+                            <i class="fa fa-trash"></i> Unblock
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

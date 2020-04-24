@@ -270,6 +270,48 @@ definitePlansScripts.initLg = function () {
     });
 };
 
+definitePlansScripts.unblockUser = function () {
+    $('.unblockLink').click(function () {
+        let unlockBtn = $(this);
+        $.ajax({
+            type: "GET", url: '/me/unblock/' + $(this).attr('profile-id'),
+            beforeSend: function (xhr) {
+                definitePlansScripts.makeBtnLoadingObj(unlockBtn);
+
+                var token = $('#_csrf').attr('content');
+                var header = $('#_csrf_header').attr('content');
+                xhr.setRequestHeader(header, token);
+            },
+            error: function () {
+                definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+            },
+            success: function (data) {
+                definitePlansScripts.stopBtnLoadingObj(unlockBtn);
+                definitePlansScripts.refreshBlockedList();
+            }
+        });
+    });
+};
+
+definitePlansScripts.refreshBlockedList = function () {
+    $.ajax({
+        type: "GET", url: '/me/refresh-blocked-list',
+        error: function () {
+            alert('Sorry, there was some error. Please try again.');
+        },
+        beforeSend: function () {
+            $('#blocked-loading-indicator').show();
+        },
+        success: function (data) {
+            $('#blocked-loading-indicator').hide();
+            $("#blocked-users-list").html(data);
+            definitePlansScripts.unblockUser();
+        }
+    });
+};
+
+
+
 definitePlansScripts.lg_profile_gallery = null;
 definitePlansScripts.timestamp = Date.now();
 
@@ -278,6 +320,7 @@ $(document).ready(function() {
     definitePlansScripts.basicInfo();
     definitePlansScripts.initImageUpload();
     definitePlansScripts.initImgScripts();
+    definitePlansScripts.unblockUser();
 });
 
 

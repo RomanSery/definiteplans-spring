@@ -2,6 +2,7 @@ package com.definiteplans.service;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.definiteplans.controller.model.BlockedUserRow;
 import com.definiteplans.controller.model.PwdUpdate;
 import com.definiteplans.dao.BlockedUserRepository;
 import com.definiteplans.dao.UserRepository;
@@ -172,11 +174,11 @@ public class UserService {
         }
 
         int myAge = DateUtil.getAge(currUser.getDob());
-        if (myAge > profile.getAgeMax() || myAge < profile.getAgeMin()) {
+        if ( (profile.getAgeMax() > 0 && myAge > profile.getAgeMax()) || (myAge < profile.getAgeMin())) {
             return false;
         }
         int profileAge = DateUtil.getAge(profile.getDob());
-        if (profileAge > currUser.getAgeMax() || profileAge < currUser.getAgeMin()) {
+        if ( (currUser.getAgeMax() > 0 && profileAge > currUser.getAgeMax()) || profileAge < currUser.getAgeMin()) {
             return false;
         }
 
@@ -210,5 +212,65 @@ public class UserService {
         u.setLastModifiedDate(LocalDateTime.now());
         u = userRepository.save(u);
         return u;
+    }
+
+
+    public boolean blockUser(int userId) {
+
+        int currUserId = getCurrentUserId();
+        if(currUserId <= 0 || userId <= 0) {
+            return false;
+        }
+
+        if(blockedUserRepository.countByUserIdAndBlockedUserId(currUserId, userId) > 0) {
+            //already blocked
+            return true;
+        }
+
+        BlockedUser blocked = new BlockedUser();
+        blocked.setUserId(currUserId);
+        blocked.setBlockedUserId(userId);
+        blocked.setBlockedDate(LocalDateTime.now());
+        blockedUserRepository.save(blocked);
+
+//        DefiniteDate dd = this.dateService.getActiveDate(currUser, userToBlock);
+//        if (dd != null) {
+//            boolean isOwner = (currUser.getId() == dd.getOwnerUserId());
+//            dd.setParticipantLastUpdate(isOwner, DateUtil.getCurrentServerTime());
+//            dd.setDateStatusId(DateStatus.DELETED.getId());
+//            dd.setParticipantStatusId(isOwner, DateParticipantStatus.DECLINED.getId());
+//            this.dateService.save(dd);
+//            this.dateLetterManager.onDateUpdated(dd, DatePanel.SubmitType.DECLINE, isOwner);
+//        }
+
+        return true;
+    }
+
+    public boolean unBlockUser(int userId) {
+
+        int currUserId = getCurrentUserId();
+        if(currUserId <= 0 || userId <= 0) {
+            return false;
+        }
+
+        BlockedUser blockedUser = blockedUserRepository.findByUserIdAndBlockedUserId(currUserId, userId);
+        if(blockedUser != null) {
+            blockedUserRepository.delete(blockedUser);
+        }
+
+        return true;
+    }
+
+    public List<BlockedUserRow> getBlockedUserRows() {
+        int currUserId = getCurrentUserId();
+        List<BlockedUser> arr = blockedUserRepository.findByUserId(currUserId);
+        List<BlockedUserRow> blockedUsers = new ArrayList<>(arr.size());
+        for(BlockedUser bu : arr) {
+            Optional<User> u = userRepository.findById(bu.getBlockedUserId());
+            if(u.isPresent()) {
+                blockedUsers.add(new BlockedUserRow(bu.getBlockedUserId(), u.get().getDisplayName()));
+            }
+        }
+        return blockedUsers;
     }
 }
