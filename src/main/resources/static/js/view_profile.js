@@ -32,5 +32,10 @@ $(document).ready(function() {
     lightGallery(document.getElementById('profile-light-gallery'));
     lightGallery(document.getElementById('main-profile-pic'));
 
+    $('#btnMakePlans').click(function () {
+        $('#profileTabsDiv a[href="#tab-4"]').tab('show');
+    });
+
+
     definitePlansScripts.blockUser();
 });

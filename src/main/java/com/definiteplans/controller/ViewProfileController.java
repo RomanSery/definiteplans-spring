@@ -21,7 +21,6 @@ import com.definiteplans.dom.User;
 import com.definiteplans.service.DefiniteDateService;
 import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.UserService;
-import com.definiteplans.util.DateUtil;
 
 @Controller
 public class ViewProfileController {
@@ -62,15 +61,6 @@ public class ViewProfileController {
 
 
         boolean isViewingSelf = currUser.getId() == profile.getId();
-        Integer age = (profile.getDob() != null) ? DateUtil.getAge(profile.getDob()) : null;
-        if (age != null && age.intValue() < 18) age = Integer.valueOf(18);
-
-        List<String> languages = new ArrayList<>();
-        if (profile.getLanguages() != null && profile.getLanguages().length() > 0) {
-            for (String languageId : profile.getLanguages().split(",")) {
-                languages.add(getProfileVal(Integer.parseInt(languageId)));
-            }
-        }
 
         ModelAndView m = new ModelAndView("view_profile");
         m.addObject("title", "View Profile - " + profile.getDisplayName());
@@ -79,14 +69,14 @@ public class ViewProfileController {
         m.addObject("loc", userService.getAddrDesc(profile));
         m.addObject("profileThumbImg", userService.getProfileImg(profile, true));
         m.addObject("profileFullImg", userService.getProfileImg(profile, false));
-        m.addObject("age", age);
+        m.addObject("age", userService.getProfileAge(profile));
         m.addObject("gender", getProfileVal(profile.getGender()));
         m.addObject("height", getProfileVal(profile.getHeight()));
         m.addObject("ethnicity", getProfileVal(profile.getEthnicity()));
         m.addObject("maritalStatus", getProfileVal(profile.getMaritalStatus()));
         m.addObject("kids", getProfileVal(profile.getKids()));
         m.addObject("wantsKids", getProfileVal(profile.getWantsKids()));
-        m.addObject("languages", StringUtils.join(languages, ","));
+        m.addObject("languages", getLanguages(profile));
         m.addObject("religion", getProfileVal(profile.getReligion()));
         m.addObject("education", getProfileVal(profile.getEducation()));
         m.addObject("income", getProfileVal(profile.getIncome()));
@@ -115,4 +105,13 @@ public class ViewProfileController {
         return enumValue != null ? enumValue.getEnumValue() : "";
     }
 
+    private String getLanguages(User profile) {
+        List<String> languages = new ArrayList<>();
+        if (profile.getLanguages() != null && profile.getLanguages().length() > 0) {
+            for (String languageId : profile.getLanguages().split(",")) {
+                languages.add(getProfileVal(Integer.parseInt(languageId)));
+            }
+        }
+        return StringUtils.join(languages, ",");
+    }
 }

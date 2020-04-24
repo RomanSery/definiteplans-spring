@@ -1,51 +1,51 @@
 
-<div th:fragment="panel" th:remove="tag">
+<div th:fragment="makePlans" th:remove="tag">
 
-    <form class="form-horizontal" wicket:id="definiteDateForm">
+    <form class="form-horizontal" id="definiteDateForm">
 
-        <div id="tipsContainer" style="width:100px;"></div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">What
-                <a class="fa fa-question-circle tooltip-icon-test" data-container="#tipsContainer" data-content="What are we going to be doing on the date? <br> Be specific." data-html="true" data-toggle="popover" data-trigger="focus"></a></label>
-            <div class="col-sm-6"><input class="form-control" maxlength="35" placeholder="ex: Take a walk in the park, grab drinks" type="text"id="doingWhat" name="doingWhat"></div>
+        <div class="form-group row">
+            <label for="doingWhat" class="col-sm-2 col-form-label font-bold">What?</label>
+            <div class="col">
+                <input class="form-control" maxlength="35" placeholder="ex: Take a walk in the park, grab drinks" type="text" id="doingWhat" name="doingWhat">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="locationName" class="col-sm-2 col-form-label font-bold">Where?</label>
+            <div class="col">
+                <input class="form-control" maxlength="30" placeholder="ex: Bob's Cafe" type="text" id="locationName" name="locationName">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="locationAddr" class="col-sm-2 col-form-label font-bold"></label>
+            <div class="col">
+                <input class="form-control" maxlength="50" placeholder="ex: 123 Main St" type="text" id="locationAddr" name="locationAddr">
+            </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Where
-                <a class="fa fa-question-circle tooltip-icon-test" data-container="#tipsContainer" data-content="Make sure to pick a safe, public place to meet.<br>Make sure it is easy to get to for both people." data-html="true" data-toggle="popover" data-trigger="focus"></a></label>
-            <div class="col-sm-6"><input class="form-control" maxlength="30" placeholder="ex: Bob's Cafe" type="text" id="locationName" name="locationName"></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label"></label>
-            <div class="col-sm-6"><input class="form-control" maxlength="50" placeholder="ex: 123 Main St" type="text" id="locationAddr" name="locationAddr"></div>
-        </div>
 
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">When</label>
-            <div class="col-sm-3">
-                <div class="input-group m-b">
-                    <input class="form-control" readonly="readonly" style="background:white;cursor:auto;" ype="text" id="doingWhenDate" name="doingWhenDate">
+        <div class="form-group row">
+            <label for="doingWhenDate" class="col-sm-2 col-form-label font-bold">When?</label>
+            <div class="col">
+                <div class="input-group date">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    <input type="text" id="doingWhenDate" name="doingWhenDate" class="form-control">
                 </div>
             </div>
         </div>
 
-        <div class="form-group bootstrap-timepicker">
-            <label class="col-sm-2 control-label"></label>
-            <div class="col-sm-3">
-                <div class="input-group m-b">
-                    <input class="form-control" readonly="readonly" style="background:white;cursor:auto;" type="text" id="doingWhenTime" name="doingWhenTime">
+        <div class="form-group row">
+            <label for="doingWhenTime" class="col-sm-2 col-form-label font-bold"></label>
+            <div class="col">
+                <div class="input-group date">
                     <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                    <input type="text" id="doingWhenTime" name="doingWhenTime" class="form-control">
                 </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Greeting
-                <a class="fa fa-question-circle tooltip-icon-test" data-container="#tipsContainer" data-content="Write a brief, simple message introducing yourself and mentioning what caught your eye." data-html="true" data-toggle="popover" data-trigger="focus"></a></label>
-            <div class="col-sm-6">
+        <div class="form-group row">
+            <label for="greetingMsg" class="col-sm-2 col-form-label font-bold">Greeting</label>
+            <div class="col">
                 <div class="input-group m-b">
                     <textarea class="form-control" cols="100" rows="5" id="greetingMsg" name="greetingMsg"></textarea>
                     <span class="help-block m-b-none" id="greetingMsgChars"></span>
@@ -53,124 +53,81 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Greeting</label>
-            <div class="col-sm-6">
-                <div class="input-group m-b"><span id="greetingMsgStatic"></span></div>
-            </div>
-        </div>
-
-
-        <div class="form-group" wicket:id="infoContainer">
-            <div class="col-sm-12">
-                <div class="alert alert-success" wicket:id="infoDesc"></div>
-            </div>
-        </div>
 
         <div class="form-group" wicket:id="proposeNewPlanContainer">
             <div class="col-sm-4">
                 <button class="btn btn-primary" data-singleton="true" data-toggle="confirmation" wicket:id="proposePlan">Propose this plan!</button>
             </div>
         </div>
-
-        <div class="form-group" wicket:id="proposeModificationContainer">
-            <div class="col-sm-12">
-                <button class="btn btn-primary btn-lg" data-singleton="true" data-toggle="confirmation" wicket:id="proposeChange">Propose a change</button>
-                <button class="btn btn-success btn-lg" data-singleton="true" data-toggle="confirmation" wicket:id="acceptPlan">Accept</button>
-                <button class="btn btn-danger pull-right" data-singleton="true" data-toggle="confirmation" wicket:id="declinePlan">Decline</button>
-            </div>
-        </div>
     </form>
-
-    <div wicket:id="alreadyOccuredContainer">
-
-        <div class="alert alert-danger" id="feedbackErrorBox" style="display:none;">
-            <ul>
-            </ul>
-        </div>
-
-        <form class="form-horizontal" wicket:id="dateFeedbackForm">
-
-            <h3 class="m-t-none m-b">This <strong class="text-success">WILL</strong> be shared with <span
-                    wicket:id="otherPersonName1"></span></h3>
-
-            <div class="form-group">
-                <label class="col-sm-4 control-label">Did <span wicket:id="otherPersonName4"></span> show up?</label>
-                <div class="col-sm-6" wicket:id="participantNoShow">
-                    <input type="radio" wicket:id="participantNoShowYes"> Yes
-                    <input type="radio" wicket:id="participantNoShowNo"> No
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-4 control-label">Do you want another date?</label>
-                <div class="col-sm-6" wicket:id="participantWantsMore">
-                    <input type="radio" wicket:id="participantWantsMoreYes"> Yes
-                    <input type="radio" wicket:id="participantWantsMoreNo"> No
-                </div>
-            </div>
-
-            <div class="hr-line-dashed"></div>
-
-            <h3 class="m-t-none m-b">This <strong class="text-danger">WILL NOT</strong> be shared with <span
-                    wicket:id="otherPersonName2"></span></h3>
-
-            <div class="form-group">
-                <label class="col-sm-4 control-label">Is <span wicket:id="otherPersonName3"></span> safe to
-                    date?</label>
-                <div class="col-sm-6" wicket:id="participantWasSafe">
-                    <input type="radio" wicket:id="participantWasSafeYes"> Yes
-                    <input type="radio" wicket:id="participantWasSafeNo"> No
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-4 control-label">How was it? <a class="fa fa-question-circle tooltip-icon-test"
-                                                                     data-container="#tipsContainer"
-                                                                     data-content="Tell us your overall experience setting up the date, the date itself, and ways to improve the process" data-toggle="popover"
-                                                                     data-trigger="focus" role="button"
-                                                                     tabindex="0"
-                                                                     title="Feedback"></a></label>
-                <div class="col-sm-6"><textarea class="form-control" wicket:id="participantFeedback"></textarea></div>
-            </div>
-
-
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <button class="btn btn-primary btn-lg" type="submit">Submit</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-
 
 </div>
 
 
 
-<div th:fragment="pastDates" class="ibox float-e-margins">
-    <div class="ibox-title">
-        <h5>Past Dates</h5>
+
+<div th:fragment="already-occured-frag" th:remove="tag">
+    <div class="alert alert-danger" id="feedbackErrorBox" style="display:none;">
+        <ul>
+        </ul>
     </div>
-    <div class="ibox-content inspinia-timeline">
-        <div class="timeline-item">
-            <div class="row" wicket:id="pastDatesListView">
-                <div class="col-xs-3 date">
-                    <i class="fa fa-calendar"></i>
-                    <span wicket:id="eventDateTime"></span>
-                    <br/>
-                    <span wicket:id="wantsAnotherDate"></span>
-                </div>
-                <div class="col-xs-7 content no-top-border">
-                    <address>
-                        <strong wicket:id="doingWhat">Meeting</strong><br>
-                        <span wicket:id="locationName"></span><br>
-                        <span wicket:id="locationAddr"></span>
-                    </address>
-                    <p wicket:id="dateGreetingMsg"></p>
-                </div>
+
+    <form class="form-horizontal" wicket:id="dateFeedbackForm">
+
+        <h3 class="m-t-none m-b">This <strong class="text-success">WILL</strong> be shared with <span
+                wicket:id="otherPersonName1"></span></h3>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Did <span wicket:id="otherPersonName4"></span> show up?</label>
+            <div class="col-sm-6" wicket:id="participantNoShow">
+                <input type="radio" wicket:id="participantNoShowYes"> Yes
+                <input type="radio" wicket:id="participantNoShowNo"> No
             </div>
         </div>
-    </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Do you want another date?</label>
+            <div class="col-sm-6" wicket:id="participantWantsMore">
+                <input type="radio" wicket:id="participantWantsMoreYes"> Yes
+                <input type="radio" wicket:id="participantWantsMoreNo"> No
+            </div>
+        </div>
+
+        <div class="hr-line-dashed"></div>
+
+        <h3 class="m-t-none m-b">This <strong class="text-danger">WILL NOT</strong> be shared with <span
+                wicket:id="otherPersonName2"></span></h3>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Is <span wicket:id="otherPersonName3"></span> safe to
+                date?</label>
+            <div class="col-sm-6" wicket:id="participantWasSafe">
+                <input type="radio" wicket:id="participantWasSafeYes"> Yes
+                <input type="radio" wicket:id="participantWasSafeNo"> No
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">How was it? <a class="fa fa-question-circle tooltip-icon-test"
+                                                                 data-container="#tipsContainer"
+                                                                 data-content="Tell us your overall experience setting up the date, the date itself, and ways to improve the process" data-toggle="popover"
+                                                                 data-trigger="focus" role="button"
+                                                                 tabindex="0"
+                                                                 title="Feedback"></a></label>
+            <div class="col-sm-6"><textarea class="form-control" wicket:id="participantFeedback"></textarea></div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-sm-12">
+                <button class="btn btn-primary btn-lg" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<div th:fragment="pastDates" th:remove="tag" class="ibox float-e-margins">
+
 </div>

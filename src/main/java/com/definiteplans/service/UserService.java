@@ -207,6 +207,12 @@ public class UserService {
         return token.getUserId();
     }
 
+    public Integer getProfileAge(User profile) {
+        Integer age = (profile.getDob() != null) ? DateUtil.getAge(profile.getDob()) : null;
+        if (age != null && age.intValue() < 18) age = Integer.valueOf(18);
+        return age;
+    }
+
     public User saveUser(User u) {
         u.setComplete(u.isCompleteProfile());
         u.setLastModifiedDate(LocalDateTime.now());
