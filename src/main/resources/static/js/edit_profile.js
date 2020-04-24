@@ -272,24 +272,26 @@ definitePlansScripts.initLg = function () {
 
 definitePlansScripts.unblockUser = function () {
     $('.unblockLink').click(function () {
-        let unlockBtn = $(this);
-        $.ajax({
-            type: "GET", url: '/me/unblock/' + $(this).attr('profile-id'),
-            beforeSend: function (xhr) {
-                definitePlansScripts.makeBtnLoadingObj(unlockBtn);
+        if(confirm('Are you sure you want to unblock this person?')) {
+            let unlockBtn = $(this);
+            $.ajax({
+                type: "GET", url: '/me/unblock/' + $(this).attr('profile-id'),
+                beforeSend: function (xhr) {
+                    definitePlansScripts.makeBtnLoadingObj(unlockBtn);
 
-                var token = $('#_csrf').attr('content');
-                var header = $('#_csrf_header').attr('content');
-                xhr.setRequestHeader(header, token);
-            },
-            error: function () {
-                definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
-            },
-            success: function (data) {
-                definitePlansScripts.stopBtnLoadingObj(unlockBtn);
-                definitePlansScripts.refreshBlockedList();
-            }
-        });
+                    var token = $('#_csrf').attr('content');
+                    var header = $('#_csrf_header').attr('content');
+                    xhr.setRequestHeader(header, token);
+                },
+                error: function () {
+                    definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                },
+                success: function (data) {
+                    definitePlansScripts.stopBtnLoadingObj(unlockBtn);
+                    definitePlansScripts.refreshBlockedList();
+                }
+            });
+        }
     });
 };
 
