@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.definiteplans.dom.SearchPrefs;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.ZipCode;
+import com.definiteplans.util.DateUtil;
 
 public class SearchUsersRepositoryImpl implements SearchUsersRepository {
     @Autowired
@@ -22,19 +23,22 @@ public class SearchUsersRepositoryImpl implements SearchUsersRepository {
     @Override
     public List<User> browsePagedResults(User currUser, int first, int count, SearchPrefs prefs) {
         StringBuilder hql = new StringBuilder();
-        hql.append("from User u where u.isComplete = 1 ");
+        hql.append("from User u where u.isComplete = 1 and u.id <> :currUsrId ");
         hql.append(" and u.id not in (select bu.blockedUserId from BlockedUser bu where bu.userId = :currUsrId)");
         hql.append(" and :currUsrId not in (select bu.blockedUserId from BlockedUser bu where bu.userId = u.id)");
 
-        //TODO - this doesnt work if ageMin or ageMax = 0
         if (currUser.getDob() != null) {
-            //hql = hql + " and " + DateUtil.getAge(currUser.getDob()) + " between u.ageMin and u.ageMax";
+            hql.append(" and (u.ageMin = 0 OR :myAge >= u.ageMin) ");
+            hql.append(" and (u.ageMax = 0 OR :myAge <= u.ageMax) ");
         }
 
-//        if(currUser.getAgeMin() > 0 || currUser.getAgeMax() > 0) {
-//            hql = hql + " and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) between " + currUser.getAgeMin() + " and " + currUser.getAgeMax();
-//        }
-//
+        if(currUser.getAgeMin() > 0) {
+            hql.append(" and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) >= :myAgeMin ");
+        }
+        if(currUser.getAgeMax() > 0) {
+            hql.append(" and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) <= :myAgeMax ");
+        }
+
         if (prefs.hasAgeFrom()) {
             hql.append(" and TIMESTAMPDIFF(YEAR,u.dob,CURDATE()) >= :ageFrom ");
         }
@@ -101,6 +105,16 @@ public class SearchUsersRepositoryImpl implements SearchUsersRepository {
 
         TypedQuery<User> q = entityManager.createQuery(hql.toString(), User.class);
         q.setParameter("currUsrId", currUser.getId());
+
+        if(currUser.getDob() != null) {
+            q.setParameter("myAge", DateUtil.getAge(currUser.getDob()));
+        }
+        if(currUser.getAgeMin() > 0) {
+            q.setParameter("myAgeMin", currUser.getAgeMin());
+        }
+        if(currUser.getAgeMax() > 0) {
+            q.setParameter("myAgeMax", currUser.getAgeMax());
+        }
 
         if(hasDistancePref) {
             q.setParameter("distanceFrom", distanceFrom);

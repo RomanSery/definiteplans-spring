@@ -11,3 +11,11 @@ login with fb & google
 reset filters button in browse page
 
 browse page paging
+
+
+delete my account
+
+finish implementing user.isProfileCompleted
+
+
+clarify settings in edit profile - visible to ages, also means you wont be able to see them!

@@ -42,7 +42,7 @@ public class User implements Serializable {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "user_id")
+    @Column(name = "id")
     @EqualsAndHashCode.Include
     private int id;
 
@@ -136,10 +136,10 @@ public class User implements Serializable {
     @Column(name = "notifications_email")
     private String notificationsEmail;
 
-    @Column(name = "age_min")
+    @Column(name = "age_min", nullable = false)
     private int ageMin;
 
-    @Column(name = "age_max")
+    @Column(name = "age_max", nullable = false)
     private int ageMax;
 
     @Column(name = "num_no_shows")
