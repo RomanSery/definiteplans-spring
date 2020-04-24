@@ -17,35 +17,41 @@
             </div>
             <div class="ibox-content">
                 <div>
-                    <div class="panel blank-panel">
-                        <div class="panel-heading">
-                            <div class="panel-options">
-                                <ul class="nav nav-tabs" id="profileTabsDiv">
-                                    <li class="active"><a data-toggle="tab" href="#profile-tab-1">Basic Info</a></li>
-                                    <li><a data-toggle="tab" href="#profile-tab-2">In my own words</a></li>
-                                    <li><a data-toggle="tab" href="#profile-tab-3">Pictures</a></li>
-                                    <li wicket:id="makePlansTab"><a data-toggle="tab" href="#profile-tab-4">Make Plans</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="profile-tab-1">
+
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" id="profileTabsDiv">
+                            <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Basic</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">More</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-3">Pictures</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-4">Make Plans!</a></li>
+                        </ul>
+
+
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="panel-body">
                                     <div th:replace="view_profile/profile_frags::basicInfo" th:remove="tag"></div>
                                 </div>
-                                <div class="tab-pane" id="profile-tab-2">
+                            </div>
+                            <div id="tab-2" class="tab-pane">
+                                <div class="panel-body">
                                     <div th:replace="view_profile/profile_frags::aboutMe" th:remove="tag"></div>
                                 </div>
-                                <div class="tab-pane" id="profile-tab-3">
+                            </div>
+                            <div id="tab-3" class="tab-pane">
+                                <div class="panel-body">
                                     <div th:replace="view_profile/profile_frags::pics" th:remove="tag"></div>
                                 </div>
-                                <div class="tab-pane" id="profile-tab-4">
+                            </div>
+                            <div id="tab-4" class="tab-pane">
+                                <div class="panel-body">
                                     <div th:replace="view_profile/date::panel" th:remove="tag"></div>
                                     <div th:replace="view_profile/date::pastDates" th:remove="tag"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

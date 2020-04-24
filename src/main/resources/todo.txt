@@ -2,7 +2,6 @@ when logging and user is not active, it shows error message but also need to sho
 
 store last_login_date, use for sorting in browse results, show when user was last online
 
-finish blocked users in profile settings
 
 domisc?action=findzip
 
