@@ -4,13 +4,17 @@
     <form class="form-horizontal" id="definiteDateForm" th:action="@{/dates/date}" th:object="${date}" method="POST" data-parsley-validate>
 
         <div class="form-group row">
-            <label for="doingWhat" class="col-sm-2 col-form-label font-bold">What?</label>
+            <label for="doingWhat" class="col-sm-2 col-form-label font-bold">What?
+                <a class="fa fa-question-circle" title="What are we going to be doing on the date?<br>Be specific." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
+            </label>
             <div class="col">
                 <input class="form-control" maxlength="35" placeholder="ex: Take a walk in the park, grab drinks" type="text" th:field="*{doingWhat}">
             </div>
         </div>
         <div class="form-group row">
-            <label for="locationName" class="col-sm-2 col-form-label font-bold">Where?</label>
+            <label for="locationName" class="col-sm-2 col-form-label font-bold">Where?
+                <a class="fa fa-question-circle" title="Make sure to pick a safe, public place to meet.<br>Make sure it is easy to get to for both people." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
+            </label>
             <div class="col">
                 <input class="form-control" maxlength="30" placeholder="ex: Bob's Cafe" type="text" th:field="*{locationName}">
             </div>
@@ -26,7 +30,7 @@
         <div class="form-group row">
             <label for="doingWhenDate" class="col-sm-2 col-form-label font-bold">When?</label>
             <div class="col">
-                <div class="input-group date">
+                <div class="input-group date" data-provide="datepicker">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     <input type="text" th:field="*{doingWhenDate}" class="form-control">
                 </div>
@@ -36,7 +40,7 @@
         <div class="form-group row">
             <label for="doingWhenTime" class="col-sm-2 col-form-label font-bold"></label>
             <div class="col">
-                <div class="input-group date">
+                <div class="input-group date clockpicker">
                     <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
                     <input type="text" th:field="*{doingWhenTime}" class="form-control">
                 </div>
@@ -44,7 +48,9 @@
         </div>
 
         <div class="form-group row">
-            <label for="greetingMsg" class="col-sm-2 col-form-label font-bold">Greeting</label>
+            <label for="greetingMsg" class="col-sm-2 col-form-label font-bold">Greeting
+                <a class="fa fa-question-circle" title="Write a brief, simple message introducing yourself and mentioning what caught your eye." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
+            </label>
             <div class="col">
                 <div class="input-group m-b">
                     <textarea class="form-control" cols="100" rows="5" th:field="*{greetingMsg}"></textarea>

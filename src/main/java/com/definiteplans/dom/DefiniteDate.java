@@ -1,7 +1,9 @@
 package com.definiteplans.dom;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,8 +39,11 @@ public class DefiniteDate implements Serializable {
     @Column(name = "location_addr")
     private String locationAddr;
 
-    @Column(name = "doing_when")
-    private LocalDateTime doingWhen;
+    @Column(name = "doing_when_date")
+    private LocalDate doingWhenDate;
+
+    @Column(name = "doing_when_time")
+    private LocalTime doingWhenTime;
 
     @Column(name = "owner_id")
     private int ownerUserId;

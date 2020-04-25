@@ -36,6 +36,12 @@ $(document).ready(function() {
         $('#profileTabsDiv a[href="#tab-4"]').tab('show');
     });
 
+    $('.clockpicker').clockpicker({
+        autoclose: true,
+        'default': 'now'
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
 
     definitePlansScripts.blockUser();
 });
