@@ -16,6 +16,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.controller.model.SearchResult;
+import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.SearchPrefs;
 import com.definiteplans.dom.User;
@@ -32,12 +33,14 @@ public class BrowseController {
     private final SearchService searchService;
     private final EnumValueService enumValueService;
     private final DefiniteDateService definiteDateService;
+    private final DefiniteDateRepository definiteDateRepository;
 
-    public BrowseController(UserService userService, SearchService searchService, EnumValueService enumValueService, DefiniteDateService definiteDateService) {
+    public BrowseController(UserService userService, SearchService searchService, EnumValueService enumValueService, DefiniteDateService definiteDateService, DefiniteDateRepository definiteDateRepository) {
         this.userService = userService;
         this.searchService = searchService;
         this.enumValueService = enumValueService;
         this.definiteDateService = definiteDateService;
+        this.definiteDateRepository = definiteDateRepository;
     }
 
     @GetMapping("/browse")
@@ -57,20 +60,6 @@ public class BrowseController {
         m.addObject("numResults", results.size());
         return m;
     }
-
-    private Boolean wantsMore(User currUser, User viewing, DefiniteDate activeDate) {
-        if (activeDate != null) return null;
-        List<DefiniteDate> pastDates = definiteDateService.getPastDatesByOwnerAndDatee(currUser, viewing);
-        if (pastDates.size() > 0) {
-            DefiniteDate dd = pastDates.get(0);
-            if (viewing.getId() == dd.getOwnerUserId()) {
-                return Boolean.valueOf(dd.isOwnerWantsMore());
-            }
-            return Boolean.valueOf(dd.isDateeWantsMore());
-        }
-        return null;
-    }
-
 
     @PostMapping("/browse/filter")
     public @ResponseBody AjaxResponse applyFilters(@ModelAttribute("prefs") SearchPrefs prefs) {
@@ -114,8 +103,8 @@ public class BrowseController {
             if (age != null && age.intValue() < 18) age = null;
             String name = u.getDisplayName() + ((age != null) ? (", " + age) : "");
 
-            DefiniteDate activeDate = definiteDateService.getActiveDate(currUser, u);
-            Boolean b = wantsMore(currUser, u, activeDate);
+            DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), u.getId());
+            Boolean b = definiteDateService.wantsMore(currUser, u, activeDate);
 
             SearchResult sr = new SearchResult(u.getId(), userService.getProfileImg(u, true), name, userService.getAddrDesc(u), u.getNumNoShows(),
                     BooleanUtils.isTrue(b), b != null && !b.booleanValue(), activeDate != null);

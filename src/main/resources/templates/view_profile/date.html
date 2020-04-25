@@ -1,24 +1,24 @@
 
 <div th:fragment="makePlans" th:remove="tag">
 
-    <form class="form-horizontal" id="definiteDateForm">
+    <form class="form-horizontal" id="definiteDateForm" th:action="@{/dates/date}" th:object="${date}" method="POST" data-parsley-validate>
 
         <div class="form-group row">
             <label for="doingWhat" class="col-sm-2 col-form-label font-bold">What?</label>
             <div class="col">
-                <input class="form-control" maxlength="35" placeholder="ex: Take a walk in the park, grab drinks" type="text" id="doingWhat" name="doingWhat">
+                <input class="form-control" maxlength="35" placeholder="ex: Take a walk in the park, grab drinks" type="text" th:field="*{doingWhat}">
             </div>
         </div>
         <div class="form-group row">
             <label for="locationName" class="col-sm-2 col-form-label font-bold">Where?</label>
             <div class="col">
-                <input class="form-control" maxlength="30" placeholder="ex: Bob's Cafe" type="text" id="locationName" name="locationName">
+                <input class="form-control" maxlength="30" placeholder="ex: Bob's Cafe" type="text" th:field="*{locationName}">
             </div>
         </div>
         <div class="form-group row">
             <label for="locationAddr" class="col-sm-2 col-form-label font-bold"></label>
             <div class="col">
-                <input class="form-control" maxlength="50" placeholder="ex: 123 Main St" type="text" id="locationAddr" name="locationAddr">
+                <input class="form-control" maxlength="50" placeholder="ex: 123 Main St" type="text" th:field="*{locationAddr}">
             </div>
         </div>
 
@@ -28,7 +28,7 @@
             <div class="col">
                 <div class="input-group date">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input type="text" id="doingWhenDate" name="doingWhenDate" class="form-control">
+                    <input type="text" th:field="*{doingWhenDate}" class="form-control">
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
             <div class="col">
                 <div class="input-group date">
                     <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-                    <input type="text" id="doingWhenTime" name="doingWhenTime" class="form-control">
+                    <input type="text" th:field="*{doingWhenTime}" class="form-control">
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
             <label for="greetingMsg" class="col-sm-2 col-form-label font-bold">Greeting</label>
             <div class="col">
                 <div class="input-group m-b">
-                    <textarea class="form-control" cols="100" rows="5" id="greetingMsg" name="greetingMsg"></textarea>
+                    <textarea class="form-control" cols="100" rows="5" th:field="*{greetingMsg}"></textarea>
                     <span class="help-block m-b-none" id="greetingMsgChars"></span>
                 </div>
             </div>

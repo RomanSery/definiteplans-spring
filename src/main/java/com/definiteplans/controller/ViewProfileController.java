@@ -14,8 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.AjaxResponse;
+import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
+import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
 import com.definiteplans.service.DefiniteDateService;
@@ -28,13 +30,15 @@ public class ViewProfileController {
     private final UserRepository userRepository;
     private final EnumValueService enumValueService;
     private final DefiniteDateService definiteDateService;
+    private final DefiniteDateRepository definiteDateRepository;
     private final UserImageRepository userImageRepository;
 
-    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueService enumValueService, DefiniteDateService definiteDateService, UserImageRepository userImageRepository) {
+    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueService enumValueService, DefiniteDateService definiteDateService, DefiniteDateRepository definiteDateRepository, UserImageRepository userImageRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.enumValueService = enumValueService;
         this.definiteDateService = definiteDateService;
+        this.definiteDateRepository = definiteDateRepository;
         this.userImageRepository = userImageRepository;
     }
 
@@ -83,8 +87,14 @@ public class ViewProfileController {
         m.addObject("smokes", getProfileVal(profile.getSmokes()));
         m.addObject("aboutMe", profile.getAboutMePretty());
         m.addObject("interests", profile.getInterestsPretty());
-
         m.addObject("user_pics", userImageRepository.findByUserId(profile.getId()));
+
+        DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), profile.getId());
+        if(activeDate == null) {
+            activeDate = definiteDateService.createNew(currUser);
+        }
+        m.addObject("date", activeDate);
+
         return m;
     }
 
