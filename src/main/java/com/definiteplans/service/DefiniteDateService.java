@@ -2,11 +2,13 @@ package com.definiteplans.service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.definiteplans.controller.model.PastDateRow;
 import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.DefiniteDate;
@@ -46,13 +48,7 @@ public class DefiniteDateService {
         return null;
     }
 
-
-    public String getDateDescription(User currUser, User viewingUser, DefiniteDate dd) {
-
-        if(dd == null || dd.getId() == 0) {
-            return "";
-        }
-
+    private LocalDateTime getSpecificTime(DefiniteDate dd) {
         LocalDateTime date = null;
         if(dd.getDoingWhenDate() != null) {
             date = LocalDateTime.of(dd.getDoingWhenDate(), LocalTime.MIDNIGHT);
@@ -60,7 +56,17 @@ public class DefiniteDateService {
         if(dd.getDoingWhenTime() != null && date != null) {
             date = LocalDateTime.of(dd.getDoingWhenDate(), dd.getDoingWhenTime());
         }
+        return date;
+    }
 
+
+    public String getDateDescription(User currUser, User viewingUser, DefiniteDate dd) {
+
+        if(dd == null || dd.getId() == 0) {
+            return "";
+        }
+
+        LocalDateTime date = getSpecificTime(dd);
         boolean isOwner = currUser.getId() == dd.getOwnerUserId();
 
         DateParticipantStatus myStatus = DateParticipantStatus.getById((dd.getOwnerUserId() == currUser.getId()) ? dd.getOwnerStatusId() : dd.getDateeStatusId());
@@ -106,5 +112,21 @@ public class DefiniteDateService {
         return infoDesc;
     }
 
+    public List<PastDateRow> getPastDates(User currUser, User profile) {
+        List<DefiniteDate> pastDates = definiteDateRepository.getPastDatesByOwnerAndDatee(currUser.getId(), profile.getId());
+
+        List<PastDateRow> rows = new ArrayList<>(pastDates.size());
+        for(DefiniteDate dd : pastDates) {
+
+            String doingWhat = dd.getDoingWhat();
+            LocalDateTime doingWhen = getSpecificTime(dd);
+            String locationName = dd.getLocationName();
+            String greetingMsg = '"' + dd.getGreetingMsg() + '"';
+            boolean wantsAnotherDate = dd.getOwnerUserId() == profile.getId() ? dd.isOwnerWantsMore() : dd.isDateeWantsMore();
+            String theirName = dd.getOwnerUserId() == profile.getId() ? profile.getDisplayName() : currUser.getDisplayName();
+            rows.add(new PastDateRow(doingWhat, doingWhen, locationName, greetingMsg, wantsAnotherDate, theirName));
+        }
+        return rows;
+    }
 
 }

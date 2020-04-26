@@ -127,6 +127,30 @@
 
 
 
-<div th:fragment="pastDates" th:remove="tag" class="ibox float-e-margins">
-
+<div th:fragment="pastDates" th:remove="tag">
+    <div class="ibox float-e-margins" th:if="${past_dates != null and !past_dates.isEmpty()}">
+        <div class="ibox-title">
+            <h5>Past Dates</h5>
+        </div>
+        <div class="ibox-content inspinia-timeline">
+            <div class="timeline-item">
+                <div class="row" th:each="pd : ${past_dates}">
+                    <div class="col-xs-3 date">
+                        <i class="fa fa-calendar"></i>
+                        <span th:text="${pd.doingWhen}"></span>
+                        <br/>
+                        <small th:if="${pd.wantsAnotherDate}" class="text-info">[[${pd.theirName}]] wants another date</small>
+                        <small th:unless="${pd.wantsAnotherDate}" class="text-danger">[[${pd.theirName}]] doesn't want another date</small>
+                    </div>
+                    <div class="col-xs-7 content no-top-border">
+                        <address>
+                            <strong th:text="${pd.doingWhat}">Meeting</strong><br>
+                            <span th:text="${pd.locationName}"></span>
+                        </address>
+                        <p th:text="${pd.greetingMsg}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

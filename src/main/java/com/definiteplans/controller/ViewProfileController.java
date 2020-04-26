@@ -95,6 +95,8 @@ public class ViewProfileController {
         }
         m.addObject("date", activeDate);
         m.addObject("has_active_date", activeDate != null && activeDate.getId() > 0);
+
+        m.addObject("past_dates", definiteDateService.getPastDates(currUser, profile));
         return m;
     }
 
