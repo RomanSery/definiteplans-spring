@@ -19,12 +19,6 @@
                 <input class="form-control" maxlength="30" placeholder="ex: Bob's Cafe" type="text" th:field="*{locationName}">
             </div>
         </div>
-        <div class="form-group row">
-            <label for="locationAddr" class="col-sm-2 col-form-label font-bold"></label>
-            <div class="col">
-                <input class="form-control" maxlength="50" placeholder="ex: 123 Main St" type="text" th:field="*{locationAddr}">
-            </div>
-        </div>
 
 
         <div class="form-group row">
@@ -59,10 +53,9 @@
             </div>
         </div>
 
-
-        <div class="form-group" wicket:id="proposeNewPlanContainer">
-            <div class="col-sm-4">
-                <button class="btn btn-primary" data-singleton="true" data-toggle="confirmation" wicket:id="proposePlan">Propose this plan!</button>
+        <div class="form-group row" th:unless="${has_active_date}">
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-primary" data-singleton="true" data-toggle="confirmation" id="proposePlanBtn">Propose this plan!</button>
             </div>
         </div>
     </form>

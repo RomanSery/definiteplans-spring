@@ -94,7 +94,7 @@ public class ViewProfileController {
             activeDate = definiteDateService.createNew(currUser);
         }
         m.addObject("date", activeDate);
-
+        m.addObject("has_active_date", activeDate != null && activeDate.getId() > 0);
         return m;
     }
 

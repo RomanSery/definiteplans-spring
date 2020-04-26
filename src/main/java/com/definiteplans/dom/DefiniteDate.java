@@ -36,9 +36,6 @@ public class DefiniteDate implements Serializable {
     @Column(name = "location_name")
     private String locationName;
 
-    @Column(name = "location_addr")
-    private String locationAddr;
-
     @Column(name = "doing_when_date")
     private LocalDate doingWhenDate;
 

@@ -15,7 +15,8 @@ browse page paging
 delete my account
 
 finish implementing user.isProfileCompleted
-
+Your profile is missing required information, please <a href="editProfile">complete your profile</a>.
+Please complete all required info in the 'Basic Info' tab of your profile and upload a picture.  You will not show up in search results or be able to make plans with anyone until you do.
 
 clarify settings in edit profile - visible to ages, also means you wont be able to see them!
 

@@ -43,5 +43,7 @@ $(document).ready(function() {
 
     $('[data-toggle="tooltip"]').tooltip();
 
+    $('[data-toggle="confirmation"]').confirmation();
+
     definitePlansScripts.blockUser();
 });
