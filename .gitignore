@@ -32,5 +32,6 @@ build/
 /.mvn/wrapper/
 /mvnw
 /mvnw.cmd
+src/test/
 
-/src/resources/application.properties
+!/src/main/resources/application.properties
