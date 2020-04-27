@@ -79,16 +79,11 @@
 
 
 
-<div th:fragment="already-occured-frag" th:remove="tag">
-    <div class="alert alert-danger" id="feedbackErrorBox" style="display:none;">
-        <ul>
-        </ul>
-    </div>
+<div th:fragment="feedbackFrag" th:remove="tag">
 
-    <form class="form-horizontal" wicket:id="dateFeedbackForm">
+    <form class="form-horizontal" id="dateFeedbackForm" th:if="${show_feedback_form}">
 
-        <h3 class="m-t-none m-b">This <strong class="text-success">WILL</strong> be shared with <span
-                wicket:id="otherPersonName1"></span></h3>
+        <h3 class="m-t-none m-b">This <strong class="text-success">WILL</strong> be shared with <span wicket:id="otherPersonName1"></span></h3>
 
         <div class="form-group">
             <label class="col-sm-4 control-label">Did <span wicket:id="otherPersonName4"></span> show up?</label>
@@ -108,12 +103,10 @@
 
         <div class="hr-line-dashed"></div>
 
-        <h3 class="m-t-none m-b">This <strong class="text-danger">WILL NOT</strong> be shared with <span
-                wicket:id="otherPersonName2"></span></h3>
+        <h3 class="m-t-none m-b">This <strong class="text-danger">WILL NOT</strong> be shared with <span wicket:id="otherPersonName2"></span></h3>
 
         <div class="form-group">
-            <label class="col-sm-4 control-label">Is <span wicket:id="otherPersonName3"></span> safe to
-                date?</label>
+            <label class="col-sm-4 control-label">Is <span wicket:id="otherPersonName3"></span> safe to date?</label>
             <div class="col-sm-6" wicket:id="participantWasSafe">
                 <input type="radio" wicket:id="participantWasSafeYes"> Yes
                 <input type="radio" wicket:id="participantWasSafeNo"> No
@@ -121,12 +114,9 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-4 control-label">How was it? <a class="fa fa-question-circle tooltip-icon-test"
-                                                                 data-container="#tipsContainer"
-                                                                 data-content="Tell us your overall experience setting up the date, the date itself, and ways to improve the process" data-toggle="popover"
-                                                                 data-trigger="focus" role="button"
-                                                                 tabindex="0"
-                                                                 title="Feedback"></a></label>
+            <label class="col-sm-4 control-label">How was it?
+                <a class="fa fa-question-circle" title="Tell us your overall experience setting up the date, the date itself, and ways to improve the process" data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
+            </label>
             <div class="col-sm-6"><textarea class="form-control" wicket:id="participantFeedback"></textarea></div>
         </div>
 

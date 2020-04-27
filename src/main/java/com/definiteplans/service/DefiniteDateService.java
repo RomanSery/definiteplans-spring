@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.definiteplans.controller.model.DateFeedback;
 import com.definiteplans.controller.model.PastDateRow;
 import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dao.UserRepository;
@@ -75,6 +76,7 @@ public class DefiniteDateService {
             m.addObject("has_desc", false);
             m.addObject("can_edit", true);
             m.addObject("can_mod", false);
+            m.addObject("show_feedback_form", false);
             return;
         }
 
@@ -93,7 +95,7 @@ public class DefiniteDateService {
         boolean theyGaveFeedback = isOwner ? dd.isDateeGaveFeedback() : dd.isOwnerGaveFeedback();
 
         boolean isChange = dd.getDateeLastUpdate() != null && dd.getOwnerLastUpdate() != null;
-
+        boolean showFeedbackForm = dd.getId() > 0 && bothApproved && isTooLateToAccept && !gaveFeedback;
 
         String infoDesc = "";
         if (bothApproved) {
@@ -131,6 +133,7 @@ public class DefiniteDateService {
         m.addObject("can_propose_change", !isTooLateToModify);
         m.addObject("can_accept", myStatus != DateParticipantStatus.APPROVED && !isTooLateToAccept);
         m.addObject("can_decline", !isTooLateToModify);
+        m.addObject("show_feedback_form", showFeedbackForm);
     }
 
     public List<PastDateRow> getPastDates(User currUser, User profile) {
@@ -212,21 +215,21 @@ public class DefiniteDateService {
 
 
 
-    public boolean submitDateFeedback(User currUser, User viewingUser, SubmitType type, DefiniteDate dd) {
+    public boolean submitDateFeedback(User currUser, DateFeedback feedback, DefiniteDate dd) {
 
         boolean isOwner = currUser.getId() == dd.getOwnerUserId();
 
         if (isOwner) {
-            //dd.setOwnerWantsMore(this.participantWantsMore.booleanValue());
-            //dd.setOwnerWasSafe(this.participantWasSafe);
-            //dd.setOwnerFeedback(this.participantFeedback);
-            //dd.setDateeNoShow(this.participantNoShow.booleanValue());
+            dd.setOwnerWantsMore(feedback.getParticipantWantsMore());
+            dd.setOwnerWasSafe(feedback.getParticipantWasSafe());
+            dd.setOwnerFeedback(feedback.getParticipantFeedback());
+            dd.setDateeNoShow(feedback.getParticipantNoShow());
             dd.setOwnerGaveFeedback(true);
         } else {
-            //dd.setDateeWantsMore(this.participantWantsMore.booleanValue());
-            //dd.setDateeWasSafe(this.participantWasSafe);
-            //dd.setDateeFeedback(this.participantFeedback);
-            //dd.setOwnerNoShow(this.participantNoShow.booleanValue());
+            dd.setDateeWantsMore(feedback.getParticipantWantsMore());
+            dd.setDateeWasSafe(feedback.getParticipantWasSafe());
+            dd.setDateeFeedback(feedback.getParticipantFeedback());
+            dd.setOwnerNoShow(feedback.getParticipantNoShow());
             dd.setDateeGaveFeedback(true);
         }
 
