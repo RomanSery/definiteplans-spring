@@ -21,3 +21,8 @@ Please complete all required info in the 'Basic Info' tab of your profile and up
 clarify settings in edit profile - visible to ages, also means you wont be able to see them!
 
 update loading buttons the same way i do for block user on view profile page
+
+  add((new RequiredTextField("doingWhenDate", new PropertyModel(this, "doingWhenDate")))
+                    .add(new AttributeModifier("data-date-start-date", DateUtil.printDate(DateUtil.getCurrentServerTime())))
+                    .add(new AttributeModifier("data-date-end-date", DateUtil.printDate(DateUtil.getCurrentServerTime().plusDays(25))))
+                    .setMarkupId("doingWhenDate"));

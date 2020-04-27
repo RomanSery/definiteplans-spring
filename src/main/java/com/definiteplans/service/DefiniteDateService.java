@@ -6,25 +6,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.definiteplans.controller.model.PastDateRow;
 import com.definiteplans.dao.DefiniteDateRepository;
+import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.DateParticipantStatus;
+import com.definiteplans.dom.enumerations.DateStatus;
+import com.definiteplans.dom.enumerations.SubmitType;
 import com.definiteplans.util.DateUtil;
 
 @Service
 public class DefiniteDateService {
     private final DefiniteDateRepository definiteDateRepository;
     private final ZipCodeRepository zipCodeRepository;
+    private final UserRepository userRepository;
 
-    public DefiniteDateService(DefiniteDateRepository definiteDateRepository, ZipCodeRepository zipCodeRepository) {
+    public DefiniteDateService(DefiniteDateRepository definiteDateRepository, ZipCodeRepository zipCodeRepository, UserRepository userRepository) {
         this.definiteDateRepository = definiteDateRepository;
         this.zipCodeRepository = zipCodeRepository;
+        this.userRepository = userRepository;
     }
 
     public DefiniteDate createNew(User currUser) {
@@ -60,10 +67,15 @@ public class DefiniteDateService {
     }
 
 
-    public String getDateDescription(User currUser, User viewingUser, DefiniteDate dd) {
+    public void setDateAttributes(ModelAndView m, User currUser, User viewingUser, DefiniteDate dd) {
+
+        m.addObject("past_dates", getPastDates(currUser, viewingUser));
 
         if(dd == null || dd.getId() == 0) {
-            return "";
+            m.addObject("has_desc", false);
+            m.addObject("can_edit", true);
+            m.addObject("can_mod", false);
+            return;
         }
 
         LocalDateTime date = getSpecificTime(dd);
@@ -72,6 +84,7 @@ public class DefiniteDateService {
         DateParticipantStatus myStatus = DateParticipantStatus.getById((dd.getOwnerUserId() == currUser.getId()) ? dd.getOwnerStatusId() : dd.getDateeStatusId());
         DateParticipantStatus otherPersonStatus = DateParticipantStatus.getById((dd.getOwnerUserId() == viewingUser.getId()) ? dd.getOwnerStatusId() : dd.getDateeStatusId());
 
+        boolean enableFormFields = (myStatus == null || myStatus == DateParticipantStatus.NEEDS_TO_REPLY);
         boolean bothApproved = (dd.getOwnerStatusId() == DateParticipantStatus.APPROVED.getId() && dd.getDateeStatusId() == DateParticipantStatus.APPROVED.getId());
         boolean isTooLateToModify = (bothApproved && DateUtil.getHoursBetween(DateUtil.getCurrentServerTime(0, dd.getTimezone()), date, dd.getTimezone()) <= 6);
 
@@ -109,7 +122,15 @@ public class DefiniteDateService {
                 infoDesc = "You have accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate(), dd.getTimezone()) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
             }
         }
-        return infoDesc;
+
+        m.addObject("date_desc", infoDesc);
+        m.addObject("has_desc", !StringUtils.isBlank(infoDesc));
+        m.addObject("can_edit", enableFormFields);
+        m.addObject("can_mod", myStatus == DateParticipantStatus.NEEDS_TO_REPLY || dd.getDateStatusId() == DateStatus.APPROVED.getId());
+
+        m.addObject("can_propose_change", !isTooLateToModify);
+        m.addObject("can_accept", myStatus != DateParticipantStatus.APPROVED && !isTooLateToAccept);
+        m.addObject("can_decline", !isTooLateToModify);
     }
 
     public List<PastDateRow> getPastDates(User currUser, User profile) {
@@ -129,4 +150,108 @@ public class DefiniteDateService {
         return rows;
     }
 
+
+    public boolean proposeNewDate(User currUser, User viewingUser, SubmitType type, DefiniteDate dd) {
+
+        //if (DateUtil.isInThePast(dd.getDoingWhen(), dd.getTimezone())) {
+          //  error("Date can't be in the past.");
+//            return;
+//        }
+
+        boolean isOwner = currUser.getId() == dd.getOwnerUserId();
+
+        if (dd.getId() <= 0) {
+            dd.setDateStatusId(DateStatus.NEGOTIATION.getId());
+            dd.setOwnerUserId(currUser.getId());
+            dd.setOwnerLastUpdate(DateUtil.getCurrentServerTime());
+            dd.setOwnerStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
+            dd.setDateeUserId(viewingUser.getId());
+            dd.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+            dd.setEmailReminderSent(false);
+
+            Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
+            dd.setTimezone(zip.isPresent() ? zip.get().getTimezone() : "America/New_York");
+        } else {
+            dd.setParticipantLastUpdate(isOwner, DateUtil.getCurrentServerTime());
+
+            if (type == SubmitType.PROPOSE_CHANGE) {
+                dd.setEmailReminderSent(false);
+                dd.setDateStatusId(DateStatus.NEGOTIATION.getId());
+                if (isOwner) {
+                    dd.setOwnerStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
+                    dd.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+                } else {
+                    dd.setDateeStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
+                    dd.setOwnerStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+                }
+            } else if (type == SubmitType.ACCEPT) {
+                dd.setParticipantStatusId(isOwner, DateParticipantStatus.APPROVED.getId());
+                if (dd.getOwnerStatusId() == DateParticipantStatus.APPROVED.getId() && dd.getDateeStatusId() == DateParticipantStatus.APPROVED.getId()) {
+                    dd.setDateStatusId(DateStatus.APPROVED.getId());
+                } else {
+                    dd.setDateStatusId(DateStatus.NEGOTIATION.getId());
+
+                    if (isOwner) {
+                        dd.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+                    } else {
+                        dd.setOwnerStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+                    }
+                }
+            } else if (type == SubmitType.DECLINE) {
+                dd.setDateStatusId(DateStatus.DELETED.getId());
+                dd.setParticipantStatusId(isOwner, DateParticipantStatus.DECLINED.getId());
+            }
+        }
+
+        definiteDateRepository.save(dd);
+
+        //dateLetterManager.onDateUpdated(dd, type, DatePanel.this.isOwner(dd));
+
+        return true;
+    }
+
+
+
+    public boolean submitDateFeedback(User currUser, User viewingUser, SubmitType type, DefiniteDate dd) {
+
+        boolean isOwner = currUser.getId() == dd.getOwnerUserId();
+
+        if (isOwner) {
+            //dd.setOwnerWantsMore(this.participantWantsMore.booleanValue());
+            //dd.setOwnerWasSafe(this.participantWasSafe);
+            //dd.setOwnerFeedback(this.participantFeedback);
+            //dd.setDateeNoShow(this.participantNoShow.booleanValue());
+            dd.setOwnerGaveFeedback(true);
+        } else {
+            //dd.setDateeWantsMore(this.participantWantsMore.booleanValue());
+            //dd.setDateeWasSafe(this.participantWasSafe);
+            //dd.setDateeFeedback(this.participantFeedback);
+            //dd.setOwnerNoShow(this.participantNoShow.booleanValue());
+            dd.setDateeGaveFeedback(true);
+        }
+
+        if (dd.isOwnerGaveFeedback() && dd.isDateeGaveFeedback()) {
+            dd.setDateStatusId(DateStatus.OCCURRED.getId());
+        }
+        definiteDateRepository.save(dd);
+
+        if (isOwner && dd.isDateeNoShow()) {
+            Optional<User> datee = userRepository.findById(dd.getDateeUserId());
+            if(datee.isPresent()) {
+                datee.get().setNumNoShows(datee.get().getNumNoShows() + 1);
+                userRepository.save(datee.get());
+            }
+        }
+
+        if (!isOwner && dd.isOwnerNoShow()) {
+            Optional<User> owner = userRepository.findById(dd.getOwnerUserId());
+            if(owner.isPresent()) {
+                owner.get().setNumNoShows(owner.get().getNumNoShows() + 1);
+                userRepository.save(owner.get());
+            }
+        }
+
+        //dateLetterManager.onSubmittedPostDateFeedback(dd, isOwner(dd));
+        return true;
+    }
 }

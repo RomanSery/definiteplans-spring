@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.definiteplans.util.DateUtil;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -113,6 +115,9 @@ public class DefiniteDate implements Serializable {
 
     public DefiniteDate(String timezone) {
         this.timezone = timezone;
+        LocalDateTime date = DateUtil.getCurrentServerTime(72, this.timezone);
+        this.doingWhenDate = date.toLocalDate();
+        this.doingWhenTime = date.toLocalTime();
     }
 
 
