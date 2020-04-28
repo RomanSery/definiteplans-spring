@@ -157,7 +157,7 @@ public class DateService {
     }
 
 
-    public boolean proposeNewDate(User currUser, User viewingUser, SubmitType type, DefiniteDate dd) {
+    public boolean updateDate(User currUser, User viewingUser, SubmitType type, DefiniteDate dd) {
         boolean isOwner = currUser.getId() == dd.getOwnerUserId();
 
         if (dd.getId() <= 0) {

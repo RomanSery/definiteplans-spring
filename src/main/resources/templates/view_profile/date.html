@@ -1,7 +1,7 @@
 
 <div th:fragment="makePlans" th:remove="tag">
 
-    <form class="form-horizontal" id="definiteDateForm" th:action="@{/dates/date}" th:object="${date}" method="POST" data-parsley-validate>
+    <form class="form-horizontal" id="definiteDateForm" th:object="${date}" method="POST" data-parsley-validate>
 
         <div class="form-group row">
             <label for="doingWhat" class="col-sm-2 col-form-label font-bold">What?
@@ -16,7 +16,7 @@
                 <a class="fa fa-question-circle" title="Make sure to pick a safe, public place to meet.<br>Make sure it is easy to get to for both people." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
             </label>
             <div class="col">
-                <input th:if="${can_edit}" class="form-control" maxlength="30" placeholder="ex: Bob's Cafe" type="text" th:field="*{locationName}"> required
+                <input th:if="${can_edit}" class="form-control" maxlength="30" placeholder="ex: Bob's Cafe" type="text" th:field="*{locationName}" required>
             </div>
         </div>
 

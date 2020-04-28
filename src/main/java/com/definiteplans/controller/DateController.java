@@ -49,16 +49,14 @@ public class DateController {
             return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
         }
 
-
-
         User currUser = userService.getCurrentUser();
         if(currUser != null) {
             Optional<User> datee = userRepository.findById(date.getDateeUserId());
             if(datee.isPresent()) {
-                dateService.proposeNewDate(currUser, datee.get(), SubmitType.PROPOSE_NEW_PLAN, date);
+                dateService.updateDate(currUser, datee.get(), SubmitType.PROPOSE_NEW_PLAN, date);
             }
         }
-        return AjaxResponse.success("Saved");
+        return AjaxResponse.success("Date made!");
     }
 
 
