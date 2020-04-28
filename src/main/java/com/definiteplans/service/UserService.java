@@ -279,4 +279,23 @@ public class UserService {
         }
         return blockedUsers;
     }
+
+
+    public String getProfileVal(int n) {
+        if(n == 0) {
+            return "";
+        }
+        EnumValue enumValue = enumValueService.findById(n);
+        return enumValue != null ? enumValue.getEnumValue() : "";
+    }
+
+    public String getLanguages(User profile) {
+        List<String> languages = new ArrayList<>();
+        if (profile.getLanguages() != null && profile.getLanguages().length() > 0) {
+            for (String languageId : profile.getLanguages().split(",")) {
+                languages.add(getProfileVal(Integer.parseInt(languageId)));
+            }
+        }
+        return StringUtils.join(languages, ",");
+    }
 }

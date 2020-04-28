@@ -24,20 +24,23 @@ import com.definiteplans.dom.enumerations.SubmitType;
 import com.definiteplans.util.DateUtil;
 
 @Service
-public class DefiniteDateService {
+public class DateService {
     private final DefiniteDateRepository definiteDateRepository;
     private final ZipCodeRepository zipCodeRepository;
     private final UserRepository userRepository;
 
-    public DefiniteDateService(DefiniteDateRepository definiteDateRepository, ZipCodeRepository zipCodeRepository, UserRepository userRepository) {
+    public DateService(DefiniteDateRepository definiteDateRepository, ZipCodeRepository zipCodeRepository, UserRepository userRepository) {
         this.definiteDateRepository = definiteDateRepository;
         this.zipCodeRepository = zipCodeRepository;
         this.userRepository = userRepository;
     }
 
-    public DefiniteDate createNew(User currUser) {
+    public DefiniteDate createNew(User currUser, User profile) {
         Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
-        return new DefiniteDate(zip.isPresent() ? zip.get().getTimezone() : "America/New_York");
+        DefiniteDate dd = new DefiniteDate(zip.isPresent() ? zip.get().getTimezone() : "America/New_York");
+        dd.setOwnerUserId(currUser.getId());
+        dd.setDateeUserId(profile.getId());
+        return dd;
     }
 
 
@@ -56,7 +59,7 @@ public class DefiniteDateService {
         return null;
     }
 
-    private LocalDateTime getSpecificTime(DefiniteDate dd) {
+    public static LocalDateTime getSpecificTime(DefiniteDate dd) {
         LocalDateTime date = null;
         if(dd.getDoingWhenDate() != null) {
             date = LocalDateTime.of(dd.getDoingWhenDate(), LocalTime.MIDNIGHT);
@@ -155,12 +158,6 @@ public class DefiniteDateService {
 
 
     public boolean proposeNewDate(User currUser, User viewingUser, SubmitType type, DefiniteDate dd) {
-
-        //if (DateUtil.isInThePast(dd.getDoingWhen(), dd.getTimezone())) {
-          //  error("Date can't be in the past.");
-//            return;
-//        }
-
         boolean isOwner = currUser.getId() == dd.getOwnerUserId();
 
         if (dd.getId() <= 0) {

@@ -20,7 +20,7 @@ import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.SearchPrefs;
 import com.definiteplans.dom.User;
-import com.definiteplans.service.DefiniteDateService;
+import com.definiteplans.service.DateService;
 import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.SearchService;
 import com.definiteplans.service.UserService;
@@ -32,14 +32,14 @@ public class BrowseController {
     private final UserService userService;
     private final SearchService searchService;
     private final EnumValueService enumValueService;
-    private final DefiniteDateService definiteDateService;
+    private final DateService dateService;
     private final DefiniteDateRepository definiteDateRepository;
 
-    public BrowseController(UserService userService, SearchService searchService, EnumValueService enumValueService, DefiniteDateService definiteDateService, DefiniteDateRepository definiteDateRepository) {
+    public BrowseController(UserService userService, SearchService searchService, EnumValueService enumValueService, DateService dateService, DefiniteDateRepository definiteDateRepository) {
         this.userService = userService;
         this.searchService = searchService;
         this.enumValueService = enumValueService;
-        this.definiteDateService = definiteDateService;
+        this.dateService = dateService;
         this.definiteDateRepository = definiteDateRepository;
     }
 
@@ -104,7 +104,7 @@ public class BrowseController {
             String name = u.getDisplayName() + ((age != null) ? (", " + age) : "");
 
             DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), u.getId());
-            Boolean b = definiteDateService.wantsMore(currUser, u, activeDate);
+            Boolean b = dateService.wantsMore(currUser, u, activeDate);
 
             SearchResult sr = new SearchResult(u.getId(), userService.getProfileImg(u, true), name, userService.getAddrDesc(u), u.getNumNoShows(),
                     BooleanUtils.isTrue(b), b != null && !b.booleanValue(), activeDate != null);

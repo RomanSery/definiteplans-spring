@@ -1,10 +1,8 @@
 package com.definiteplans.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +16,8 @@ import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.DefiniteDate;
-import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
-import com.definiteplans.service.DefiniteDateService;
+import com.definiteplans.service.DateService;
 import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.UserService;
 
@@ -29,15 +26,15 @@ public class ViewProfileController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final EnumValueService enumValueService;
-    private final DefiniteDateService definiteDateService;
+    private final DateService dateService;
     private final DefiniteDateRepository definiteDateRepository;
     private final UserImageRepository userImageRepository;
 
-    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueService enumValueService, DefiniteDateService definiteDateService, DefiniteDateRepository definiteDateRepository, UserImageRepository userImageRepository) {
+    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueService enumValueService, DateService dateService, DefiniteDateRepository definiteDateRepository, UserImageRepository userImageRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.enumValueService = enumValueService;
-        this.definiteDateService = definiteDateService;
+        this.dateService = dateService;
         this.definiteDateRepository = definiteDateRepository;
         this.userImageRepository = userImageRepository;
     }
@@ -74,30 +71,30 @@ public class ViewProfileController {
         m.addObject("profileThumbImg", userService.getProfileImg(profile, true));
         m.addObject("profileFullImg", userService.getProfileImg(profile, false));
         m.addObject("age", userService.getProfileAge(profile));
-        m.addObject("gender", getProfileVal(profile.getGender()));
-        m.addObject("height", getProfileVal(profile.getHeight()));
-        m.addObject("ethnicity", getProfileVal(profile.getEthnicity()));
-        m.addObject("maritalStatus", getProfileVal(profile.getMaritalStatus()));
-        m.addObject("kids", getProfileVal(profile.getKids()));
-        m.addObject("wantsKids", getProfileVal(profile.getWantsKids()));
-        m.addObject("languages", getLanguages(profile));
-        m.addObject("religion", getProfileVal(profile.getReligion()));
-        m.addObject("education", getProfileVal(profile.getEducation()));
-        m.addObject("income", getProfileVal(profile.getIncome()));
-        m.addObject("smokes", getProfileVal(profile.getSmokes()));
+        m.addObject("gender", userService.getProfileVal(profile.getGender()));
+        m.addObject("height", userService.getProfileVal(profile.getHeight()));
+        m.addObject("ethnicity", userService.getProfileVal(profile.getEthnicity()));
+        m.addObject("maritalStatus", userService.getProfileVal(profile.getMaritalStatus()));
+        m.addObject("kids", userService.getProfileVal(profile.getKids()));
+        m.addObject("wantsKids", userService.getProfileVal(profile.getWantsKids()));
+        m.addObject("languages", userService.getLanguages(profile));
+        m.addObject("religion", userService.getProfileVal(profile.getReligion()));
+        m.addObject("education", userService.getProfileVal(profile.getEducation()));
+        m.addObject("income", userService.getProfileVal(profile.getIncome()));
+        m.addObject("smokes", userService.getProfileVal(profile.getSmokes()));
         m.addObject("aboutMe", profile.getAboutMePretty());
         m.addObject("interests", profile.getInterestsPretty());
         m.addObject("user_pics", userImageRepository.findByUserId(profile.getId()));
 
         DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), profile.getId());
         if(activeDate == null) {
-            activeDate = definiteDateService.createNew(currUser);
+            activeDate = dateService.createNew(currUser, profile);
         }
 
         m.addObject("date", activeDate);
         m.addObject("has_active_date", activeDate != null && activeDate.getId() > 0);
 
-        definiteDateService.setDateAttributes(m, currUser, profile, activeDate);
+        dateService.setDateAttributes(m, currUser, profile, activeDate);
         return m;
     }
 
@@ -110,21 +107,4 @@ public class ViewProfileController {
         return AjaxResponse.success("Blocked");
     }
 
-    private String getProfileVal(int n) {
-        if(n == 0) {
-            return "";
-        }
-        EnumValue enumValue = enumValueService.findById(n);
-        return enumValue != null ? enumValue.getEnumValue() : "";
-    }
-
-    private String getLanguages(User profile) {
-        List<String> languages = new ArrayList<>();
-        if (profile.getLanguages() != null && profile.getLanguages().length() > 0) {
-            for (String languageId : profile.getLanguages().split(",")) {
-                languages.add(getProfileVal(Integer.parseInt(languageId)));
-            }
-        }
-        return StringUtils.join(languages, ",");
-    }
 }
