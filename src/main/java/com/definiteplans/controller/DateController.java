@@ -12,7 +12,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.definiteplans.controller.model.AjaxResponse;
@@ -26,7 +25,6 @@ import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
 
 @Controller
-@RequestMapping(path="/dates")
 public class DateController {
     private final UserService userService;
     private final DateService dateService;
@@ -40,10 +38,9 @@ public class DateController {
         this.userRepository = userRepository;
     }
 
-
-    @PostMapping("/propose")
+    @PostMapping("/dates/propose")
     public @ResponseBody
-    AjaxResponse proposeDate(@ModelAttribute("date") @Valid DefiniteDate date, BindingResult bindingResult) {
+    AjaxResponse proposeDate(@ModelAttribute("date") @Valid DefiniteDate date,  BindingResult bindingResult) {
         DateValidator.validatePropose(date, bindingResult);
         if (bindingResult.hasErrors()) {
             return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));

@@ -2,6 +2,11 @@
 <div th:fragment="makePlans" th:remove="tag">
 
     <form class="form-horizontal" id="definiteDateForm" th:object="${date}" method="POST" data-parsley-validate>
+        <input type="hidden" th:value="${dateeUserId}" th:field="*{dateeUserId}">
+
+        <ul th:if="${#fields.hasErrors('*')}">
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+        </ul>
 
         <div class="form-group row">
             <label for="doingWhat" class="col-sm-2 col-form-label font-bold">What?
@@ -61,15 +66,15 @@
 
         <div class="form-group row" th:unless="${has_active_date}">
             <div class="col-sm-3">
-                <button type="submit" class="btn btn-primary" data-singleton="true" data-toggle="confirmation" id="proposePlanBtn">Propose this plan!</button>
+                <a href="javascript:;" class="btn btn-primary" id="proposePlanBtn">Propose this plan!</a>
             </div>
         </div>
 
         <div class="form-group row" th:if="${can_mod}">
             <div class="col-sm-12">
-                <button th:if="${can_propose_change}" class="btn btn-primary btn-lg" data-singleton="true" data-toggle="confirmation" id="proposeChange">Propose a change</button>
-                <button th:if="${can_accept}" class="btn btn-success btn-lg" data-singleton="true" data-toggle="confirmation" id="acceptPlan">Accept</button>
-                <button th:if="${can_decline}" class="btn btn-danger pull-right" data-singleton="true" data-toggle="confirmation" id="declinePlan">Decline</button>
+                <a href="javascript:;" th:if="${can_propose_change}" class="btn btn-primary btn-lg" id="proposeChange">Propose a change</a>
+                <a href="javascript:;" th:if="${can_accept}" class="btn btn-success btn-lg" id="acceptPlan">Accept</a>
+                <a href="javascript:;" th:if="${can_decline}" class="btn btn-danger pull-right" id="declinePlan">Decline</a>
             </div>
         </div>
     </form>

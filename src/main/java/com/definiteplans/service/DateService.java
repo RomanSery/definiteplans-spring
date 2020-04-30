@@ -203,6 +203,9 @@ public class DateService {
             }
         }
 
+        if(dd.getId() == 0) {
+            dd.setCreatedDate(DateUtil.getCurrentServerTime());
+        }
         definiteDateRepository.save(dd);
 
         //dateLetterManager.onDateUpdated(dd, type, DatePanel.this.isOwner(dd));

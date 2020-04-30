@@ -40,7 +40,7 @@ definitePlansScripts.dateBtns = function () {
                     xhr.setRequestHeader(header, token);
                 },
                 error: function () {
-                    definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                    //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
                 },
                 success: function (data) {
                     definitePlansScripts.stopBtnLoading('proposePlanBtn');
@@ -67,8 +67,6 @@ $(document).ready(function() {
     });
 
     $('[data-toggle="tooltip"]').tooltip();
-
-    $('[data-toggle="confirmation"]').confirmation();
 
     definitePlansScripts.blockUser();
     definitePlansScripts.dateBtns();
