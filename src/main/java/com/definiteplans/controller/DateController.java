@@ -39,22 +39,40 @@ public class DateController {
     }
 
     @PostMapping("/dates/propose")
-    public @ResponseBody
-    AjaxResponse proposeDate(@ModelAttribute("date") @Valid DefiniteDate date,  BindingResult bindingResult) {
+    public @ResponseBody AjaxResponse proposeDate(@ModelAttribute("date") @Valid DefiniteDate date, BindingResult bindingResult) {
         DateValidator.validatePropose(date, bindingResult);
         if (bindingResult.hasErrors()) {
             return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
         }
 
-        User currUser = userService.getCurrentUser();
-        if(currUser != null) {
-            Optional<User> datee = userRepository.findById(date.getDateeUserId());
-            if(datee.isPresent()) {
-                dateService.updateDate(currUser, datee.get(), SubmitType.PROPOSE_NEW_PLAN, date);
-            }
-        }
-        return AjaxResponse.success("Date made!");
+        dateService.updateDate(userService.getCurrentUser(), SubmitType.PROPOSE_NEW_PLAN, date);
+        return AjaxResponse.success("Date made");
     }
+
+    @PostMapping("/dates/change")
+    public @ResponseBody AjaxResponse proposeChange(@ModelAttribute("date") @Valid DefiniteDate date, BindingResult bindingResult) {
+        DateValidator.validatePropose(date, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
+        }
+
+        dateService.updateDate(userService.getCurrentUser(), SubmitType.PROPOSE_CHANGE, date);
+        return AjaxResponse.success("Date changed");
+    }
+
+    @PostMapping("/dates/accept")
+    public @ResponseBody AjaxResponse acceptDate(@ModelAttribute("date") @Valid DefiniteDate date, BindingResult bindingResult) {
+        dateService.updateDate(userService.getCurrentUser(), SubmitType.ACCEPT, date);
+        return AjaxResponse.success("Date accepted");
+    }
+
+    @PostMapping("/dates/decline")
+    public @ResponseBody AjaxResponse declineDate(@ModelAttribute("date") @Valid DefiniteDate date, BindingResult bindingResult) {
+        dateService.updateDate(userService.getCurrentUser(), SubmitType.DECLINE, date);
+        return AjaxResponse.success("Date declined");
+    }
+
+
 
 
     private static class DateValidator {

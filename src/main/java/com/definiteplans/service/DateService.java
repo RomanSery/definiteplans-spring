@@ -157,6 +157,15 @@ public class DateService {
     }
 
 
+    public boolean updateDate(User currUser, SubmitType type, DefiniteDate date) {
+        if(currUser != null) {
+            Optional<User> datee = userRepository.findById(date.getDateeUserId());
+            if(datee.isPresent()) {
+                return updateDate(currUser, datee.get(), type, date);
+            }
+        }
+        return false;
+    }
     public boolean updateDate(User currUser, User viewingUser, SubmitType type, DefiniteDate dd) {
         boolean isOwner = currUser.getId() == dd.getOwnerUserId();
 

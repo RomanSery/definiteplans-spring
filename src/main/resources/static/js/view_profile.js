@@ -54,6 +54,84 @@ definitePlansScripts.dateBtns = function () {
             });
         }
     });
+
+    $('#proposeChange').click(function () {
+        const profileId = $(this).attr('profile-id');
+        if(confirm('Are you sure you want to change this date?')) {
+            $.ajax({
+                type: "POST", url: '/dates/change', data: $('#definiteDateForm').serialize(),
+                beforeSend: function (xhr) {
+                    definitePlansScripts.makeBtnLoading('proposeChange');
+                    var token = $('#_csrf').attr('content');
+                    var header = $('#_csrf_header').attr('content');
+                    xhr.setRequestHeader(header, token);
+                },
+                error: function () {
+                    //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                },
+                success: function (data) {
+                    if(data.status == "ERR") {
+                        $('#definiteDateFormErrors').show();
+                        $('#definiteDateFormErrors').html(data.msg);
+                    }
+                    definitePlansScripts.stopBtnLoading('proposeChange');
+                    definitePlansScripts.refreshMakePlans(profileId);
+                }
+            });
+        }
+    });
+
+    $('#acceptPlan').click(function () {
+        const profileId = $(this).attr('profile-id');
+        if(confirm('Are you sure you want to accept this date?')) {
+            $.ajax({
+                type: "POST", url: '/dates/accept', data: $('#definiteDateForm').serialize(),
+                beforeSend: function (xhr) {
+                    definitePlansScripts.makeBtnLoading('acceptPlan');
+                    var token = $('#_csrf').attr('content');
+                    var header = $('#_csrf_header').attr('content');
+                    xhr.setRequestHeader(header, token);
+                },
+                error: function () {
+                    //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                },
+                success: function (data) {
+                    if(data.status == "ERR") {
+                        $('#definiteDateFormErrors').show();
+                        $('#definiteDateFormErrors').html(data.msg);
+                    }
+                    definitePlansScripts.stopBtnLoading('acceptPlan');
+                    definitePlansScripts.refreshMakePlans(profileId);
+                }
+            });
+        }
+    });
+
+    $('#declinePlan').click(function () {
+        const profileId = $(this).attr('profile-id');
+        if(confirm('Are you sure you want to decline this date?')) {
+            $.ajax({
+                type: "POST", url: '/dates/decline', data: $('#definiteDateForm').serialize(),
+                beforeSend: function (xhr) {
+                    definitePlansScripts.makeBtnLoading('declinePlan');
+                    var token = $('#_csrf').attr('content');
+                    var header = $('#_csrf_header').attr('content');
+                    xhr.setRequestHeader(header, token);
+                },
+                error: function () {
+                    //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                },
+                success: function (data) {
+                    if(data.status == "ERR") {
+                        $('#definiteDateFormErrors').show();
+                        $('#definiteDateFormErrors').html(data.msg);
+                    }
+                    definitePlansScripts.stopBtnLoading('declinePlan');
+                    definitePlansScripts.refreshMakePlans(profileId);
+                }
+            });
+        }
+    });
 };
 
 definitePlansScripts.refreshMakePlans = function (profileId) {
