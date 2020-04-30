@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -85,7 +85,7 @@ public class BrowseController {
 
 
     @RequestMapping("/refresh-browse-results")
-    public String refreshBrowsingResults(Model m) {
+    public String refreshBrowsingResults(ModelMap m) {
         User currUser = userService.getCurrentUser();
         List<SearchResult> results = getSearchResults(currUser);
         m.addAttribute("profiles", results);

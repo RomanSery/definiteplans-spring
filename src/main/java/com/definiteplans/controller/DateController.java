@@ -67,7 +67,7 @@ public class DateController {
 
             LocalDateTime date = DateService.getSpecificTime(obj);
             if (date != null && DateUtil.isInThePast(date, obj.getTimezone())) {
-                ValidationUtils.rejectIfEmpty(e, "doingWhenDate", "", "Date can't be in the past.");
+                e.reject("doingWhenDate", "Date can't be in the past.");
             }
 
         }

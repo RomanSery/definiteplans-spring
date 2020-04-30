@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -86,15 +88,7 @@ public class ViewProfileController {
         m.addObject("interests", profile.getInterestsPretty());
         m.addObject("user_pics", userImageRepository.findByUserId(profile.getId()));
 
-        DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), profile.getId());
-        if(activeDate == null) {
-            activeDate = dateService.createNew(currUser, profile);
-        }
-
-        m.addObject("date", activeDate);
-        m.addObject("has_active_date", activeDate != null && activeDate.getId() > 0);
-
-        dateService.setDateAttributes(m, currUser, profile, activeDate);
+        setDateAttributes(currUser, profile, m.getModelMap());
         return m;
     }
 
@@ -107,4 +101,29 @@ public class ViewProfileController {
         return AjaxResponse.success("Blocked");
     }
 
+
+    @RequestMapping("/refresh-make-plans/{userId}")
+    public String refreshMakePlans(ModelMap m, @PathVariable("userId") Integer userId) {
+        User currUser = userService.getCurrentUser();
+        Optional<User> found = userRepository.findById(userId);
+        if(currUser == null || found.isEmpty()) {
+            return "";
+        }
+        User profile = found.get();
+        setDateAttributes(currUser, profile, m);
+        return "view_profile/date :: makePlans";
+    }
+
+
+    private void setDateAttributes(User currUser, User profile, ModelMap m) {
+        DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), profile.getId());
+        if(activeDate == null) {
+            activeDate = dateService.createNew(currUser, profile);
+        }
+
+        m.addAttribute("date", activeDate);
+        m.addAttribute("has_active_date", activeDate != null && activeDate.getId() > 0);
+
+        dateService.setDateAttributes(m, currUser, profile, activeDate);
+    }
 }

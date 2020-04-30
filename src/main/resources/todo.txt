@@ -26,3 +26,6 @@ update loading buttons the same way i do for block user on view profile page
                     .add(new AttributeModifier("data-date-start-date", DateUtil.printDate(DateUtil.getCurrentServerTime())))
                     .add(new AttributeModifier("data-date-end-date", DateUtil.printDate(DateUtil.getCurrentServerTime().plusDays(25))))
                     .setMarkupId("doingWhenDate"));
+
+
+when viewing profile, if has active date, immeditaly show the make plans tab

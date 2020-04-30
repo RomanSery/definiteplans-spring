@@ -29,6 +29,7 @@ definitePlansScripts.blockUser = function () {
 definitePlansScripts.dateBtns = function () {
 
     $('#proposePlanBtn').click(function () {
+        const profileId = $(this).attr('profile-id');
         if(confirm('Are you sure you want to propose this date?')) {
             $.ajax({
                 type: "POST", url: '/dates/propose', data: $('#definiteDateForm').serialize(),
@@ -43,14 +44,35 @@ definitePlansScripts.dateBtns = function () {
                     //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
                 },
                 success: function (data) {
+                    if(data.status == "ERR") {
+                        $('#definiteDateFormErrors').show();
+                        $('#definiteDateFormErrors').html(data.msg);
+                    }
                     definitePlansScripts.stopBtnLoading('proposePlanBtn');
-
+                    definitePlansScripts.refreshMakePlans(profileId);
                 }
             });
         }
     });
 };
 
+definitePlansScripts.refreshMakePlans = function (profileId) {
+    $.ajax({
+        type: "GET", url: '/refresh-make-plans/' + profileId,
+        error: function () {
+            alert('Sorry, there was some error. Please try again.');
+        },
+        success: function (data) {
+            $("#make-plans-frag").html(data);
+            $('#loading-indicator').hide();
+        },
+        beforeSend: function () {
+            $("#make-plans-frag").html("");
+            $('#loading-indicator').show();
+        }
+    });
+    return false;
+};
 
 
 $(document).ready(function() {

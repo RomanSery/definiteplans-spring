@@ -1,19 +1,18 @@
 
-<div th:fragment="makePlans" th:remove="tag">
+<div th:fragment="makePlans" id="make-plans-frag">
 
     <form class="form-horizontal" id="definiteDateForm" th:object="${date}" method="POST" data-parsley-validate>
         <input type="hidden" th:value="${dateeUserId}" th:field="*{dateeUserId}">
 
-        <ul th:if="${#fields.hasErrors('*')}">
-            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-        </ul>
+        <div class="alert alert-danger" role="alert" id="definiteDateFormErrors" style="display:none;"></div>
 
         <div class="form-group row">
             <label for="doingWhat" class="col-sm-2 col-form-label font-bold">What?
                 <a class="fa fa-question-circle" title="What are we going to be doing on the date?<br>Be specific." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
             </label>
             <div class="col">
-                <input th:if="${can_edit}" class="form-control" maxlength="35" placeholder="ex: Take a walk in the park, grab drinks" type="text" th:field="*{doingWhat}" required>
+                <input th:readonly="${!can_edit}" th:class="${can_edit} ? 'form-control' : 'form-control-plaintext'"
+                       maxlength="35" placeholder="ex: Take a walk in the park, grab drinks" type="text" th:field="*{doingWhat}" required>
             </div>
         </div>
         <div class="form-group row">
@@ -21,7 +20,8 @@
                 <a class="fa fa-question-circle" title="Make sure to pick a safe, public place to meet.<br>Make sure it is easy to get to for both people." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
             </label>
             <div class="col">
-                <input th:if="${can_edit}" class="form-control" maxlength="30" placeholder="ex: Bob's Cafe" type="text" th:field="*{locationName}" required>
+                <input th:readonly="${!can_edit}" th:class="${can_edit} ? 'form-control' : 'form-control-plaintext'"
+                       maxlength="30" placeholder="ex: Bob's Cafe" type="text" th:field="*{locationName}" required>
             </div>
         </div>
 
@@ -66,15 +66,15 @@
 
         <div class="form-group row" th:unless="${has_active_date}">
             <div class="col-sm-3">
-                <a href="javascript:;" class="btn btn-primary" id="proposePlanBtn">Propose this plan!</a>
+                <a href="javascript:;" class="btn btn-primary" id="proposePlanBtn" th:profile-id="${profile.id}">Propose this plan!</a>
             </div>
         </div>
 
         <div class="form-group row" th:if="${can_mod}">
             <div class="col-sm-12">
-                <a href="javascript:;" th:if="${can_propose_change}" class="btn btn-primary btn-lg" id="proposeChange">Propose a change</a>
-                <a href="javascript:;" th:if="${can_accept}" class="btn btn-success btn-lg" id="acceptPlan">Accept</a>
-                <a href="javascript:;" th:if="${can_decline}" class="btn btn-danger pull-right" id="declinePlan">Decline</a>
+                <a href="javascript:;" th:if="${can_propose_change}" class="btn btn-primary btn-lg" id="proposeChange" th:profile-id="${profile.id}">Propose a change</a>
+                <a href="javascript:;" th:if="${can_accept}" class="btn btn-success btn-lg" id="acceptPlan" th:profile-id="${profile.id}">Accept</a>
+                <a href="javascript:;" th:if="${can_decline}" class="btn btn-danger pull-right" id="declinePlan" th:profile-id="${profile.id}">Decline</a>
             </div>
         </div>
     </form>

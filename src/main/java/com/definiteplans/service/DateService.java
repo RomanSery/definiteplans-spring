@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.ui.ModelMap;
 
 import com.definiteplans.controller.model.DateFeedback;
 import com.definiteplans.controller.model.PastDateRow;
@@ -65,21 +65,21 @@ public class DateService {
             date = LocalDateTime.of(dd.getDoingWhenDate(), LocalTime.MIDNIGHT);
         }
         if(dd.getDoingWhenTime() != null && date != null) {
-            date = LocalDateTime.of(dd.getDoingWhenDate(), dd.getDoingWhenTime());
+            date = LocalDateTime.of(dd.getDoingWhenDate(), dd.getDoingWhenTime().toLocalTime());
         }
         return date;
     }
 
 
-    public void setDateAttributes(ModelAndView m, User currUser, User viewingUser, DefiniteDate dd) {
+    public void setDateAttributes(ModelMap m, User currUser, User viewingUser, DefiniteDate dd) {
 
-        m.addObject("past_dates", getPastDates(currUser, viewingUser));
+        m.addAttribute("past_dates", getPastDates(currUser, viewingUser));
 
         if(dd == null || dd.getId() == 0) {
-            m.addObject("has_desc", false);
-            m.addObject("can_edit", true);
-            m.addObject("can_mod", false);
-            m.addObject("show_feedback_form", false);
+            m.addAttribute("has_desc", false);
+            m.addAttribute("can_edit", true);
+            m.addAttribute("can_mod", false);
+            m.addAttribute("show_feedback_form", false);
             return;
         }
 
@@ -128,15 +128,15 @@ public class DateService {
             }
         }
 
-        m.addObject("date_desc", infoDesc);
-        m.addObject("has_desc", !StringUtils.isBlank(infoDesc));
-        m.addObject("can_edit", enableFormFields);
-        m.addObject("can_mod", myStatus == DateParticipantStatus.NEEDS_TO_REPLY || dd.getDateStatusId() == DateStatus.APPROVED.getId());
+        m.addAttribute("date_desc", infoDesc);
+        m.addAttribute("has_desc", !StringUtils.isBlank(infoDesc));
+        m.addAttribute("can_edit", enableFormFields);
+        m.addAttribute("can_mod", myStatus == DateParticipantStatus.NEEDS_TO_REPLY || dd.getDateStatusId() == DateStatus.APPROVED.getId());
 
-        m.addObject("can_propose_change", !isTooLateToModify);
-        m.addObject("can_accept", myStatus != DateParticipantStatus.APPROVED && !isTooLateToAccept);
-        m.addObject("can_decline", !isTooLateToModify);
-        m.addObject("show_feedback_form", showFeedbackForm);
+        m.addAttribute("can_propose_change", !isTooLateToModify);
+        m.addAttribute("can_accept", myStatus != DateParticipantStatus.APPROVED && !isTooLateToAccept);
+        m.addAttribute("can_decline", !isTooLateToModify);
+        m.addAttribute("show_feedback_form", showFeedbackForm);
     }
 
     public List<PastDateRow> getPastDates(User currUser, User profile) {

@@ -42,7 +42,7 @@ public class DefiniteDate implements Serializable {
     private LocalDate doingWhenDate;
 
     @Column(name = "doing_when_time")
-    private LocalTime doingWhenTime;
+    private LocalDateTime doingWhenTime;
 
     @Column(name = "owner_id")
     private int ownerUserId;
@@ -117,7 +117,7 @@ public class DefiniteDate implements Serializable {
         this.timezone = timezone;
         LocalDateTime date = DateUtil.getCurrentServerTime(72, this.timezone);
         this.doingWhenDate = date.toLocalDate();
-        this.doingWhenTime = date.toLocalTime();
+        this.doingWhenTime = date;
     }
 
 
