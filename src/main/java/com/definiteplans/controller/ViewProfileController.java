@@ -68,7 +68,6 @@ public class ViewProfileController {
         ModelAndView m = new ModelAndView("view_profile");
         m.addObject("title", "View Profile - " + profile.getDisplayName());
         m.addObject("isViewingSelf", isViewingSelf);
-        m.addObject("profile", profile);
         m.addObject("loc", userService.getAddrDesc(profile));
         m.addObject("profileThumbImg", userService.getProfileImg(profile, true));
         m.addObject("profileFullImg", userService.getProfileImg(profile, false));
@@ -116,6 +115,9 @@ public class ViewProfileController {
 
 
     private void setDateAttributes(User currUser, User profile, ModelMap m) {
+
+        m.addAttribute("profile", profile);
+
         DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), profile.getId());
         if(activeDate == null) {
             activeDate = dateService.createNew(currUser, profile);

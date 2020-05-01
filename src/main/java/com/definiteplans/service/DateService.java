@@ -157,65 +157,69 @@ public class DateService {
     }
 
 
-    public boolean updateDate(User currUser, SubmitType type, DefiniteDate date) {
-        if(currUser != null) {
-            Optional<User> datee = userRepository.findById(date.getDateeUserId());
-            if(datee.isPresent()) {
-                return updateDate(currUser, datee.get(), type, date);
-            }
+    public boolean createDate(User currUser, DefiniteDate date) {
+        if(currUser == null || date == null) {
+            return false;
         }
-        return false;
+
+        Optional<User> datee = userRepository.findById(date.getDateeUserId());
+        if(datee.isEmpty()) {
+            return false;
+        }
+
+        date.setCreatedDate(DateUtil.getCurrentServerTime());
+        date.setDateStatusId(DateStatus.NEGOTIATION.getId());
+        date.setOwnerUserId(currUser.getId());
+        date.setOwnerLastUpdate(DateUtil.getCurrentServerTime());
+        date.setOwnerStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
+        date.setDateeUserId(datee.get().getId());
+        date.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+        date.setEmailReminderSent(false);
+
+        Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
+        date.setTimezone(zip.isPresent() ? zip.get().getTimezone() : "America/New_York");
+        definiteDateRepository.save(date);
+
+        //dateLetterManager.onDateUpdated(dd, type, DatePanel.this.isOwner(dd));
+
+        return true;
     }
-    public boolean updateDate(User currUser, User viewingUser, SubmitType type, DefiniteDate dd) {
-        boolean isOwner = currUser.getId() == dd.getOwnerUserId();
 
-        if (dd.getId() <= 0) {
-            dd.setDateStatusId(DateStatus.NEGOTIATION.getId());
-            dd.setOwnerUserId(currUser.getId());
-            dd.setOwnerLastUpdate(DateUtil.getCurrentServerTime());
-            dd.setOwnerStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
-            dd.setDateeUserId(viewingUser.getId());
-            dd.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
-            dd.setEmailReminderSent(false);
 
-            Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
-            dd.setTimezone(zip.isPresent() ? zip.get().getTimezone() : "America/New_York");
-        } else {
-            dd.setParticipantLastUpdate(isOwner, DateUtil.getCurrentServerTime());
+    public boolean updateDate(User currUser, SubmitType type, DefiniteDate date) {
+        boolean isOwner = currUser.getId() == date.getOwnerUserId();
 
-            if (type == SubmitType.PROPOSE_CHANGE) {
-                dd.setEmailReminderSent(false);
-                dd.setDateStatusId(DateStatus.NEGOTIATION.getId());
-                if (isOwner) {
-                    dd.setOwnerStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
-                    dd.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
-                } else {
-                    dd.setDateeStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
-                    dd.setOwnerStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
-                }
-            } else if (type == SubmitType.ACCEPT) {
-                dd.setParticipantStatusId(isOwner, DateParticipantStatus.APPROVED.getId());
-                if (dd.getOwnerStatusId() == DateParticipantStatus.APPROVED.getId() && dd.getDateeStatusId() == DateParticipantStatus.APPROVED.getId()) {
-                    dd.setDateStatusId(DateStatus.APPROVED.getId());
-                } else {
-                    dd.setDateStatusId(DateStatus.NEGOTIATION.getId());
+        date.setParticipantLastUpdate(isOwner, DateUtil.getCurrentServerTime());
 
-                    if (isOwner) {
-                        dd.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
-                    } else {
-                        dd.setOwnerStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
-                    }
-                }
-            } else if (type == SubmitType.DECLINE) {
-                dd.setDateStatusId(DateStatus.DELETED.getId());
-                dd.setParticipantStatusId(isOwner, DateParticipantStatus.DECLINED.getId());
+        if (type == SubmitType.PROPOSE_CHANGE) {
+            date.setEmailReminderSent(false);
+            date.setDateStatusId(DateStatus.NEGOTIATION.getId());
+            if (isOwner) {
+                date.setOwnerStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
+                date.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+            } else {
+                date.setDateeStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
+                date.setOwnerStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
             }
+        } else if (type == SubmitType.ACCEPT) {
+            date.setParticipantStatusId(isOwner, DateParticipantStatus.APPROVED.getId());
+            if (date.getOwnerStatusId() == DateParticipantStatus.APPROVED.getId() && date.getDateeStatusId() == DateParticipantStatus.APPROVED.getId()) {
+                date.setDateStatusId(DateStatus.APPROVED.getId());
+            } else {
+                date.setDateStatusId(DateStatus.NEGOTIATION.getId());
+
+                if (isOwner) {
+                    date.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+                } else {
+                    date.setOwnerStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+                }
+            }
+        } else if (type == SubmitType.DECLINE) {
+            date.setDateStatusId(DateStatus.DELETED.getId());
+            date.setParticipantStatusId(isOwner, DateParticipantStatus.DECLINED.getId());
         }
 
-        if(dd.getId() == 0) {
-            dd.setCreatedDate(DateUtil.getCurrentServerTime());
-        }
-        definiteDateRepository.save(dd);
+        definiteDateRepository.save(date);
 
         //dateLetterManager.onDateUpdated(dd, type, DatePanel.this.isOwner(dd));
 

@@ -3,6 +3,7 @@
 
     <form class="form-horizontal" id="definiteDateForm" th:object="${date}" method="POST" data-parsley-validate>
         <input type="hidden" th:value="${dateeUserId}" th:field="*{dateeUserId}">
+        <input type="hidden" th:value="${id}" th:field="*{id}">
 
         <div class="alert alert-danger" role="alert" id="definiteDateFormErrors" style="display:none;"></div>
 

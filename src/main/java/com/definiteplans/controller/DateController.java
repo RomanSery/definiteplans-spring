@@ -1,7 +1,6 @@
 package com.definiteplans.controller;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 
@@ -18,7 +17,6 @@ import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.DefiniteDate;
-import com.definiteplans.dom.User;
 import com.definiteplans.dom.enumerations.SubmitType;
 import com.definiteplans.service.DateService;
 import com.definiteplans.service.UserService;
@@ -45,7 +43,7 @@ public class DateController {
             return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
         }
 
-        dateService.updateDate(userService.getCurrentUser(), SubmitType.PROPOSE_NEW_PLAN, date);
+        dateService.createDate(userService.getCurrentUser(), date);
         return AjaxResponse.success("Date made");
     }
 
