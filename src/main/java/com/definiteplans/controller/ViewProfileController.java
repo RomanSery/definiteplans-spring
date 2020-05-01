@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.AjaxResponse;
+import com.definiteplans.controller.model.DateProposal;
 import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
@@ -123,7 +124,7 @@ public class ViewProfileController {
             activeDate = dateService.createNew(currUser, profile);
         }
 
-        m.addAttribute("date", activeDate);
+        m.addAttribute("date", activeDate != null ? new DateProposal(activeDate) : new DateProposal());
         m.addAttribute("has_active_date", activeDate != null && activeDate.getId() > 0);
 
         dateService.setDateAttributes(m, currUser, profile, activeDate);

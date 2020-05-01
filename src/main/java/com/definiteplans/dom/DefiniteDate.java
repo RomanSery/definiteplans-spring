@@ -1,9 +1,7 @@
 package com.definiteplans.dom;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.definiteplans.controller.model.DateProposal;
 import com.definiteplans.util.DateUtil;
 
 import lombok.EqualsAndHashCode;
@@ -38,11 +37,8 @@ public class DefiniteDate implements Serializable {
     @Column(name = "location_name")
     private String locationName;
 
-    @Column(name = "doing_when_date")
-    private LocalDate doingWhenDate;
-
-    @Column(name = "doing_when_time")
-    private LocalDateTime doingWhenTime;
+    @Column(name = "doing_when")
+    private LocalDateTime doingWhen;
 
     @Column(name = "owner_id")
     private int ownerUserId;
@@ -107,19 +103,25 @@ public class DefiniteDate implements Serializable {
     @Column(name = "datee_no_show")
     private boolean dateeNoShow;
 
-    @Column(name = "timezone")
-    private String timezone;
-
     public DefiniteDate() {
+        this.doingWhen = DateUtil.getCurrentServerTime(72);
     }
 
-    public DefiniteDate(String timezone) {
-        this.timezone = timezone;
-        LocalDateTime date = DateUtil.getCurrentServerTime(72, this.timezone);
-        this.doingWhenDate = date.toLocalDate();
-        this.doingWhenTime = date;
+    public DefiniteDate(DateProposal proposal) {
+        this.doingWhat = proposal.getDoingWhat();
+        this.locationName = proposal.getLocationName();
+        this.doingWhen = LocalDateTime.of(proposal.getDoingWhenDate(), proposal.getDoingWhenTime());
+        this.greetingMsg = proposal.getGreetingMsg();
+        this.ownerUserId = proposal.getOwnerUserId();
+        this.dateeUserId = proposal.getDateeUserId();
     }
 
+    public void updateFromProposal(DateProposal proposal) {
+        this.doingWhat = proposal.getDoingWhat();
+        this.locationName = proposal.getLocationName();
+        this.doingWhen = LocalDateTime.of(proposal.getDoingWhenDate(), proposal.getDoingWhenTime());
+        this.greetingMsg = proposal.getGreetingMsg();
+    }
 
     public void setParticipantStatusId(boolean owner, int statusId) {
         if (owner) {
@@ -143,6 +145,5 @@ public class DefiniteDate implements Serializable {
         }
         return this.dateeLastUpdate;
     }
-
 
 }

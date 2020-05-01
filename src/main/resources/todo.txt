@@ -29,3 +29,9 @@ update loading buttons the same way i do for block user on view profile page
 
 
 when viewing profile, if has active date, immeditaly show the make plans tab
+
+
+date gretting msg char counter
+
+
+add another tab to profile, with chat view.  limit 3 messages per person (or some #)

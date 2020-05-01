@@ -1,6 +1,7 @@
 package com.definiteplans.controller;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 
@@ -10,12 +11,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.definiteplans.controller.model.AjaxResponse;
+import com.definiteplans.controller.model.DateProposal;
 import com.definiteplans.dao.DefiniteDateRepository;
-import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.enumerations.SubmitType;
 import com.definiteplans.service.DateService;
@@ -27,46 +29,55 @@ public class DateController {
     private final UserService userService;
     private final DateService dateService;
     private final DefiniteDateRepository definiteDateRepository;
-    private final UserRepository userRepository;
 
-    public DateController(UserService userService, DateService dateService, DefiniteDateRepository definiteDateRepository, UserRepository userRepository) {
+    public DateController(UserService userService, DateService dateService, DefiniteDateRepository definiteDateRepository) {
         this.userService = userService;
         this.dateService = dateService;
         this.definiteDateRepository = definiteDateRepository;
-        this.userRepository = userRepository;
     }
 
     @PostMapping("/dates/propose")
-    public @ResponseBody AjaxResponse proposeDate(@ModelAttribute("date") @Valid DefiniteDate date, BindingResult bindingResult) {
-        DateValidator.validatePropose(date, bindingResult);
+    public @ResponseBody AjaxResponse proposeDate(@ModelAttribute("date") @Valid DateProposal proposal, BindingResult bindingResult) {
+        DateValidator.validatePropose(proposal, bindingResult);
         if (bindingResult.hasErrors()) {
             return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
         }
 
-        dateService.createDate(userService.getCurrentUser(), date);
+        dateService.createDate(userService.getCurrentUser(), proposal);
         return AjaxResponse.success("Date made");
     }
 
     @PostMapping("/dates/change")
-    public @ResponseBody AjaxResponse proposeChange(@ModelAttribute("date") @Valid DefiniteDate date, BindingResult bindingResult) {
-        DateValidator.validatePropose(date, bindingResult);
+    public @ResponseBody AjaxResponse proposeChange(@ModelAttribute("date") @Valid DateProposal proposal, BindingResult bindingResult) {
+        DateValidator.validatePropose(proposal, bindingResult);
         if (bindingResult.hasErrors()) {
             return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
         }
 
-        dateService.updateDate(userService.getCurrentUser(), SubmitType.PROPOSE_CHANGE, date);
+        Optional<DefiniteDate> find = definiteDateRepository.findById(proposal.getId());
+        if(find.isPresent()) {
+            DefiniteDate date = find.get();
+            date.updateFromProposal(proposal);
+            dateService.updateDate(userService.getCurrentUser(), SubmitType.PROPOSE_CHANGE, date);
+        }
         return AjaxResponse.success("Date changed");
     }
 
-    @PostMapping("/dates/accept")
-    public @ResponseBody AjaxResponse acceptDate(@ModelAttribute("date") @Valid DefiniteDate date, BindingResult bindingResult) {
-        dateService.updateDate(userService.getCurrentUser(), SubmitType.ACCEPT, date);
+    @PostMapping("/dates/accept/{dateId}")
+    public @ResponseBody AjaxResponse acceptDate(@PathVariable("dateId") Integer dateId) {
+        Optional<DefiniteDate> date = definiteDateRepository.findById(dateId);
+        if(date.isPresent()) {
+            dateService.updateDate(userService.getCurrentUser(), SubmitType.ACCEPT, date.get());
+        }
         return AjaxResponse.success("Date accepted");
     }
 
-    @PostMapping("/dates/decline")
-    public @ResponseBody AjaxResponse declineDate(@ModelAttribute("date") @Valid DefiniteDate date, BindingResult bindingResult) {
-        dateService.updateDate(userService.getCurrentUser(), SubmitType.DECLINE, date);
+    @PostMapping("/dates/decline/{dateId}")
+    public @ResponseBody AjaxResponse declineDate(@PathVariable("dateId") Integer dateId) {
+        Optional<DefiniteDate> date = definiteDateRepository.findById(dateId);
+        if(date.isPresent()) {
+            dateService.updateDate(userService.getCurrentUser(), SubmitType.DECLINE, date.get());
+        }
         return AjaxResponse.success("Date declined");
     }
 
@@ -74,7 +85,7 @@ public class DateController {
 
 
     private static class DateValidator {
-        private static void validatePropose(DefiniteDate obj, Errors e) {
+        private static void validatePropose(DateProposal obj, Errors e) {
             ValidationUtils.rejectIfEmpty(e, "doingWhat", "", "Doing what is required");
             ValidationUtils.rejectIfEmpty(e, "locationName", "", "Location is required");
             ValidationUtils.rejectIfEmpty(e, "doingWhenDate", "", "Doing when date is required");
@@ -82,7 +93,7 @@ public class DateController {
             ValidationUtils.rejectIfEmpty(e, "greetingMsg", "", "Greeting is required");
 
             LocalDateTime date = DateService.getSpecificTime(obj);
-            if (date != null && DateUtil.isInThePast(date, obj.getTimezone())) {
+            if (date != null && DateUtil.isInThePast(date)) {
                 e.reject("doingWhenDate", "Date can't be in the past.");
             }
 

@@ -2,6 +2,7 @@
 <div th:fragment="makePlans" id="make-plans-frag">
 
     <form class="form-horizontal" id="definiteDateForm" th:object="${date}" method="POST" data-parsley-validate>
+        <input type="hidden" th:value="${ownerUserId}" th:field="*{ownerUserId}">
         <input type="hidden" th:value="${dateeUserId}" th:field="*{dateeUserId}">
         <input type="hidden" th:value="${id}" th:field="*{id}">
 
@@ -80,8 +81,8 @@
         <div class="form-group row" th:if="${can_mod}">
             <div class="col-sm-12">
                 <a href="javascript:;" th:if="${can_propose_change}" class="btn btn-primary btn-lg" id="proposeChange" th:profile-id="${profile.id}">Propose a change</a>
-                <a href="javascript:;" th:if="${can_accept}" class="btn btn-success btn-lg" id="acceptPlan" th:profile-id="${profile.id}">Accept</a>
-                <a href="javascript:;" th:if="${can_decline}" class="btn btn-danger pull-right" id="declinePlan" th:profile-id="${profile.id}">Decline</a>
+                <a href="javascript:;" th:if="${can_accept}" class="btn btn-success btn-lg" id="acceptPlan" th:profile-id="${profile.id}" th:date-id="${date.id}">Accept</a>
+                <a href="javascript:;" th:if="${can_decline}" class="btn btn-danger pull-right" id="declinePlan" th:profile-id="${profile.id}" th:date-id="${date.id}">Decline</a>
             </div>
         </div>
     </form>

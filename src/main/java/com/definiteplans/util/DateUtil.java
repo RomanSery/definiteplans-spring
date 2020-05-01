@@ -21,11 +21,7 @@ public class DateUtil {
     }
 
     public static LocalDateTime getCurrentServerTime(int plusHours) {
-        return getCurrentServerTime(plusHours, null);
-    }
-
-    public static LocalDateTime getCurrentServerTime(int plusHours, String timezone) {
-        ZoneId zone = ZoneId.of((timezone != null) ? timezone : "America/New_York");
+        ZoneId zone = ZoneId.of("America/New_York");
         LocalDateTime dt = LocalDateTime.now(zone);
         if (plusHours != 0) {
             dt = dt.plusHours(plusHours);
@@ -34,15 +30,15 @@ public class DateUtil {
     }
 
 
-    public static boolean isInThePast(LocalDateTime dt, String timezone) {
-        ZoneId zone = ZoneId.of((timezone != null) ? timezone : "America/New_York");
+    public static boolean isInThePast(LocalDateTime dt) {
+        ZoneId zone = ZoneId.of("America/New_York");
         LocalDateTime dtNow = LocalDateTime.now(zone);
         return dt.isBefore(dtNow);
     }
 
 
-    public static int getHoursBetween(LocalDateTime d1, LocalDateTime d2, String timezone) {
-        ZoneId zone = ZoneId.of((timezone != null) ? timezone : "America/New_York");
+    public static int getHoursBetween(LocalDateTime d1, LocalDateTime d2) {
+        ZoneId zone = ZoneId.of("America/New_York");
         ZonedDateTime dt1 = ZonedDateTime.of(d1, zone);
         ZonedDateTime dt2 = ZonedDateTime.of(d2, zone);
         return (int) Math.abs(ChronoUnit.HOURS.between(dt1, dt2));
@@ -56,15 +52,12 @@ public class DateUtil {
         return (int) Math.abs(ChronoUnit.YEARS.between(dob, LocalDate.now()));
     }
 
-    public static String printDateTime(LocalDateTime dt, String timezone) {
+    public static String printDateTime(LocalDateTime dt) {
         if(dt == null) {
             return "";
         }
-        if (timezone != null) {
-            ZoneId zone = ZoneId.of(timezone);
-            return fullformatter.format(dt.atZone(zone));
-        }
-        return fullformatter.format(dt);
+        ZoneId zone = ZoneId.of("America/New_York");
+        return fullformatter.format(dt.atZone(zone));
     }
 
     public static String printDate(LocalDateTime dt) {

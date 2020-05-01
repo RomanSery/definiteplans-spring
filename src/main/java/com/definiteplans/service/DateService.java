@@ -11,13 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import com.definiteplans.controller.model.DateFeedback;
+import com.definiteplans.controller.model.DateProposal;
 import com.definiteplans.controller.model.PastDateRow;
 import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dao.UserRepository;
-import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
-import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.DateParticipantStatus;
 import com.definiteplans.dom.enumerations.DateStatus;
 import com.definiteplans.dom.enumerations.SubmitType;
@@ -26,18 +25,15 @@ import com.definiteplans.util.DateUtil;
 @Service
 public class DateService {
     private final DefiniteDateRepository definiteDateRepository;
-    private final ZipCodeRepository zipCodeRepository;
     private final UserRepository userRepository;
 
-    public DateService(DefiniteDateRepository definiteDateRepository, ZipCodeRepository zipCodeRepository, UserRepository userRepository) {
+    public DateService(DefiniteDateRepository definiteDateRepository, UserRepository userRepository) {
         this.definiteDateRepository = definiteDateRepository;
-        this.zipCodeRepository = zipCodeRepository;
         this.userRepository = userRepository;
     }
 
     public DefiniteDate createNew(User currUser, User profile) {
-        Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
-        DefiniteDate dd = new DefiniteDate(zip.isPresent() ? zip.get().getTimezone() : "America/New_York");
+        DefiniteDate dd = new DefiniteDate();
         dd.setOwnerUserId(currUser.getId());
         dd.setDateeUserId(profile.getId());
         return dd;
@@ -59,13 +55,14 @@ public class DateService {
         return null;
     }
 
-    public static LocalDateTime getSpecificTime(DefiniteDate dd) {
+
+    public static LocalDateTime getSpecificTime(DateProposal dd) {
         LocalDateTime date = null;
         if(dd.getDoingWhenDate() != null) {
             date = LocalDateTime.of(dd.getDoingWhenDate(), LocalTime.MIDNIGHT);
         }
         if(dd.getDoingWhenTime() != null && date != null) {
-            date = LocalDateTime.of(dd.getDoingWhenDate(), dd.getDoingWhenTime().toLocalTime());
+            date = LocalDateTime.of(dd.getDoingWhenDate(), dd.getDoingWhenTime());
         }
         return date;
     }
@@ -83,22 +80,23 @@ public class DateService {
             return;
         }
 
-        LocalDateTime date = getSpecificTime(dd);
+        LocalDateTime doingWhen = dd.getDoingWhen();
         boolean isOwner = currUser.getId() == dd.getOwnerUserId();
 
         DateParticipantStatus myStatus = DateParticipantStatus.getById((dd.getOwnerUserId() == currUser.getId()) ? dd.getOwnerStatusId() : dd.getDateeStatusId());
         DateParticipantStatus otherPersonStatus = DateParticipantStatus.getById((dd.getOwnerUserId() == viewingUser.getId()) ? dd.getOwnerStatusId() : dd.getDateeStatusId());
 
-        boolean enableFormFields = (myStatus == null || myStatus == DateParticipantStatus.NEEDS_TO_REPLY);
         boolean bothApproved = (dd.getOwnerStatusId() == DateParticipantStatus.APPROVED.getId() && dd.getDateeStatusId() == DateParticipantStatus.APPROVED.getId());
-        boolean isTooLateToModify = (bothApproved && DateUtil.getHoursBetween(DateUtil.getCurrentServerTime(0, dd.getTimezone()), date, dd.getTimezone()) <= 6);
+        boolean isTooLateToModify = (bothApproved && DateUtil.getHoursBetween(DateUtil.getCurrentServerTime(), doingWhen) <= 6);
 
-        boolean isTooLateToAccept = (date != null && DateUtil.isInThePast(date, dd.getTimezone()));
+        boolean isTooLateToAccept = (doingWhen != null && DateUtil.isInThePast(doingWhen));
         boolean gaveFeedback = isOwner ? dd.isOwnerGaveFeedback() : dd.isDateeGaveFeedback();
         boolean theyGaveFeedback = isOwner ? dd.isDateeGaveFeedback() : dd.isOwnerGaveFeedback();
 
         boolean isChange = dd.getDateeLastUpdate() != null && dd.getOwnerLastUpdate() != null;
         boolean showFeedbackForm = dd.getId() > 0 && bothApproved && isTooLateToAccept && !gaveFeedback;
+
+        boolean canEdit = (myStatus == null || myStatus == DateParticipantStatus.NEEDS_TO_REPLY) || (bothApproved && !isTooLateToModify);
 
         String infoDesc = "";
         if (bothApproved) {
@@ -116,21 +114,21 @@ public class DateService {
         } else {
             String change = isChange ? " change " : " ";
             if (myStatus == DateParticipantStatus.WAITING_FOR_REPLY) {
-                infoDesc = "You proposed this" + change + "on " + DateUtil.printDateTime(dd.getParticipantLastUpdate(isOwner), dd.getTimezone()) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
+                infoDesc = "You proposed this" + change + "on " + DateUtil.printDateTime(dd.getParticipantLastUpdate(isOwner)) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
             } else if (myStatus == DateParticipantStatus.NEEDS_TO_REPLY) {
                 if (otherPersonStatus == DateParticipantStatus.APPROVED) {
-                    infoDesc = viewingUser.getDisplayName() + " has accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate(), dd.getTimezone());
+                    infoDesc = viewingUser.getDisplayName() + " has accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate());
                 } else {
-                    infoDesc = viewingUser.getDisplayName() + " has proposed this" + change + "on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate(), dd.getTimezone());
+                    infoDesc = viewingUser.getDisplayName() + " has proposed this" + change + "on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate());
                 }
             } else if (myStatus == DateParticipantStatus.APPROVED) {
-                infoDesc = "You have accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate(), dd.getTimezone()) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
+                infoDesc = "You have accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate()) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
             }
         }
 
         m.addAttribute("date_desc", infoDesc);
         m.addAttribute("has_desc", !StringUtils.isBlank(infoDesc));
-        m.addAttribute("can_edit", enableFormFields);
+        m.addAttribute("can_edit", canEdit);
         m.addAttribute("can_mod", myStatus == DateParticipantStatus.NEEDS_TO_REPLY || dd.getDateStatusId() == DateStatus.APPROVED.getId());
 
         m.addAttribute("can_propose_change", !isTooLateToModify);
@@ -146,7 +144,7 @@ public class DateService {
         for(DefiniteDate dd : pastDates) {
 
             String doingWhat = dd.getDoingWhat();
-            LocalDateTime doingWhen = getSpecificTime(dd);
+            LocalDateTime doingWhen = dd.getDoingWhen();
             String locationName = dd.getLocationName();
             String greetingMsg = '"' + dd.getGreetingMsg() + '"';
             boolean wantsAnotherDate = dd.getOwnerUserId() == profile.getId() ? dd.isOwnerWantsMore() : dd.isDateeWantsMore();
@@ -157,15 +155,17 @@ public class DateService {
     }
 
 
-    public boolean createDate(User currUser, DefiniteDate date) {
-        if(currUser == null || date == null) {
+    public boolean createDate(User currUser, DateProposal proposal) {
+        if(currUser == null || proposal == null) {
             return false;
         }
 
-        Optional<User> datee = userRepository.findById(date.getDateeUserId());
+        Optional<User> datee = userRepository.findById(proposal.getDateeUserId());
         if(datee.isEmpty()) {
             return false;
         }
+
+        DefiniteDate date = new DefiniteDate(proposal);
 
         date.setCreatedDate(DateUtil.getCurrentServerTime());
         date.setDateStatusId(DateStatus.NEGOTIATION.getId());
@@ -176,8 +176,6 @@ public class DateService {
         date.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
         date.setEmailReminderSent(false);
 
-        Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
-        date.setTimezone(zip.isPresent() ? zip.get().getTimezone() : "America/New_York");
         definiteDateRepository.save(date);
 
         //dateLetterManager.onDateUpdated(dd, type, DatePanel.this.isOwner(dd));

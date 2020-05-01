@@ -83,9 +83,10 @@ definitePlansScripts.dateBtns = function () {
 
     $('#acceptPlan').click(function () {
         const profileId = $(this).attr('profile-id');
+        const dateId = $(this).attr('date-id');
         if(confirm('Are you sure you want to accept this date?')) {
             $.ajax({
-                type: "POST", url: '/dates/accept', data: $('#definiteDateForm').serialize(),
+                type: "POST", url: '/dates/accept/' + dateId,
                 beforeSend: function (xhr) {
                     definitePlansScripts.makeBtnLoading('acceptPlan');
                     var token = $('#_csrf').attr('content');
@@ -109,9 +110,10 @@ definitePlansScripts.dateBtns = function () {
 
     $('#declinePlan').click(function () {
         const profileId = $(this).attr('profile-id');
+        const dateId = $(this).attr('date-id');
         if(confirm('Are you sure you want to decline this date?')) {
             $.ajax({
-                type: "POST", url: '/dates/decline', data: $('#definiteDateForm').serialize(),
+                type: "POST", url: '/dates/decline/' + dateId,
                 beforeSend: function (xhr) {
                     definitePlansScripts.makeBtnLoading('declinePlan');
                     var token = $('#_csrf').attr('content');

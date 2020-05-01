@@ -14,7 +14,7 @@ import com.definiteplans.dom.DefiniteDate;
 public interface DefiniteDateRepository extends JpaRepository<DefiniteDate, Integer> {
 
 
-    @Query("FROM DefiniteDate where dateStatusId = 3 and ((ownerUserId = :ownerUserId and dateeUserId = :dateeUserId) or (ownerUserId = :dateeUserId and dateeUserId = :ownerUserId)) order by doingWhenDate desc")
+    @Query("FROM DefiniteDate where dateStatusId = 3 and ((ownerUserId = :ownerUserId and dateeUserId = :dateeUserId) or (ownerUserId = :dateeUserId and dateeUserId = :ownerUserId)) order by doingWhen desc")
     List<DefiniteDate> getPastDatesByOwnerAndDatee(@Param("ownerUserId") int ownerUserId, @Param("dateeUserId") int dateeUserId);
 
     @Query("FROM DefiniteDate where dateStatusId IN (1,2) and ((ownerUserId = :ownerUserId and dateeUserId = :dateeUserId) or (ownerUserId = :dateeUserId and dateeUserId = :ownerUserId)) order by createdDate desc")
