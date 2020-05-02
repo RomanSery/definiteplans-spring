@@ -1,7 +1,9 @@
 package com.definiteplans.dom;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -104,7 +106,7 @@ public class DefiniteDate implements Serializable {
     private boolean dateeNoShow;
 
     public DefiniteDate() {
-        this.doingWhen = DateUtil.getCurrentServerTime(72);
+        this.doingWhen = LocalDateTime.of(LocalDate.now().plusDays(3), LocalTime.of(18, 0));
     }
 
     public DefiniteDate(DateProposal proposal) {

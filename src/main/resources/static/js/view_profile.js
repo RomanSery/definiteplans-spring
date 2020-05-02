@@ -163,9 +163,19 @@ $(document).ready(function() {
         $('#profileTabsDiv a[href="#tab-4"]').tab('show');
     });
 
-    $('.clockpicker').clockpicker({
-        autoclose: true,
-        'default': 'now'
+    $('.clockpicker').datetimepicker({
+        toolbarPlacement: 'bottom',
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-arrows ',
+            clear: 'fa fa-trash',
+            close: 'fa fa-times'
+        }, format: 'LT'
     });
 
     $('[data-toggle="tooltip"]').tooltip();

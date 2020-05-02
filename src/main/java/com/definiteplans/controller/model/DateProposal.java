@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.definiteplans.dom.DefiniteDate;
 
 import lombok.Getter;
@@ -18,11 +20,15 @@ public class DateProposal implements Serializable {
     private int id;
     private String doingWhat;
     private String locationName;
-    private LocalDate doingWhenDate;
-    private LocalTime doingWhenTime;
     private String greetingMsg;
     private int ownerUserId;
     private int dateeUserId;
+
+    @DateTimeFormat(pattern = "MM/DD/YYYY")
+    private LocalDate doingWhenDate;
+
+    @DateTimeFormat(pattern = "h:mm a")
+    private LocalTime doingWhenTime;
 
     public DateProposal() {
 

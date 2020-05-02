@@ -41,9 +41,9 @@
         <div class="form-group row">
             <label for="doingWhenTime" class="col-sm-2 col-form-label font-bold"></label>
             <div class="col">
-                <div th:if="${can_edit}" class="input-group date clockpicker">
+                <div th:if="${can_edit}" class="input-group date">
                     <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-                    <input type="text" th:field="*{doingWhenTime}" class="form-control" required>
+                    <input type="text" th:field="*{doingWhenTime}" class="form-control clockpicker" required>
                 </div>
                 <div th:unless="${can_edit}" class="input-group date">
                     <input readonly type="text" th:field="*{doingWhenTime}" class="form-control-plaintext">
