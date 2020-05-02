@@ -5,7 +5,7 @@ import java.util.List;
 public enum DateParticipantStatus implements GenericEnum {
     WAITING_FOR_REPLY(1, "Waiting for Reply"),
     NEEDS_TO_REPLY(2, "Needs to Reply"),
-    APPROVED(3, "Approved"),
+    ACCEPTED(3, "Accepted"),
     DECLINED(4, "Declined");
 
     public static final List<DateParticipantStatus> VALUES = List.of(DateParticipantStatus.values());

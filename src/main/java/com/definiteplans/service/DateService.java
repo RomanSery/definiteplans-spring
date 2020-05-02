@@ -22,6 +22,9 @@ import com.definiteplans.dom.enumerations.DateStatus;
 import com.definiteplans.dom.enumerations.SubmitType;
 import com.definiteplans.util.DateUtil;
 
+import static com.definiteplans.dom.enumerations.DateParticipantStatus.NEEDS_TO_REPLY;
+import static com.definiteplans.dom.enumerations.DateParticipantStatus.WAITING_FOR_REPLY;
+
 @Service
 public class DateService {
     private final DefiniteDateRepository definiteDateRepository;
@@ -86,7 +89,7 @@ public class DateService {
         DateParticipantStatus myStatus = DateParticipantStatus.getById((dd.getOwnerUserId() == currUser.getId()) ? dd.getOwnerStatusId() : dd.getDateeStatusId());
         DateParticipantStatus otherPersonStatus = DateParticipantStatus.getById((dd.getOwnerUserId() == viewingUser.getId()) ? dd.getOwnerStatusId() : dd.getDateeStatusId());
 
-        boolean bothApproved = (dd.getOwnerStatusId() == DateParticipantStatus.APPROVED.getId() && dd.getDateeStatusId() == DateParticipantStatus.APPROVED.getId());
+        boolean bothApproved = (dd.getOwnerStatusId() == DateParticipantStatus.ACCEPTED.getId() && dd.getDateeStatusId() == DateParticipantStatus.ACCEPTED.getId());
         boolean isTooLateToModify = (bothApproved && DateUtil.getHoursBetween(DateUtil.getCurrentServerTime(), doingWhen) <= 6);
 
         boolean isTooLateToAccept = (doingWhen != null && DateUtil.isInThePast(doingWhen));
@@ -96,7 +99,7 @@ public class DateService {
         boolean isChange = dd.getDateeLastUpdate() != null && dd.getOwnerLastUpdate() != null;
         boolean showFeedbackForm = dd.getId() > 0 && bothApproved && isTooLateToAccept && !gaveFeedback;
 
-        boolean canEdit = (myStatus == null || myStatus == DateParticipantStatus.NEEDS_TO_REPLY) || (bothApproved && !isTooLateToModify);
+        boolean canEdit = (myStatus == null || myStatus == NEEDS_TO_REPLY) || (bothApproved && !isTooLateToModify);
 
         String infoDesc = "";
         if (bothApproved) {
@@ -113,15 +116,15 @@ public class DateService {
             }
         } else {
             String change = isChange ? " change " : " ";
-            if (myStatus == DateParticipantStatus.WAITING_FOR_REPLY) {
+            if (myStatus == WAITING_FOR_REPLY) {
                 infoDesc = "You proposed this" + change + "on " + DateUtil.printDateTime(dd.getParticipantLastUpdate(isOwner)) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
-            } else if (myStatus == DateParticipantStatus.NEEDS_TO_REPLY) {
-                if (otherPersonStatus == DateParticipantStatus.APPROVED) {
+            } else if (myStatus == NEEDS_TO_REPLY) {
+                if (otherPersonStatus == DateParticipantStatus.ACCEPTED) {
                     infoDesc = viewingUser.getDisplayName() + " has accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate());
                 } else {
                     infoDesc = viewingUser.getDisplayName() + " has proposed this" + change + "on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate());
                 }
-            } else if (myStatus == DateParticipantStatus.APPROVED) {
+            } else if (myStatus == DateParticipantStatus.ACCEPTED) {
                 infoDesc = "You have accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate()) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
             }
         }
@@ -129,10 +132,10 @@ public class DateService {
         m.addAttribute("date_desc", infoDesc);
         m.addAttribute("has_desc", !StringUtils.isBlank(infoDesc));
         m.addAttribute("can_edit", canEdit);
-        m.addAttribute("can_mod", myStatus == DateParticipantStatus.NEEDS_TO_REPLY || dd.getDateStatusId() == DateStatus.APPROVED.getId());
+        m.addAttribute("can_mod", myStatus == NEEDS_TO_REPLY || dd.getDateStatusId() == DateStatus.APPROVED.getId());
 
         m.addAttribute("can_propose_change", !isTooLateToModify);
-        m.addAttribute("can_accept", myStatus != DateParticipantStatus.APPROVED && !isTooLateToAccept);
+        m.addAttribute("can_accept", myStatus != DateParticipantStatus.ACCEPTED && !isTooLateToAccept);
         m.addAttribute("can_decline", !isTooLateToModify);
         m.addAttribute("show_feedback_form", showFeedbackForm);
     }
@@ -171,9 +174,9 @@ public class DateService {
         date.setDateStatusId(DateStatus.NEGOTIATION.getId());
         date.setOwnerUserId(currUser.getId());
         date.setOwnerLastUpdate(DateUtil.getCurrentServerTime());
-        date.setOwnerStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
+        date.setOwnerStatusId(WAITING_FOR_REPLY.getId());
         date.setDateeUserId(datee.get().getId());
-        date.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+        date.setDateeStatusId(NEEDS_TO_REPLY.getId());
         date.setEmailReminderSent(false);
 
         definiteDateRepository.save(date);
@@ -193,23 +196,31 @@ public class DateService {
             date.setEmailReminderSent(false);
             date.setDateStatusId(DateStatus.NEGOTIATION.getId());
             if (isOwner) {
-                date.setOwnerStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
-                date.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+                date.setOwnerStatusId(WAITING_FOR_REPLY.getId());
+                date.setDateeStatusId(NEEDS_TO_REPLY.getId());
             } else {
-                date.setDateeStatusId(DateParticipantStatus.WAITING_FOR_REPLY.getId());
-                date.setOwnerStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+                date.setDateeStatusId(WAITING_FOR_REPLY.getId());
+                date.setOwnerStatusId(NEEDS_TO_REPLY.getId());
             }
         } else if (type == SubmitType.ACCEPT) {
-            date.setParticipantStatusId(isOwner, DateParticipantStatus.APPROVED.getId());
-            if (date.getOwnerStatusId() == DateParticipantStatus.APPROVED.getId() && date.getDateeStatusId() == DateParticipantStatus.APPROVED.getId()) {
+            date.setParticipantStatusId(isOwner, DateParticipantStatus.ACCEPTED.getId());
+
+            if(isOwner && date.getDateeStatusId() == WAITING_FOR_REPLY.getId()) {
+                date.setDateeStatusId(DateParticipantStatus.ACCEPTED.getId());
+            }
+            if(!isOwner && date.getOwnerStatusId() == WAITING_FOR_REPLY.getId()) {
+                date.setOwnerStatusId(DateParticipantStatus.ACCEPTED.getId());
+            }
+
+            if (date.getOwnerStatusId() == DateParticipantStatus.ACCEPTED.getId() && date.getDateeStatusId() == DateParticipantStatus.ACCEPTED.getId()) {
                 date.setDateStatusId(DateStatus.APPROVED.getId());
             } else {
                 date.setDateStatusId(DateStatus.NEGOTIATION.getId());
 
                 if (isOwner) {
-                    date.setDateeStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+                    date.setDateeStatusId(NEEDS_TO_REPLY.getId());
                 } else {
-                    date.setOwnerStatusId(DateParticipantStatus.NEEDS_TO_REPLY.getId());
+                    date.setOwnerStatusId(NEEDS_TO_REPLY.getId());
                 }
             }
         } else if (type == SubmitType.DECLINE) {

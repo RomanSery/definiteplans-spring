@@ -35,3 +35,6 @@ date gretting msg char counter
 
 
 add another tab to profile, with chat view.  limit 3 messages per person (or some #)
+
+
+add security checks for dateService, make sure user updating date has access to it.
