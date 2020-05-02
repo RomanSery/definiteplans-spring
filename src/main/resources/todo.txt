@@ -38,3 +38,5 @@ add another tab to profile, with chat view.  limit 3 messages per person (or som
 
 
 add security checks for dateService, make sure user updating date has access to it.
+
+santize user input, remove js/html

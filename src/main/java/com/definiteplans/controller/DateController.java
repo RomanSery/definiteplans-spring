@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.definiteplans.controller.model.AjaxResponse;
+import com.definiteplans.controller.model.DateFeedback;
 import com.definiteplans.controller.model.DateProposal;
 import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dom.DefiniteDate;
@@ -82,9 +83,36 @@ public class DateController {
     }
 
 
+    @PostMapping("/dates/feedback")
+    public @ResponseBody AjaxResponse submitFeedback(@ModelAttribute("feedback") @Valid DateFeedback feedback, BindingResult bindingResult) {
+        DateValidator.validateFeedback(feedback, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
+        }
+
+        Optional<DefiniteDate> date = definiteDateRepository.findById(feedback.getDateId());
+        if(date.isPresent()) {
+            dateService.submitDateFeedback(userService.getCurrentUser(), feedback, date.get());
+        }
+        return AjaxResponse.success("Date declined");
+    }
+
 
 
     private static class DateValidator {
+        private static void validateFeedback(DateFeedback feedback, Errors e) {
+//            ValidationUtils.rejectIfEmpty(e, "doingWhat", "", "Doing what is required");
+//            ValidationUtils.rejectIfEmpty(e, "locationName", "", "Location is required");
+//            ValidationUtils.rejectIfEmpty(e, "doingWhenDate", "", "Doing when date is required");
+//            ValidationUtils.rejectIfEmpty(e, "doingWhenTime", "", "Doing when time is required");
+//            ValidationUtils.rejectIfEmpty(e, "greetingMsg", "", "Greeting is required");
+//
+//            LocalDateTime date = DateService.getSpecificTime(obj);
+//            if (date != null && DateUtil.isInThePast(date)) {
+//                e.reject("doingWhenDate", "Date can't be in the past.");
+//            }
+        }
+
         private static void validatePropose(DateProposal obj, Errors e) {
             ValidationUtils.rejectIfEmpty(e, "doingWhat", "", "Doing what is required");
             ValidationUtils.rejectIfEmpty(e, "locationName", "", "Location is required");
@@ -96,7 +124,6 @@ public class DateController {
             if (date != null && DateUtil.isInThePast(date)) {
                 e.reject("doingWhenDate", "Date can't be in the past.");
             }
-
         }
     }
 }

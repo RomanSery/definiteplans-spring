@@ -8,69 +8,72 @@
 
         <div class="alert alert-danger" role="alert" id="definiteDateFormErrors" style="display:none;"></div>
 
-        <div class="form-group row">
-            <label for="doingWhat" class="col-sm-2 col-form-label font-bold">What?
-                <a class="fa fa-question-circle" title="What are we going to be doing on the date?<br>Be specific." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
-            </label>
-            <div class="col">
-                <input th:readonly="${!can_edit}" th:class="${can_edit} ? 'form-control' : 'form-control-plaintext'"
-                       maxlength="35" placeholder="ex: Take a walk in the park, grab drinks" type="text" th:field="*{doingWhat}" required>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="locationName" class="col-sm-2 col-form-label font-bold">Where?
-                <a class="fa fa-question-circle" title="Make sure to pick a safe, public place to meet.<br>Make sure it is easy to get to for both people." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
-            </label>
-            <div class="col">
-                <input th:readonly="${!can_edit}" th:class="${can_edit} ? 'form-control' : 'form-control-plaintext'"
-                       maxlength="30" placeholder="ex: Bob's Cafe" type="text" th:field="*{locationName}" required>
-            </div>
-        </div>
-
-
-        <div class="form-group row" th:if="${can_edit}">
-            <label for="doingWhenDate" class="col-sm-2 col-form-label font-bold">When?</label>
-            <div class="col">
-                <div class="input-group date" data-provide="datepicker">
-                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input type="text" th:field="*{doingWhenDate}" class="form-control" required>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label for="doingWhenTime" class="col-sm-2 col-form-label font-bold"></label>
-            <div class="col">
-                <div th:if="${can_edit}" class="input-group date">
-                    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-                    <input type="text" th:field="*{doingWhenTime}" class="form-control clockpicker" required>
-                </div>
-                <div th:unless="${can_edit}" class="input-group date">
-                    <input readonly type="text" th:field="*{doingWhenTime}" class="form-control-plaintext">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label for="greetingMsg" class="col-sm-2 col-form-label font-bold">Greeting
-                <a class="fa fa-question-circle" title="Write a brief, simple message introducing yourself and mentioning what caught your eye." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
-            </label>
-            <div class="col">
-                <div th:unless="${has_active_date}" class="input-group m-b">
-                    <textarea class="form-control" cols="100" rows="5" th:field="*{greetingMsg}" required></textarea>
-                    <span class="help-block m-b-none" id="greetingMsgChars"></span>
-                </div>
-                <div th:if="${has_active_date}" class="input-group m-b">
-                    <input readonly class="form-control-plaintext" th:field="*{greetingMsg}"></input>
-                </div>
-            </div>
-        </div>
-
         <div class="form-group" th:if="${has_desc}">
-            <div class="col-sm-12">
-                <div class="alert alert-success" th:utext="${date_desc}"></div>
-            </div>
+            <div class="alert alert-success" th:utext="${date_desc}"></div>
         </div>
+
+        <th:block th:unless="${can_edit}" th:remove="tag">
+            <div class="form-group">
+                <div th:utext="${date_info}"></div>
+            </div>
+        </th:block>
+
+        <th:block th:if="${can_edit}" th:remove="tag">
+            <div class="form-group row">
+                <label for="doingWhat" class="col-sm-2 col-form-label font-bold">What?
+                    <a class="fa fa-question-circle" title="What are we going to be doing on the date?<br>Be specific." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
+                </label>
+                <div class="col">
+                    <input class="form-control" maxlength="35" placeholder="ex: Take a walk in the park, grab drinks" type="text" th:field="*{doingWhat}" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="locationName" class="col-sm-2 col-form-label font-bold">Where?
+                    <a class="fa fa-question-circle" title="Make sure to pick a safe, public place to meet.<br>Make sure it is easy to get to for both people." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
+                </label>
+                <div class="col">
+                    <input class="form-control" maxlength="30" placeholder="ex: Bob's Cafe" type="text" th:field="*{locationName}" required>
+                </div>
+            </div>
+
+
+            <div class="form-group row">
+                <label for="doingWhenDate" class="col-sm-2 col-form-label font-bold">When?</label>
+                <div class="col">
+                    <div class="input-group date" data-provide="datepicker">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input type="text" th:field="*{doingWhenDate}" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="doingWhenTime" class="col-sm-2 col-form-label font-bold"></label>
+                <div class="col">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                        <input type="text" th:field="*{doingWhenTime}" class="form-control clockpicker" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="greetingMsg" class="col-sm-2 col-form-label font-bold">Greeting
+                    <a class="fa fa-question-circle" title="Write a brief, simple message introducing yourself and mentioning what caught your eye." data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
+                </label>
+                <div class="col">
+                    <div th:unless="${has_active_date}" class="input-group m-b">
+                        <textarea class="form-control" cols="100" rows="5" th:field="*{greetingMsg}" required></textarea>
+                        <span class="help-block m-b-none" id="greetingMsgChars"></span>
+                    </div>
+                    <div th:if="${has_active_date}" class="input-group m-b">
+                        <input readonly class="form-control-plaintext" th:field="*{greetingMsg}"></input>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+
+
 
         <div class="form-group row" th:unless="${has_active_date}">
             <div class="col-sm-3">
@@ -94,49 +97,73 @@
 
 <div th:fragment="feedbackFrag" th:remove="tag">
 
-    <form class="form-horizontal" id="dateFeedbackForm" th:if="${show_feedback_form}">
+    <form class="form-horizontal" id="dateFeedbackForm" th:object="${feedback}" method="POST" data-parsley-validate th:if="${show_feedback_form}">
+        <input type="hidden" th:value="${dateId}" th:field="*{dateId}">
+        <h3 class="m-t-none m-b">This <strong class="text-success">WILL</strong> be shared with [[${otherPersonName}]]</h3>
 
-        <h3 class="m-t-none m-b">This <strong class="text-success">WILL</strong> be shared with <span wicket:id="otherPersonName1"></span></h3>
 
-        <div class="form-group">
-            <label class="col-sm-4 control-label">Did <span wicket:id="otherPersonName4"></span> show up?</label>
-            <div class="col-sm-6" wicket:id="participantNoShow">
-                <input type="radio" wicket:id="participantNoShowYes"> Yes
-                <input type="radio" wicket:id="participantNoShowNo"> No
+        <div class="form-group row">
+            <label for="participantNoShow" class="col-sm-4 col-form-label font-bold">Did [[${otherPersonName}]] show up?</label>
+            <div class="col">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" th:field="*{participantNoShow}" value="false" class="custom-control-input" required>
+                    <label class="custom-control-label" for="participantNoShow1">Yes</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" th:field="*{participantNoShow}" value="true" class="custom-control-input" required>
+                    <label class="custom-control-label" for="participantNoShow2">No</label>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-sm-4 control-label">Do you want another date?</label>
-            <div class="col-sm-6" wicket:id="participantWantsMore">
-                <input type="radio" wicket:id="participantWantsMoreYes"> Yes
-                <input type="radio" wicket:id="participantWantsMoreNo"> No
+        <div class="form-group row">
+            <label for="participantWantsMore" class="col-sm-4 col-form-label font-bold">Do you want another date?</label>
+            <div class="col">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" th:field="*{participantWantsMore}" value="true" class="custom-control-input" required>
+                    <label class="custom-control-label" for="participantWantsMore1">Yes</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" th:field="*{participantWantsMore}" value="false" class="custom-control-input" required>
+                    <label class="custom-control-label" for="participantWantsMore2">No</label>
+                </div>
             </div>
         </div>
 
         <div class="hr-line-dashed"></div>
 
-        <h3 class="m-t-none m-b">This <strong class="text-danger">WILL NOT</strong> be shared with <span wicket:id="otherPersonName2"></span></h3>
+        <h3 class="m-t-none m-b">This <strong class="text-danger">WILL NOT</strong> be shared with [[${otherPersonName}]]</h3>
 
-        <div class="form-group">
-            <label class="col-sm-4 control-label">Is <span wicket:id="otherPersonName3"></span> safe to date?</label>
-            <div class="col-sm-6" wicket:id="participantWasSafe">
-                <input type="radio" wicket:id="participantWasSafeYes"> Yes
-                <input type="radio" wicket:id="participantWasSafeNo"> No
+        <div class="form-group row">
+            <label for="participantWasSafe" class="col-sm-4 col-form-label font-bold">Is [[${otherPersonName}]] safe to date?</label>
+            <div class="col">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" th:field="*{participantWasSafe}" value="true" class="custom-control-input" required>
+                    <label class="custom-control-label" for="participantWasSafe1">Yes</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" th:field="*{participantWasSafe}" value="false" class="custom-control-input" required>
+                    <label class="custom-control-label" for="participantWasSafe2">No</label>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-sm-4 control-label">How was it?
+
+        <div class="form-group row">
+            <label for="participantFeedback" class="col-sm-2 col-form-label font-bold">How was it?
                 <a class="fa fa-question-circle" title="Tell us your overall experience setting up the date, the date itself, and ways to improve the process" data-toggle="tooltip" data-placement="top" data-html="true" tabindex="-1"></a>
             </label>
-            <div class="col-sm-6"><textarea class="form-control" wicket:id="participantFeedback"></textarea></div>
+            <div class="col">
+                <div class="input-group m-b">
+                    <textarea class="form-control" cols="100" rows="5" th:field="*{participantFeedback}"></textarea>
+                </div>
+            </div>
         </div>
 
 
         <div class="form-group">
             <div class="col-sm-12">
-                <button class="btn btn-primary btn-lg" type="submit">Submit</button>
+                <button class="btn btn-primary btn-lg" type="submit" id="submitFeedbackBtn" th:profile-id="${profile.id}">Submit</button>
             </div>
         </div>
     </form>

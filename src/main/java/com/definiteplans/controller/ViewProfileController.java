@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.AjaxResponse;
+import com.definiteplans.controller.model.DateFeedback;
 import com.definiteplans.controller.model.DateProposal;
 import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dao.UserImageRepository;
@@ -118,6 +119,7 @@ public class ViewProfileController {
     private void setDateAttributes(User currUser, User profile, ModelMap m) {
 
         m.addAttribute("profile", profile);
+        m.addAttribute("otherPersonName", profile.getDisplayName());
 
         DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), profile.getId());
         if(activeDate == null) {
@@ -126,6 +128,7 @@ public class ViewProfileController {
 
         m.addAttribute("date", activeDate != null ? new DateProposal(activeDate) : new DateProposal());
         m.addAttribute("has_active_date", activeDate != null && activeDate.getId() > 0);
+        m.addAttribute("feedback", new DateFeedback(activeDate != null ? activeDate.getId() : 0));
 
         dateService.setDateAttributes(m, currUser, profile, activeDate);
     }

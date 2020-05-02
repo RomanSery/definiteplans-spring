@@ -155,6 +155,31 @@ definitePlansScripts.refreshMakePlans = function (profileId) {
 };
 
 
+definitePlansScripts.feedbackForm = function() {
+    $("#dateFeedbackForm").submit(function (event) {
+        const profileId = $('#submitFeedbackBtn').attr('profile-id');
+        if(confirm('Are you sure you want to submit this feedback?')) {
+            $.ajax({
+                type: "POST", url: '/dates/feedback', data: $('#dateFeedbackForm').serialize(),
+                beforeSend: function (xhr) {
+                    definitePlansScripts.makeBtnLoading('submitFeedbackBtn');
+                    var token = $('#_csrf').attr('content');
+                    var header = $('#_csrf_header').attr('content');
+                    xhr.setRequestHeader(header, token);
+                },
+                error: function () {
+                    alert('Sorry, there was some error. Please try again.');
+                },
+                success: function (data) {
+                    definitePlansScripts.stopBtnLoading('submitFeedbackBtn');
+                    definitePlansScripts.refreshMakePlans(profileId);
+                }
+            });
+            return false;
+        }
+    });
+};
+
 $(document).ready(function() {
     lightGallery(document.getElementById('profile-light-gallery'));
     lightGallery(document.getElementById('main-profile-pic'));
@@ -182,4 +207,5 @@ $(document).ready(function() {
 
     definitePlansScripts.blockUser();
     definitePlansScripts.dateBtns();
+    definitePlansScripts.feedbackForm();
 });

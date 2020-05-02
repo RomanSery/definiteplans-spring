@@ -70,10 +70,18 @@ public class DateService {
         return date;
     }
 
+    private String getDateInfo(DefiniteDate date) {
+        List<String> arr = new ArrayList<>();
+        arr.add(date.getDoingWhat());
+        arr.add(date.getLocationName());
+        arr.add(DateUtil.printDateTime(date.getDoingWhen()));
+        return StringUtils.join(arr, "<br>");
+    }
 
     public void setDateAttributes(ModelMap m, User currUser, User viewingUser, DefiniteDate dd) {
 
         m.addAttribute("past_dates", getPastDates(currUser, viewingUser));
+        m.addAttribute("date_info", getDateInfo(dd));
 
         if(dd == null || dd.getId() == 0) {
             m.addAttribute("has_desc", false);
@@ -99,7 +107,7 @@ public class DateService {
         boolean isChange = dd.getDateeLastUpdate() != null && dd.getOwnerLastUpdate() != null;
         boolean showFeedbackForm = dd.getId() > 0 && bothApproved && isTooLateToAccept && !gaveFeedback;
 
-        boolean canEdit = (myStatus == null || myStatus == NEEDS_TO_REPLY) || (bothApproved && !isTooLateToModify);
+        boolean canEdit = !isTooLateToAccept && ((myStatus == null || myStatus == NEEDS_TO_REPLY) || (bothApproved && !isTooLateToModify));
 
         String infoDesc = "";
         if (bothApproved) {
@@ -132,7 +140,7 @@ public class DateService {
         m.addAttribute("date_desc", infoDesc);
         m.addAttribute("has_desc", !StringUtils.isBlank(infoDesc));
         m.addAttribute("can_edit", canEdit);
-        m.addAttribute("can_mod", myStatus == NEEDS_TO_REPLY || dd.getDateStatusId() == DateStatus.APPROVED.getId());
+        m.addAttribute("can_mod", (myStatus == NEEDS_TO_REPLY || dd.getDateStatusId() == DateStatus.APPROVED.getId()) && !isTooLateToAccept);
 
         m.addAttribute("can_propose_change", !isTooLateToModify);
         m.addAttribute("can_accept", myStatus != DateParticipantStatus.ACCEPTED && !isTooLateToAccept);
