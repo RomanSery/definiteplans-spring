@@ -39,4 +39,6 @@ definitePlansScripts.filterSearchResults = function () {
 
 $(document).ready(function() {
     definitePlansScripts.filterSearchResults();
+
+    $('[data-toggle="tooltip"]').tooltip();
 });

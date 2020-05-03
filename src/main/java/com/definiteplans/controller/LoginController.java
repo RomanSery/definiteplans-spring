@@ -117,7 +117,7 @@ public class LoginController {
             User u = found.get();
             if(u.getUserStatus() != UserStatus.ACTIVE.getId()) {
                 u.setUserStatus(UserStatus.ACTIVE.getId());
-                userService.saveUser(u);
+                userService.saveUser(u, true);
             }
         }
 

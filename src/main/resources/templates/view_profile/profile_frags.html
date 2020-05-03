@@ -11,6 +11,10 @@
         <div class="ibox-content profile-content">
             <h4><strong th:text="${profile.displayName}"></strong>, <span th:text="${age}" th:remove="tag"></span> <span th:text="${gender}" th:remove="tag"></span></h4>
             <p th:utext="${loc}"></p>
+
+            <p th:unless="${isOnline}"><span class="badge badge-info" th:utext="${lastOnline}"></span></p>
+            <p th:if="${isOnline}"><span class="badge badge-primary">Online!</span></p>
+
             <div class="user-button" wicket:id="actionButtonsContainer"  th:if="${!isViewingSelf}">
                 <div class="row">
                     <div class="col-md-6">

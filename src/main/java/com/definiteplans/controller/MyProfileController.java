@@ -86,7 +86,7 @@ public class MyProfileController {
             currUser.setState(update.getState());
             currUser.setPostalCode(update.getPostalCode());
             currUser.setNeighborhood(update.getNeighborhood());
-            userService.saveUser(currUser);
+            userService.saveUser(currUser, true);
         }
 
         return AjaxResponse.success("Saved");
@@ -110,7 +110,7 @@ public class MyProfileController {
             currUser.setInterests(update.getInterests());
             currUser.setHeight(update.getHeight());
 
-            userService.saveUser(currUser);
+            userService.saveUser(currUser, true);
         }
 
         return AjaxResponse.success("Saved");
@@ -125,7 +125,7 @@ public class MyProfileController {
             currUser.setNotificationsEmail(update.getNotificationsEmail());
             currUser.setAgeMax(update.getAgeMax());
             currUser.setAgeMin(update.getAgeMin());
-            userService.saveUser(currUser);
+            userService.saveUser(currUser, true);
         }
         return AjaxResponse.success("Saved");
     }

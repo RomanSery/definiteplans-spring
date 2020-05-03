@@ -70,10 +70,12 @@ public class ViewProfileController {
         ModelAndView m = new ModelAndView("view_profile");
         m.addObject("title", "View Profile - " + profile.getDisplayName());
         m.addObject("isViewingSelf", isViewingSelf);
-        m.addObject("loc", userService.getAddrDesc(profile));
+        m.addObject("loc", UserService.getAddrDesc(profile));
+        m.addObject("lastOnline", UserService.getLastOnline(profile));
+        m.addObject("isOnline", UserService.isOnlineNow(profile));
         m.addObject("profileThumbImg", userService.getProfileImg(profile, true));
         m.addObject("profileFullImg", userService.getProfileImg(profile, false));
-        m.addObject("age", userService.getProfileAge(profile));
+        m.addObject("age", UserService.getProfileAge(profile));
         m.addObject("gender", userService.getProfileVal(profile.getGender()));
         m.addObject("height", userService.getProfileVal(profile.getHeight()));
         m.addObject("ethnicity", userService.getProfileVal(profile.getEthnicity()));

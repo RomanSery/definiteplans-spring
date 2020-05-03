@@ -85,7 +85,7 @@ public class AdminController {
             u.setLanguages(String.valueOf(languages.get(rndIndex(languages)).getId()));
 
             u.setPassword(bCryptPasswordEncoder.encode(pwd));
-            userService.saveUser(u);
+            userService.saveUser(u, true);
         }
 
         return AjaxResponse.success("created");

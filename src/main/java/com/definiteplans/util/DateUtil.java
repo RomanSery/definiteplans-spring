@@ -15,25 +15,27 @@ public class DateUtil {
     private static final DateTimeFormatter simpleDateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final DateTimeFormatter fullFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
 
-    public static LocalDateTime getCurrentServerTime() {
-        ZoneId zone = ZoneId.of("America/New_York");
-        LocalDateTime dt = LocalDateTime.now(zone);
-        return dt;
+    private static final ZoneId defaultTimeZone = ZoneId.of("America/New_York");
+
+    public static LocalDateTime now() {
+        return LocalDateTime.now(defaultTimeZone);
     }
 
-
     public static boolean isInThePast(LocalDateTime dt) {
-        ZoneId zone = ZoneId.of("America/New_York");
-        LocalDateTime dtNow = LocalDateTime.now(zone);
+        LocalDateTime dtNow = LocalDateTime.now(defaultTimeZone);
         return dt.isBefore(dtNow);
     }
 
-
     public static int getHoursBetween(LocalDateTime d1, LocalDateTime d2) {
-        ZoneId zone = ZoneId.of("America/New_York");
-        ZonedDateTime dt1 = ZonedDateTime.of(d1, zone);
-        ZonedDateTime dt2 = ZonedDateTime.of(d2, zone);
+        ZonedDateTime dt1 = ZonedDateTime.of(d1, defaultTimeZone);
+        ZonedDateTime dt2 = ZonedDateTime.of(d2, defaultTimeZone);
         return (int) Math.abs(ChronoUnit.HOURS.between(dt1, dt2));
+    }
+
+    public static int getMinutesBetween(LocalDateTime d1, LocalDateTime d2) {
+        ZonedDateTime dt1 = ZonedDateTime.of(d1, defaultTimeZone);
+        ZonedDateTime dt2 = ZonedDateTime.of(d2, defaultTimeZone);
+        return (int) Math.abs(ChronoUnit.MINUTES.between(dt1, dt2));
     }
 
     public static boolean isEligible(LocalDate dob) {
@@ -48,8 +50,7 @@ public class DateUtil {
         if(dt == null) {
             return "";
         }
-        ZoneId zone = ZoneId.of("America/New_York");
-        return fullFormatter.format(dt.atZone(zone));
+        return fullFormatter.format(dt.atZone(defaultTimeZone));
     }
 
 
@@ -74,5 +75,31 @@ public class DateUtil {
         } catch (Exception e) {
            return null;
         }
+    }
+
+
+    public static String getTimeDifferenceDescription(LocalDateTime dt1) {
+
+        LocalDateTime dt2 = now();
+        long numSecs = ChronoUnit.SECONDS.between(dt1, dt2);
+        long numMins = ChronoUnit.MINUTES.between(dt1, dt2);
+        long numHours = ChronoUnit.HOURS.between(dt1, dt2);
+        long numDays = ChronoUnit.DAYS.between(dt1, dt2);
+        long numWeeks = ChronoUnit.WEEKS.between(dt1, dt2);
+        long numMonths = ChronoUnit.MONTHS.between(dt1, dt2);
+        if(numSecs < 0) numSecs = 1;
+
+        if(numMonths > 0)
+            return "more than a month ago";
+        else if(numWeeks > 0)
+            return "more than a week ago";
+        else if(numDays > 0)
+            return "a few days ago";
+        else if(numHours > 0)
+            return "today";
+        else if(numMins > 0)
+            return "a few hours ago";
+        else
+            return "";
     }
 }

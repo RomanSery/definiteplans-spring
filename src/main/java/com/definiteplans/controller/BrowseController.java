@@ -66,7 +66,7 @@ public class BrowseController {
         User currUser = userService.getCurrentUser();
         if(currUser != null) {
             currUser.setSearchPrefs(prefs);
-            userService.saveUser(currUser);
+            userService.saveUser(currUser, true);
         }
 
         return AjaxResponse.success("Saved");
@@ -77,7 +77,7 @@ public class BrowseController {
         User currUser = userService.getCurrentUser();
         if(currUser != null) {
             currUser.setSearchPrefs(new SearchPrefs());
-            userService.saveUser(currUser);
+            userService.saveUser(currUser, true);
         }
 
         return new ModelAndView(new RedirectView("/browse"));
@@ -105,9 +105,10 @@ public class BrowseController {
 
             DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), u.getId());
             Boolean b = dateService.wantsMore(currUser, u, activeDate);
+            boolean isOnline = UserService.isOnlineNow(u);
 
-            SearchResult sr = new SearchResult(u.getId(), userService.getProfileImg(u, true), name, userService.getAddrDesc(u), u.getNumNoShows(),
-                    BooleanUtils.isTrue(b), b != null && !b.booleanValue(), activeDate != null);
+            SearchResult sr = new SearchResult(u.getId(), userService.getProfileImg(u, true), name, UserService.getAddrDesc(u), u.getNumNoShows(),
+                    BooleanUtils.isTrue(b), b != null && !b.booleanValue(), activeDate != null, isOnline);
             searchResults.add(sr);
         }
 

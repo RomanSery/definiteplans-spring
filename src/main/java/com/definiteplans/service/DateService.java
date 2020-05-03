@@ -98,7 +98,7 @@ public class DateService {
         DateParticipantStatus otherPersonStatus = DateParticipantStatus.getById((dd.getOwnerUserId() == viewingUser.getId()) ? dd.getOwnerStatusId() : dd.getDateeStatusId());
 
         boolean bothApproved = (dd.getOwnerStatusId() == DateParticipantStatus.ACCEPTED.getId() && dd.getDateeStatusId() == DateParticipantStatus.ACCEPTED.getId());
-        boolean isTooLateToModify = (bothApproved && DateUtil.getHoursBetween(DateUtil.getCurrentServerTime(), doingWhen) <= 6);
+        boolean isTooLateToModify = (bothApproved && DateUtil.getHoursBetween(DateUtil.now(), doingWhen) <= 6);
 
         boolean isTooLateToAccept = (doingWhen != null && DateUtil.isInThePast(doingWhen));
         boolean gaveFeedback = isOwner ? dd.isOwnerGaveFeedback() : dd.isDateeGaveFeedback();
@@ -178,10 +178,10 @@ public class DateService {
 
         DefiniteDate date = new DefiniteDate(proposal);
 
-        date.setCreatedDate(DateUtil.getCurrentServerTime());
+        date.setCreatedDate(DateUtil.now());
         date.setDateStatusId(DateStatus.NEGOTIATION.getId());
         date.setOwnerUserId(currUser.getId());
-        date.setOwnerLastUpdate(DateUtil.getCurrentServerTime());
+        date.setOwnerLastUpdate(DateUtil.now());
         date.setOwnerStatusId(WAITING_FOR_REPLY.getId());
         date.setDateeUserId(datee.get().getId());
         date.setDateeStatusId(NEEDS_TO_REPLY.getId());
@@ -198,7 +198,7 @@ public class DateService {
     public boolean updateDate(User currUser, SubmitType type, DefiniteDate date) {
         boolean isOwner = currUser.getId() == date.getOwnerUserId();
 
-        date.setParticipantLastUpdate(isOwner, DateUtil.getCurrentServerTime());
+        date.setParticipantLastUpdate(isOwner, DateUtil.now());
 
         if (type == SubmitType.PROPOSE_CHANGE) {
             date.setEmailReminderSent(false);

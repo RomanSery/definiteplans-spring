@@ -89,7 +89,7 @@ public class UserImgsController {
 
         currUser.setThumbImgUrl(img.get().getThumbImgUrl());
         currUser.setFullImgUrl(img.get().getFullImgUrl());
-        userService.saveUser(currUser);
+        userService.saveUser(currUser, true);
         return AjaxResponse.success(userService.getProfileImg(currUser, true));
     }
 

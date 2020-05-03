@@ -44,3 +44,5 @@ santize user input, remove js/html
 finish landing page/calendar view
 
 finish all emails related to dates, accepted, declined, changed, etc, reminders
+
+handle user's timezone when displaying dates

@@ -31,7 +31,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             Optional<User> found = userRepository.findById(userId);
             if(found.isPresent()) {
                 User u = found.get();
-                u.setLastLoginDate(DateUtil.getCurrentServerTime());
+                u.setLastLoginDate(DateUtil.now());
                 userRepository.save(u);
             }
         }

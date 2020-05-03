@@ -60,13 +60,13 @@ public class UserService {
             return false;
         }
         user.setPassword(bCryptPasswordEncoder.encode(pwdUpdate.getPassword1()));
-        saveUser(user);
+        saveUser(user, true);
         return true;
     }
 
     public boolean resetForgottenPwd(final User user, final PwdUpdate pwdUpdate) {
         user.setPassword(bCryptPasswordEncoder.encode(pwdUpdate.getPassword1()));
-        saveUser(user);
+        saveUser(user, true);
         return true;
     }
 
@@ -87,7 +87,7 @@ public class UserService {
         user.setCreationDate(LocalDateTime.now());
         user.setLastModifiedDate(LocalDateTime.now());
         user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());
-        user = saveUser(user);
+        user = saveUser(user, true);
 
         emailService.sendEmailValidationEmail(user);
         return user;
@@ -136,21 +136,46 @@ public class UserService {
         return "/img/question_mark.jpg";
     }
 
-    public String getAddrDesc(User u) {
+    public static String getLastOnline(User u) {
+        if(isOnlineNow(u)) {
+            return "Now";
+        }
+        return "Last online " + DateUtil.getTimeDifferenceDescription(getMostRecentDateForUser(u));
+    }
+    public static boolean isOnlineNow(User u) {
+        LocalDateTime mostRecent = getMostRecentDateForUser(u);
+        return mostRecent != null && DateUtil.getMinutesBetween(mostRecent, DateUtil.now()) <= 30;
+    }
+
+    private static LocalDateTime getMostRecentDateForUser(User u) {
+        LocalDateTime d1 = u.getLastLoginDate();
+        LocalDateTime d2 = u.getLastModifiedDate();
+        LocalDateTime mostRecent = d1;
+
+        if(mostRecent == null || (d2 != null && d2.isAfter(d1))) {
+            mostRecent = d2;
+        }
+        return mostRecent;
+    }
+
+    public static String getAddrDesc(User u) {
         String s = (u.getState() != null) ? Objects.requireNonNull(State.valueOfAbbreviation(u.getState())).toString() : "";
         String c = (u.getCity() != null) ? u.getCity() : "";
         String n = (u.getNeighborhood() != null) ? u.getNeighborhood() : "";
 
-
-        String addr = n + "<br>";
-        if (c.length() > 0 && s.length() > 0) {
-            addr = addr + c + ", " + s + "<br>";
-        } else if (c.length() > 0) {
-            addr = addr + c + "<br>";
-        } else if (s.length() > 0) {
-            addr = addr + s + "<br>";
+        List<String> components = new ArrayList<>();
+        if(!StringUtils.isBlank(u.getNeighborhood())) {
+            components.add(u.getNeighborhood());
         }
-        return addr;
+        if (c.length() > 0 && s.length() > 0) {
+            components.add(c + ", " + s);
+        } else if (c.length() > 0) {
+            components.add(c);
+        } else if (s.length() > 0) {
+            components.add(s);
+        }
+
+        return StringUtils.join(components, "<br>");
     }
 
 
@@ -207,15 +232,17 @@ public class UserService {
         return token.getUserId();
     }
 
-    public Integer getProfileAge(User profile) {
+    public static Integer getProfileAge(User profile) {
         Integer age = (profile.getDob() != null) ? DateUtil.getAge(profile.getDob()) : null;
         if (age != null && age.intValue() < 18) age = Integer.valueOf(18);
         return age;
     }
 
-    public User saveUser(User u) {
+    public User saveUser(User u, boolean updateLastModified) {
         u.setComplete(u.isCompleteProfile());
-        u.setLastModifiedDate(LocalDateTime.now());
+        if(updateLastModified) {
+            u.setLastModifiedDate(LocalDateTime.now());
+        }
         u = userRepository.save(u);
         return u;
     }
@@ -239,6 +266,7 @@ public class UserService {
         blocked.setBlockedDate(LocalDateTime.now());
         blockedUserRepository.save(blocked);
 
+        //TODO
 //        DefiniteDate dd = this.dateService.getActiveDate(currUser, userToBlock);
 //        if (dd != null) {
 //            boolean isOwner = (currUser.getId() == dd.getOwnerUserId());

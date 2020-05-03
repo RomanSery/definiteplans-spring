@@ -19,8 +19,9 @@ public class SearchResult implements Serializable {
     private final boolean wantsMore;
     private final boolean wantsNoMore;
     private final boolean hasActiveDate;
+    private final boolean isOnline;
 
-    public SearchResult(int userId, String profileImgSrc, String firstName, String location, int numNoShows, boolean wantsMore, boolean wantsNoMore, boolean hasActiveDate) {
+    public SearchResult(int userId, String profileImgSrc, String firstName, String location, int numNoShows, boolean wantsMore, boolean wantsNoMore, boolean hasActiveDate, boolean isOnline) {
         this.userId = userId;
         this.profileImgSrc = profileImgSrc;
         this.firstName = firstName;
@@ -29,5 +30,6 @@ public class SearchResult implements Serializable {
         this.wantsMore = wantsMore;
         this.wantsNoMore = wantsNoMore;
         this.hasActiveDate = hasActiveDate;
+        this.isOnline = isOnline;
     }
 }
