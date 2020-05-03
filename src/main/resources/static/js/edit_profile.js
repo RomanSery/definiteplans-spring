@@ -5,13 +5,6 @@ definitePlansScripts.basicInfo = function () {
     $('#basicInfoForm').parsley();
     $('#detailInfoForm').parsley();
 
-    $("#postalCode").on('change keyup paste', function () {
-        var zip = $(this).val();
-        setTimeout(function () {
-            definitePlansScripts.updateCityState(zip);
-        }, 1000);
-    });
-
     $("#basicInfoForm").submit(function (event) {
         $.ajax({
             type: "POST", url: '/me/basic', data: $('#basicInfoForm').serialize(),
@@ -64,21 +57,6 @@ definitePlansScripts.showSaveResult = function (data, prefix) {
     }
 };
 
-definitePlansScripts.updateCityState = function () {
-    $.ajax({
-        type: "POST", url: 'domisc?action=findzip', data: 'zipcode=' + zip,
-        error: function () {
-            alert('Sorry, there was some error. Please try again.');
-        },
-        success: function (data) {
-            if (data.status == 'OK') {
-                $('#city').val(data.city);
-                $('#state').val(data.state);
-                return false;
-            }
-        }
-    });
-};
 
 definitePlansScripts.refreshUserPics = function () {
     $.ajax({

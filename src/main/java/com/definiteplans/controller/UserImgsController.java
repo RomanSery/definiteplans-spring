@@ -1,6 +1,5 @@
 package com.definiteplans.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +17,7 @@ import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.UserImage;
 import com.definiteplans.service.UserService;
+import com.definiteplans.util.DateUtil;
 
 @Controller
 public class UserImgsController {
@@ -41,7 +41,7 @@ public class UserImgsController {
             UserImage img = userImageRepository.findByUserIdAndTimestamp(userService.getCurrentUserId(), d);
             if(img == null) {
                 img = new UserImage();
-                img.setCreationDate(LocalDateTime.now());
+                img.setCreationDate(DateUtil.now());
             }
 
             img.setUserId(userService.getCurrentUserId());

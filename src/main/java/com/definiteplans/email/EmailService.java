@@ -1,6 +1,5 @@
 package com.definiteplans.email;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -16,6 +15,7 @@ import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.UserTokenRepository;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.UserToken;
+import com.definiteplans.util.DateUtil;
 
 @Service
 public class EmailService {
@@ -44,7 +44,7 @@ public class EmailService {
 
         UserToken token = new UserToken();
         token.setUserId(user.getId());
-        token.setCreationDate(LocalDateTime.now());
+        token.setCreationDate(DateUtil.now());
         token.setToken(UUID.randomUUID().toString());
         token = userTokenRepository.save(token);
 
@@ -75,8 +75,8 @@ public class EmailService {
 
         UserToken token = new UserToken();
         token.setUserId(user.getId());
-        token.setCreationDate(LocalDateTime.now());
-        token.setExpiration(LocalDateTime.now().plusHours(1));
+        token.setCreationDate(DateUtil.now());
+        token.setExpiration(DateUtil.now().plusHours(1));
         token.setToken(UUID.randomUUID().toString());
         token = userTokenRepository.save(token);
 

@@ -84,8 +84,8 @@ public class UserService {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setSendNotifications(true);
         user.setNotificationsEmail(user.getEmail());
-        user.setCreationDate(LocalDateTime.now());
-        user.setLastModifiedDate(LocalDateTime.now());
+        user.setCreationDate(DateUtil.now());
+        user.setLastModifiedDate(DateUtil.now());
         user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());
         user = saveUser(user, true);
 
@@ -225,7 +225,7 @@ public class UserService {
             return null;
         }
 
-        if(token.getExpiration() != null && token.getExpiration().isBefore(LocalDateTime.now())) {
+        if(token.getExpiration() != null && token.getExpiration().isBefore(DateUtil.now())) {
             return null;
         }
 
@@ -241,7 +241,7 @@ public class UserService {
     public User saveUser(User u, boolean updateLastModified) {
         u.setComplete(u.isCompleteProfile());
         if(updateLastModified) {
-            u.setLastModifiedDate(LocalDateTime.now());
+            u.setLastModifiedDate(DateUtil.now());
         }
         u = userRepository.save(u);
         return u;
@@ -263,7 +263,7 @@ public class UserService {
         BlockedUser blocked = new BlockedUser();
         blocked.setUserId(currUserId);
         blocked.setBlockedUserId(userId);
-        blocked.setBlockedDate(LocalDateTime.now());
+        blocked.setBlockedDate(DateUtil.now());
         blockedUserRepository.save(blocked);
 
         //TODO

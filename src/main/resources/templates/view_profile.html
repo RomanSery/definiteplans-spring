@@ -20,7 +20,8 @@
                             <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Basic</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-2">More</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-3">Pictures</a></li>
-                            <li th:if="${!isViewingSelf}"><a class="nav-link" data-toggle="tab" href="#tab-4">Make Plans!</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-4">Chat</a></li>
+                            <li th:if="${!isViewingSelf}"><a class="nav-link" data-toggle="tab" href="#tab-5">Make Plans!</a></li>
                         </ul>
 
 
@@ -40,7 +41,12 @@
                                     <div th:replace="view_profile/profile_frags::pics" th:remove="tag"></div>
                                 </div>
                             </div>
-                            <div th:if="${!isViewingSelf}" id="tab-4" class="tab-pane">
+                            <div id="tab-4" class="tab-pane">
+                                <div class="panel-body">
+                                    <div th:replace="view_profile/profile_frags::chat" th:remove="tag"></div>
+                                </div>
+                            </div>
+                            <div th:if="${!isViewingSelf}" id="tab-5" class="tab-pane">
                                 <div class="panel-body">
                                     <div th:replace="view_profile/date::makePlans" th:remove="tag"></div>
                                     <div th:replace="view_profile/date::feedbackFrag" th:remove="tag"></div>

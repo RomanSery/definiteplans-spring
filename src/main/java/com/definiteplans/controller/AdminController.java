@@ -1,7 +1,6 @@
 package com.definiteplans.controller;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,6 +18,7 @@ import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.UserStatus;
 import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.UserService;
+import com.definiteplans.util.DateUtil;
 import com.definiteplans.util.Utils;
 import com.github.javafaker.Faker;
 
@@ -62,8 +62,8 @@ public class AdminController {
             User u = new User();
             u.setDisplayName(faker.name().firstName());
             u.setEmail(faker.name().username()+ "_" + i + "@definite.com");
-            u.setCreationDate(LocalDateTime.now());
-            u.setLastModifiedDate(LocalDateTime.now());
+            u.setCreationDate(DateUtil.now());
+            u.setLastModifiedDate(DateUtil.now());
             u.setUserStatus(UserStatus.ACTIVE.getId());
             u.setDob(getRandomDOB());
             u.setPostalCode(zip.getZip());

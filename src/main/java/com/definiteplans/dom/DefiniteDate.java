@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.definiteplans.controller.model.DateProposal;
-import com.definiteplans.util.DateUtil;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

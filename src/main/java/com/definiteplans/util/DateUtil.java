@@ -22,8 +22,7 @@ public class DateUtil {
     }
 
     public static boolean isInThePast(LocalDateTime dt) {
-        LocalDateTime dtNow = LocalDateTime.now(defaultTimeZone);
-        return dt.isBefore(dtNow);
+        return dt.isBefore(now());
     }
 
     public static int getHoursBetween(LocalDateTime d1, LocalDateTime d2) {

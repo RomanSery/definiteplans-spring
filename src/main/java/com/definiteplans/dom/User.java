@@ -3,10 +3,8 @@ package com.definiteplans.dom;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
@@ -28,8 +26,6 @@ import com.definiteplans.util.DateUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 
 @Entity
 @Table(name = "user")

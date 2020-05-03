@@ -1,6 +1,5 @@
 package com.definiteplans.email;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import javax.mail.internet.MimeMessage;
 
@@ -14,6 +13,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import com.definiteplans.dao.SentEmailRepository;
 import com.definiteplans.dom.SentEmail;
+import com.definiteplans.util.DateUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -51,7 +51,7 @@ public class SmtpService {
         sender.send(message);
 
         SentEmail email = new SentEmail(subject, body, from, to);
-        email.setEmailSentDate(LocalDateTime.now());
+        email.setEmailSentDate(DateUtil.now());
         sentEmailRepository.save(email);
     }
 
