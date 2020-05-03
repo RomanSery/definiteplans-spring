@@ -179,14 +179,14 @@
         <div class="ibox-content inspinia-timeline">
             <div class="timeline-item">
                 <div class="row" th:each="pd : ${past_dates}">
-                    <div class="col-xs-3 date">
+                    <div class="col-3 date">
                         <i class="fa fa-calendar"></i>
                         <span th:text="${pd.doingWhen}"></span>
                         <br/>
                         <small th:if="${pd.wantsAnotherDate}" class="text-info">[[${pd.theirName}]] wants another date</small>
                         <small th:unless="${pd.wantsAnotherDate}" class="text-danger">[[${pd.theirName}]] doesn't want another date</small>
                     </div>
-                    <div class="col-xs-7 content no-top-border">
+                    <div class="col-7 content no-top-border">
                         <address>
                             <strong th:text="${pd.doingWhat}">Meeting</strong><br>
                             <span th:text="${pd.locationName}"></span>

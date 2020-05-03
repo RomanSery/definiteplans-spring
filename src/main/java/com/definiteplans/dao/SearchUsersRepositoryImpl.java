@@ -102,6 +102,7 @@ public class SearchUsersRepositoryImpl implements SearchUsersRepository {
             hql.append(" and u.postalCode in (:distanceFrom) ");
         }
 
+        hql.append(" order by u.lastLoginDate desc");
 
         TypedQuery<User> q = entityManager.createQuery(hql.toString(), User.class);
         q.setParameter("currUsrId", currUser.getId());

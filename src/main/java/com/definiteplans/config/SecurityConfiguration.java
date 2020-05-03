@@ -22,10 +22,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final DpUserDetailsService dpUserDetailsService;
     private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    public SecurityConfiguration(DpUserDetailsService dpUserDetailsService, AuthenticationFailureHandler authenticationFailureHandler) {
+    public SecurityConfiguration(DpUserDetailsService dpUserDetailsService, AuthenticationFailureHandler authenticationFailureHandler, AuthenticationSuccessHandler authenticationSuccessHandler) {
         this.dpUserDetailsService = dpUserDetailsService;
         this.authenticationFailureHandler = authenticationFailureHandler;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     @Bean
@@ -60,6 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/")
                 .failureUrl("/login?error=true")
                 .failureHandler(authenticationFailureHandler)
+                .successHandler(authenticationSuccessHandler)
                 .usernameParameter("loginemail").passwordParameter("loginpassword")
                 // Config for Logout Page
                 .and().logout().invalidateHttpSession(true).clearAuthentication(true)

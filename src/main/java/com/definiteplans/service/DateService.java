@@ -155,11 +155,11 @@ public class DateService {
         for(DefiniteDate dd : pastDates) {
 
             String doingWhat = dd.getDoingWhat();
-            LocalDateTime doingWhen = dd.getDoingWhen();
+            String doingWhen = DateUtil.printDateTime(dd.getDoingWhen());
             String locationName = dd.getLocationName();
             String greetingMsg = '"' + dd.getGreetingMsg() + '"';
             boolean wantsAnotherDate = dd.getOwnerUserId() == profile.getId() ? dd.isOwnerWantsMore() : dd.isDateeWantsMore();
-            String theirName = dd.getOwnerUserId() == profile.getId() ? profile.getDisplayName() : currUser.getDisplayName();
+            String theirName = profile.getDisplayName();
             rows.add(new PastDateRow(doingWhat, doingWhen, locationName, greetingMsg, wantsAnotherDate, theirName));
         }
         return rows;

@@ -12,20 +12,12 @@ import org.apache.commons.lang3.StringUtils;
 
 public class DateUtil {
 
-    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
     private static final DateTimeFormatter simpleDateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    private static final DateTimeFormatter fullformatter = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
+    private static final DateTimeFormatter fullFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
 
     public static LocalDateTime getCurrentServerTime() {
-        return getCurrentServerTime(0);
-    }
-
-    public static LocalDateTime getCurrentServerTime(int plusHours) {
         ZoneId zone = ZoneId.of("America/New_York");
         LocalDateTime dt = LocalDateTime.now(zone);
-        if (plusHours != 0) {
-            dt = dt.plusHours(plusHours);
-        }
         return dt;
     }
 
@@ -57,22 +49,9 @@ public class DateUtil {
             return "";
         }
         ZoneId zone = ZoneId.of("America/New_York");
-        return fullformatter.format(dt.atZone(zone));
+        return fullFormatter.format(dt.atZone(zone));
     }
 
-    public static String printDate(LocalDateTime dt) {
-        if(dt == null) {
-            return "";
-        }
-        return fullformatter.format(dt);
-    }
-
-    public static String printTime(LocalDateTime dt) {
-        if(dt == null) {
-            return "";
-        }
-        return timeFormatter.format(dt);
-    }
 
     public static String printDate(LocalDate d) {
         if(d == null) {
@@ -83,19 +62,6 @@ public class DateUtil {
 
     public static String printISODateTime(LocalDateTime dt) {
         return dt != null ? DateTimeFormatter.ISO_DATE_TIME.format(dt) : "";
-    }
-
-
-    public static LocalDateTime parseDateTime(String str) {
-        if (StringUtils.isBlank(str)) {
-            return null;
-        }
-
-        try {
-            return LocalDateTime.parse(str);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     public static LocalDate parseDate(String str) {
