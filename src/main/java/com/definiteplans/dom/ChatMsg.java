@@ -40,6 +40,9 @@ public class ChatMsg implements Serializable {
 	@Column(name = "message", nullable = false)
 	private String message;
 
+	@Column(name = "is_read")
+	private Boolean isRead;
+
 	public ChatMsg() {
 
 	}
