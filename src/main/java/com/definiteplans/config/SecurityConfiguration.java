@@ -22,8 +22,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.client.RestTemplate;
 
-import com.definiteplans.oauth.CwfOAuth2UserService;
-import com.definiteplans.oauth.CwfOidcUserService;
+import com.definiteplans.oauth.DpOAuth2UserService;
+import com.definiteplans.oauth.DpOidcUserService;
 import com.definiteplans.oauth.util.OAuth2AccessTokenResponseConverterWithDefaults;
 import com.definiteplans.service.DpUserDetailsService;
 
@@ -46,13 +46,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public CwfOAuth2UserService cwfOAuth2UserService() {
-        return new CwfOAuth2UserService();
+    public DpOAuth2UserService dpOAuth2UserService() {
+        return new DpOAuth2UserService();
     }
 
     @Bean
-    public CwfOidcUserService cwfOidcUserService() {
-        return new CwfOidcUserService();
+    public DpOidcUserService dpOidcUserService() {
+        return new DpOidcUserService();
     }
 
     @Override
@@ -105,8 +105,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.oauth2Client();
         http.oauth2Login().userInfoEndpoint()
-                .userService(cwfOAuth2UserService())
-                .oidcUserService(cwfOidcUserService())
+                .userService(dpOAuth2UserService())
+                .oidcUserService(dpOidcUserService())
                 .and()
                 .loginPage("/login/oauth2")
                 .tokenEndpoint().accessTokenResponseClient(authorizationCodeTokenResponseClient());

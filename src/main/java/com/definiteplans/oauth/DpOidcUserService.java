@@ -12,10 +12,10 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import com.definiteplans.dom.User;
 import com.definiteplans.oauth.provider.GoogleLogin;
 import com.definiteplans.oauth.provider.ISocialProvider;
-import com.definiteplans.oauth.util.CwfOidcUser;
+import com.definiteplans.oauth.util.DpOidcUser;
 import com.definiteplans.service.UserService;
 
-public class CwfOidcUserService extends OidcUserService {
+public class DpOidcUserService extends OidcUserService {
 
     @Autowired
     private UserService userService;
@@ -34,7 +34,7 @@ public class CwfOidcUserService extends OidcUserService {
         createSocialUser(oidcUser, userRequest, user);
 
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
-        return new CwfOidcUser(oidcUser, user.getId(), userNameAttributeName);
+        return new DpOidcUser(oidcUser, user.getId(), userNameAttributeName);
     }
 
     public void disconnectAccount(ClientRegistration clientReg) {

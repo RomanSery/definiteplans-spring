@@ -1,6 +1,6 @@
 package com.definiteplans.oauth.util;
 
 
-public interface ICwfUser {
+public interface IDpUser {
     Integer getUserId();
 }

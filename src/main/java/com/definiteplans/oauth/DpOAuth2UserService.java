@@ -12,11 +12,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import com.definiteplans.dom.User;
 import com.definiteplans.oauth.provider.FacebookLogin;
 import com.definiteplans.oauth.provider.ISocialProvider;
-import com.definiteplans.oauth.util.CwfOAuth2User;
+import com.definiteplans.oauth.util.DpOAuth2User;
 import com.definiteplans.service.UserService;
 
 
-public class CwfOAuth2UserService extends DefaultOAuth2UserService {
+public class DpOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private UserService userService;
@@ -35,7 +35,7 @@ public class CwfOAuth2UserService extends DefaultOAuth2UserService {
         createSocialUser(oAuth2User, userRequest, user);
 
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
-        return new CwfOAuth2User(oAuth2User, user.getId(), userNameAttributeName);
+        return new DpOAuth2User(oAuth2User, user.getId(), userNameAttributeName);
     }
 
     public void disconnectAccount(ClientRegistration clientReg) {

@@ -5,26 +5,26 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.stereotype.Service;
 
-import com.definiteplans.oauth.CwfOAuth2UserService;
-import com.definiteplans.oauth.CwfOidcUserService;
+import com.definiteplans.oauth.DpOAuth2UserService;
+import com.definiteplans.oauth.DpOidcUserService;
 
 
 @Service
 public class SocialService {
 
     private final ClientRegistrationRepository clientRegistrationRepository;
-    private final CwfOAuth2UserService cwfOAuth2UserService;
-    private final CwfOidcUserService cwfOidcUserService;
+    private final DpOAuth2UserService dpOAuth2UserService;
+    private final DpOidcUserService dpOidcUserService;
 
-    public SocialService(ClientRegistrationRepository clientRegistrationRepository, CwfOAuth2UserService cwfOAuth2UserService, CwfOidcUserService cwfOidcUserService) {
+    public SocialService(ClientRegistrationRepository clientRegistrationRepository, DpOAuth2UserService dpOAuth2UserService, DpOidcUserService dpOidcUserService) {
         this.clientRegistrationRepository = clientRegistrationRepository;
-        this.cwfOAuth2UserService = cwfOAuth2UserService;
-        this.cwfOidcUserService = cwfOidcUserService;
+        this.dpOAuth2UserService = dpOAuth2UserService;
+        this.dpOidcUserService = dpOidcUserService;
     }
 
     public void disconnectSocialAccount(String regId) {
         ClientRegistration clientReg = clientRegistrationRepository.findByRegistrationId(regId);
-        cwfOAuth2UserService.disconnectAccount(clientReg);
-        cwfOidcUserService.disconnectAccount(clientReg);
+        dpOAuth2UserService.disconnectAccount(clientReg);
+        dpOidcUserService.disconnectAccount(clientReg);
     }
 }

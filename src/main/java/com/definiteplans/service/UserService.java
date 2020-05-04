@@ -32,7 +32,7 @@ import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.State;
 import com.definiteplans.dom.enumerations.UserStatus;
 import com.definiteplans.email.EmailService;
-import com.definiteplans.oauth.util.ICwfUser;
+import com.definiteplans.oauth.util.IDpUser;
 import com.definiteplans.util.DateUtil;
 
 @Service
@@ -153,8 +153,8 @@ public class UserService {
         Object principal = authentication.getPrincipal();
         if(principal instanceof org.springframework.security.core.userdetails.User) {
             return Integer.valueOf(authentication.getName());
-        } else if(principal instanceof ICwfUser) {
-            return ((ICwfUser) principal).getUserId();
+        } else if(principal instanceof IDpUser) {
+            return ((IDpUser) principal).getUserId();
         }
         return 0;
     }
