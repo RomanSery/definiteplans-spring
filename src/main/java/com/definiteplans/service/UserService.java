@@ -18,18 +18,21 @@ import org.springframework.stereotype.Service;
 import com.definiteplans.controller.model.BlockedUserRow;
 import com.definiteplans.controller.model.PwdUpdate;
 import com.definiteplans.dao.BlockedUserRepository;
+import com.definiteplans.dao.UserEmailRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.UserTokenRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.BlockedUser;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
+import com.definiteplans.dom.UserEmail;
 import com.definiteplans.dom.UserToken;
 import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.State;
 import com.definiteplans.dom.enumerations.UserStatus;
 import com.definiteplans.email.EmailService;
+import com.definiteplans.oauth.util.ICwfUser;
 import com.definiteplans.util.DateUtil;
 
 @Service
@@ -43,9 +46,10 @@ public class UserService {
     private final BlockedUserRepository blockedUserRepository;
     private final EmailService emailService;
     private final UserTokenRepository userTokenRepository;
+    private final UserEmailRepository userEmailRepository;
 
     public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                       EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, BlockedUserRepository blockedUserRepository, EmailService emailService, UserTokenRepository userTokenRepository) {
+                       EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, BlockedUserRepository blockedUserRepository, EmailService emailService, UserTokenRepository userTokenRepository, UserEmailRepository userEmailRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.enumValueService = enumValueService;
@@ -53,6 +57,7 @@ public class UserService {
         this.blockedUserRepository = blockedUserRepository;
         this.emailService = emailService;
         this.userTokenRepository = userTokenRepository;
+        this.userEmailRepository = userEmailRepository;
     }
 
     public boolean changeUserPassword(final User user, final PwdUpdate pwdUpdate) {
@@ -93,6 +98,40 @@ public class UserService {
         return user;
     }
 
+
+    public User createUser(String email, String name, String socialLoginId) {
+        User user = userRepository.findByEmail(email);
+        if(user != null) {
+            return user;
+        }
+
+        Optional<UserEmail> findEmail = userEmailRepository.findByEmail(email);
+        if(findEmail.isPresent()) {
+            Optional<User> findUser = userRepository.findById(findEmail.get().getUserId());
+            if(findUser.isPresent()) {
+                return findUser.get();
+            }
+        }
+
+        if(isLoggedIn()) {
+            userEmailRepository.save(new UserEmail(getCurrentUserId(), email));
+            return getCurrentUser();
+        }
+
+        User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setDisplayName(name);
+        newUser.setCreationDate(LocalDateTime.now());
+        newUser.setLastModifiedDate(LocalDateTime.now());
+        newUser = userRepository.save(newUser);
+
+        userEmailRepository.save(new UserEmail(newUser.getId(), email));
+
+        return newUser;
+    }
+
+
+
     public User getCurrentUser() {
         int currUserId = getCurrentUserId();
         if(currUserId == 0) {
@@ -114,6 +153,8 @@ public class UserService {
         Object principal = authentication.getPrincipal();
         if(principal instanceof org.springframework.security.core.userdetails.User) {
             return Integer.valueOf(authentication.getName());
+        } else if(principal instanceof ICwfUser) {
+            return ((ICwfUser) principal).getUserId();
         }
         return 0;
     }

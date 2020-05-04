@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
 
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,6 +42,9 @@ public class LoginController {
         m.addObject("title", "Login");
         m.addObject("was_pwd_reset", reset != null && reset == 1);
         m.addObject("was_confirmed", confirmed != null && confirmed == 1);
+
+        m.addObject("fbLoginUrl", OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/facebook");
+        m.addObject("googleLoginUrl", OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/google");
         return m;
     }
 

@@ -1,6 +1,7 @@
 package com.definiteplans.controller;
 
 import java.util.Map;
+import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.definiteplans.dao.UserEmailRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.User;
+import com.definiteplans.dom.UserEmail;
 import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.UserService;
@@ -26,12 +29,14 @@ public class RegisterController {
     private final UserService userService;
     private final ZipCodeRepository zipCodeRepository;
     private final EnumValueService enumValueService;
+    private final UserEmailRepository userEmailRepository;
 
-    public RegisterController(UserRepository userRepository, UserService userService, ZipCodeRepository zipCodeRepository, EnumValueService enumValueService) {
+    public RegisterController(UserRepository userRepository, UserService userService, ZipCodeRepository zipCodeRepository, EnumValueService enumValueService, UserEmailRepository userEmailRepository) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.zipCodeRepository = zipCodeRepository;
         this.enumValueService = enumValueService;
+        this.userEmailRepository = userEmailRepository;
     }
 
     @GetMapping("/register")
@@ -44,7 +49,7 @@ public class RegisterController {
     }
 
     private static class RegValidator {
-        private static void validate(User obj, Errors e, UserRepository userRepository, ZipCodeRepository zipCodeRepository) {
+        private static void validate(User obj, Errors e, UserRepository userRepository, ZipCodeRepository zipCodeRepository, UserEmailRepository userEmailRepository) {
             ValidationUtils.rejectIfEmpty(e, "displayName", "", "First Name is required");
             ValidationUtils.rejectIfEmpty(e, "dob", "", "Date of Birth is required");
             ValidationUtils.rejectIfEmpty(e, "gender", "", "Gender is required");
@@ -55,7 +60,13 @@ public class RegisterController {
             User u = userRepository.findByEmail(obj.getEmail());
             if (u != null) {
                 e.reject("alreadyRegistered", "This email is already being used on our site.  If this is your email you can login or retrieve your password.");
+            } else {
+                Optional<UserEmail> foundEmail = userEmailRepository.findByEmail(obj.getEmail());
+                if(foundEmail.isPresent()) {
+                    e.reject("alreadyRegistered", "This email is already being used on our site.  If this is your email you can login or retrieve your password.");
+                }
             }
+
             if (obj.getDob() == null || !DateUtil.isEligible(obj.getDob())) {
                 e.reject("validDOB", "Please enter a valid date of birth.");
             }
@@ -68,7 +79,7 @@ public class RegisterController {
 
     @PostMapping("/register")
     public ModelAndView doRegister(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-        RegValidator.validate(user, bindingResult, userRepository, zipCodeRepository);
+        RegValidator.validate(user, bindingResult, userRepository, zipCodeRepository, userEmailRepository);
         if (bindingResult.hasErrors()) {
             return new ModelAndView("register", Map.of("user", user));
         }

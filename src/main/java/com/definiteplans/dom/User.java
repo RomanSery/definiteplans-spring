@@ -148,6 +148,12 @@ public class User implements Serializable {
     @Column(name = "search_prefs")
     private SearchPrefs searchPrefs;
 
+    @Column(name = "fb_id")
+    private String fbId;
+
+    @Column(name = "google_sub_id")
+    private String googleSubId;
+
     public User() {
         super();
     }
