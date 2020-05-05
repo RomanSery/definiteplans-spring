@@ -94,6 +94,8 @@ public class UserService {
         user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());
         user = saveUser(user, true);
 
+        userEmailRepository.save(new UserEmail(user.getId(), user.getEmail()));
+
         emailService.sendEmailValidationEmail(user);
         return user;
     }
@@ -123,6 +125,7 @@ public class UserService {
         newUser.setDisplayName(name);
         newUser.setCreationDate(LocalDateTime.now());
         newUser.setLastModifiedDate(LocalDateTime.now());
+        newUser.setUserStatus(UserStatus.ACTIVE.getId());
         newUser = userRepository.save(newUser);
 
         userEmailRepository.save(new UserEmail(newUser.getId(), email));
