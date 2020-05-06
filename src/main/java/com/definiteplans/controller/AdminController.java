@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.definiteplans.controller.model.AjaxResponse;
+import com.definiteplans.dao.UserEmailRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
+import com.definiteplans.dom.UserEmail;
 import com.definiteplans.dom.ZipCode;
 import com.definiteplans.dom.enumerations.EnumValueType;
 import com.definiteplans.dom.enumerations.UserStatus;
@@ -28,17 +30,19 @@ public class AdminController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EnumValueService enumValueService;
     private final ZipCodeRepository zipCodeRepository;
+    private final UserEmailRepository userEmailRepository;
 
-    public AdminController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, EnumValueService enumValueService, ZipCodeRepository zipCodeRepository) {
+    public AdminController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, UserEmailRepository userEmailRepository) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.enumValueService = enumValueService;
         this.zipCodeRepository = zipCodeRepository;
+        this.userEmailRepository = userEmailRepository;
     }
 
     @GetMapping("/admin/create_accounts")
     public @ResponseBody AjaxResponse createUserAccounts() {
-        String pwd = "test";
+        String pwd = "Test1234!";
         Faker faker = new Faker();
 
         List<EnumValue> languages = enumValueService.findByType(EnumValueType.LANGUAGE);
@@ -85,7 +89,9 @@ public class AdminController {
             u.setLanguages(String.valueOf(languages.get(rndIndex(languages)).getId()));
 
             u.setPassword(bCryptPasswordEncoder.encode(pwd));
-            userService.saveUser(u, true);
+            u = userService.saveUser(u, true);
+
+            userEmailRepository.save(new UserEmail(u.getId(), u.getEmail()));
         }
 
         return AjaxResponse.success("created");

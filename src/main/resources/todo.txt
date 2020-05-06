@@ -2,6 +2,8 @@ when logging and user is not active, it shows error message but also need to sho
 
 login with fb & google
 
+update change pwd page for users that dont have a pwd (they logged in thru fb/google)
+
 reset filters button in browse page
 
 browse page paging
@@ -9,19 +11,9 @@ browse page paging
 
 delete my account
 
-finish implementing user.isProfileCompleted
-Your profile is missing required information, please <a href="editProfile">complete your profile</a>.
-Please complete all required info in the 'Basic Info' tab of your profile and upload a picture.  You will not show up in search results or be able to make plans with anyone until you do.
-
 clarify settings in edit profile - visible to ages, also means you wont be able to see them!
 
 update loading buttons the same way i do for block user on view profile page
-
-  add((new RequiredTextField("doingWhenDate", new PropertyModel(this, "doingWhenDate")))
-                    .add(new AttributeModifier("data-date-start-date", DateUtil.printDate(DateUtil.getCurrentServerTime())))
-                    .add(new AttributeModifier("data-date-end-date", DateUtil.printDate(DateUtil.getCurrentServerTime().plusDays(25))))
-                    .setMarkupId("doingWhenDate"));
-
 
 when viewing profile, if has active date, immeditaly show the make plans tab
 

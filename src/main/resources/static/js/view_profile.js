@@ -203,6 +203,12 @@ $(document).ready(function() {
         }, format: 'LT'
     });
 
+    $('.datepicker').datetimepicker({
+        minDate: 'now',
+        maxDate: moment().add(14, 'days'),
+        format: 'L'
+    });
+
     $('[data-toggle="tooltip"]').tooltip();
 
     definitePlansScripts.blockUser();

@@ -81,6 +81,19 @@ public class UserService {
 
     public User createUser(User user) {
 
+        User found = userRepository.findByEmail(user.getEmail());
+        if(found != null) {
+            return found;
+        }
+
+        Optional<UserEmail> findEmail = userEmailRepository.findByEmail(user.getEmail());
+        if(findEmail.isPresent()) {
+            Optional<User> findUser = userRepository.findById(findEmail.get().getUserId());
+            if(findUser.isPresent()) {
+                return findUser.get();
+            }
+        }
+
         Optional<ZipCode> zip = zipCodeRepository.findById(user.getPostalCode());
         if(zip.isPresent()) {
             user.setCity(zip.get().getPrimaryCity());
