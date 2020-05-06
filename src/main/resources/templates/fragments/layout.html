@@ -32,6 +32,9 @@
                 </div>
                 <div class="wrapper wrapper-content">
                     <div class="container">
+
+                        <div th:replace="fragments/missing_fields::warning-frag" th:remove="tag"></div>
+
                         <div th:replace="${pageContent}"></div>
                     </div>
                 </div>

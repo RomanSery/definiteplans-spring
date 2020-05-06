@@ -28,7 +28,7 @@
         <ul class="nav navbar-nav mr-auto">
             <li>
                 <div class="profile-element block">
-                    <a th:href="@{/profiles/{id}(id=${currUserId})}"><img id="nav-profile-pic" class="img-circle" width="80" th:src="${currUserImg}" /></a>
+                    <a th:href="@{/profiles/{id}(id=${currUserInfo.currUserId})}"><img id="nav-profile-pic" class="img-circle" width="80" th:src="${currUserInfo.currUserImg}" /></a>
                 </div>
             </li>
             <li class="active">

@@ -3,8 +3,10 @@ package com.definiteplans.dom;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
@@ -193,6 +195,24 @@ public class User implements Serializable {
                 gender > 0 && state != null && State.valueOfAbbreviation(state) != null && !StringUtils.isBlank(postalCode);
     }
 
+    public List<String> getMissingFields() {
+        List<String> missingFields = new ArrayList<>();
+        if(dob == null) {
+            missingFields.add("Enter your Birthday");
+        }
+        if(gender == 0) {
+            missingFields.add("Select your Gender");
+        }
+        if(StringUtils.isBlank(state)) {
+            missingFields.add("Select your State");
+        }
+        if(StringUtils.isBlank(postalCode)) {
+            missingFields.add("Enter your Zip code");
+        }
+
+
+        return missingFields;
+    }
 
     public SearchPrefs getSearchPrefs() {
         if(searchPrefs == null) {

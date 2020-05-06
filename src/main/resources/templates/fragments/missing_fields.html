@@ -1,0 +1,17 @@
+<div th:fragment="warning-frag" th:remove="tag">
+    <div class="row" th:unless="${currUserInfo.isProfileComplete()}">
+        <div class="col-lg-12">
+            <div class="alert alert-danger">
+                Your profile is incomplete, please <a class="alert-link" th:href="@{/me/profile}">update it</a>.
+                <br>
+                You will not show up in search results or be able to make plans with anyone until you do.
+                <br>
+                Missing information:
+                <ul class="spaced">
+                    <li th:each="f : ${currUserInfo.missingFields}">[[${f}]]</li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
