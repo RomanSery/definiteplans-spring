@@ -101,6 +101,7 @@ public class DateController {
 
     private static class DateValidator {
         private static void validateFeedback(DateFeedback feedback, Errors e) {
+            //TODO
 //            ValidationUtils.rejectIfEmpty(e, "doingWhat", "", "Doing what is required");
 //            ValidationUtils.rejectIfEmpty(e, "locationName", "", "Location is required");
 //            ValidationUtils.rejectIfEmpty(e, "doingWhenDate", "", "Doing when date is required");
@@ -119,6 +120,10 @@ public class DateController {
             ValidationUtils.rejectIfEmpty(e, "doingWhenDate", "", "Doing when date is required");
             ValidationUtils.rejectIfEmpty(e, "doingWhenTime", "", "Doing when time is required");
             ValidationUtils.rejectIfEmpty(e, "greetingMsg", "", "Greeting is required");
+
+            if(obj.getGreetingMsg() != null && obj.getGreetingMsg().length() > 200) {
+                e.reject("greetingMsg", "Greeting message is too long.");
+            }
 
             LocalDateTime date = DateService.getSpecificTime(obj);
             if (date != null && DateUtil.isInThePast(date)) {

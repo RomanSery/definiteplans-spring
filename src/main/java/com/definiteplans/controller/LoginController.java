@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.controller.model.PwdUpdate;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.User;
@@ -37,9 +39,13 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public ModelAndView login(@RequestParam(required = false, name = "reset") Integer reset, @RequestParam(required = false, name = "confirmed") Integer confirmed) {
+    public ModelAndView login(@RequestParam(required = false, name = "reset") Integer reset,
+                              @RequestParam(required = false, name = "confirmed") Integer confirmed,
+                              @RequestParam(required = false, name = "email") String email) {
+
         ModelAndView m = new ModelAndView("login");
         m.addObject("title", "Login");
+        m.addObject("email", email);
         m.addObject("was_pwd_reset", reset != null && reset == 1);
         m.addObject("was_confirmed", confirmed != null && confirmed == 1);
 
@@ -128,6 +134,22 @@ public class LoginController {
         return new ModelAndView(new RedirectView("/login?confirmed=1"));
     }
 
+
+    @GetMapping("/resendValidationEmail")
+    public @ResponseBody AjaxResponse resendValidationEmail() {
+        System.out.println("here");
+//        User user = userService.getCurrentUser();
+//        if(user == null) {
+//            return AjaxResponse.error(List.of("Invalid request"));
+//        }
+//
+//        Optional<UserImage> img = userImageRepository.findById(imageId);
+//        if (img.isEmpty()) {
+//            return AjaxResponse.error(List.of("Invalid request"));
+//        }
+//        userImageRepository.delete(img.get());
+        return AjaxResponse.success("Deleted");
+    }
 
 
     private static class ProfileValidator {

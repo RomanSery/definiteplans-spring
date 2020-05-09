@@ -22,7 +22,7 @@
                             <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
                         </ul>
 
-                        <div class="form-group row">
+                        <div th:if="${hasPwd}" class="form-group row">
                             <label for="currpwd" class="col-sm-2 col-form-label">Current Password</label>
                             <div class="col-sm-3">
                                 <input type="password" class="form-control" id="currpwd" name="currpwd" th:field="*{currPwd}"

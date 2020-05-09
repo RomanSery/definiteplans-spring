@@ -1,27 +1,23 @@
 when logging and user is not active, it shows error message but also need to show link to resent email with confirmation link
 
-login with fb & google
-
-update change pwd page for users that dont have a pwd (they logged in thru fb/google)
+implement remember me login
 
 reset filters button in browse page
 
 browse page paging
 
+dont allow making plans or appearing in search results if user profile incomplete
 
-delete my account
+delete my account - what happens if you have a date with someone and they delete their account
+
+what happens if you are chatting or have a date with someone and they block you
 
 clarify settings in edit profile - visible to ages, also means you wont be able to see them!
 
 update loading buttons the same way i do for block user on view profile page
 
-when viewing profile, if has active date, immeditaly show the make plans tab
 
-
-date gretting msg char counter
-
-
-add another tab to profile, with chat view.  limit 3 messages per person (or some #)
+add another tab to profile, with chat view.  limit 6 messages per person (or some #)
 
 
 add security checks for dateService, make sure user updating date has access to it.
@@ -31,3 +27,7 @@ finish landing page/calendar view
 finish all emails related to dates, accepted, declined, changed, etc, reminders
 
 handle user's timezone when displaying dates
+
+org.springframework.security.authentication.BadCredentialsException: Bad credentials
+
+alert("User has been blocked");

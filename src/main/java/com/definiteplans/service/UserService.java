@@ -61,7 +61,7 @@ public class UserService {
     }
 
     public boolean changeUserPassword(final User user, final PwdUpdate pwdUpdate) {
-        if(!isCorrectPwd(pwdUpdate.getCurrPwd(), user)) {
+        if(user.hasPwd() && !isCorrectPwd(pwdUpdate.getCurrPwd(), user)) {
             return false;
         }
         user.setPassword(bCryptPasswordEncoder.encode(pwdUpdate.getPassword1()));
@@ -111,6 +111,16 @@ public class UserService {
 
         emailService.sendEmailValidationEmail(user);
         return user;
+    }
+
+    public void resendValidationEmail(String email) {
+        if(StringUtils.isBlank(email)) {
+            return;
+        }
+        User found = userRepository.findByEmail(email);
+        if(found != null) {
+            emailService.sendEmailValidationEmail(found);
+        }
     }
 
 

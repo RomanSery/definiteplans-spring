@@ -3,7 +3,6 @@ package com.definiteplans.dom.enumerations;
 import java.util.List;
 
 public enum UserStatus implements GenericEnum {
-    STUB_ACCOUNT(1, "Stub"),
     PENDING_EMAIL_VALIDATION(2, "Pending"),
     ACTIVE(3, "Active"),
     DISABLED(4, "Disabled");

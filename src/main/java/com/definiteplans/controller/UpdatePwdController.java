@@ -52,7 +52,7 @@ public class UpdatePwdController {
         if (!success) {
             return new ModelAndView("update_pwd", Map.of("user", pwd, "hasPwd", currUser.hasPwd()));
         }
-        return new ModelAndView(new RedirectView("/me/profile"));
+        return new ModelAndView(new RedirectView("/me/profile?pwdupdated=1"));
     }
 
 

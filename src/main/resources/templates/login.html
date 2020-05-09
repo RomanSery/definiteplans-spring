@@ -3,14 +3,8 @@
 
 <head th:fragment="header-content" th:remove="tag">
     <link th:href="@{/css/bootstrap-social.css}" rel="stylesheet">
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#loginForm').parsley();
-        });
-    </script>
+    <script th:src="@{/js/login.js}"></script>
 </head>
-
 
 <div class="row" th:fragment="login">
     <div class="col-lg-4"></div>
@@ -26,28 +20,12 @@
 
         <div th:if="${param.error != null}" class="alert alert-danger" th:utext="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
 
+        <div th:if="${param.locked != null}" class="alert alert-danger">
+            You have not confirmed your email address yet, please do that first.
+            <a href="javascript:;" id="resend-confirm-email" th:email="${email}">Re-send validation email</a>
+        </div>
+
         <p>Login in. To see it in action.</p>
-
-
-        <div class="row">
-            <div class="col-6">
-                <a th:href="${fbLoginUrl}" class="btn btn-block btn-social btn-facebook">
-                    <i class="fab fa-facebook-f"></i> Sign in with Facebook
-                </a>
-            </div>
-        </div>
-
-        <br>
-
-        <div class="row">
-            <div class="col-6">
-                <a th:href="${googleLoginUrl}" class="btn btn-block btn-social btn-google">
-                    <i class="fab fa-google"></i> Sign in with Google
-                </a>
-            </div>
-        </div>
-
-        <br>
 
         <form id="loginForm" role="form" th:action="@{/login}" method="POST" data-parsley-validate>
 
@@ -61,11 +39,19 @@
             </div>
             <label> <input name="remember" type="checkbox" value="1"> Remember me </label>
             <button class="btn btn-primary block full-width" type="submit">Login</button>
+            <label><a th:href="@{/forgotpwd}"><small>Forgot password?</small></a></label>
 
+            <br>
+            <br>
 
-            <a th:href="@{/forgotpwd}"><small>Forgot password?</small></a>
-            <p class="text-muted text-center"><small>Do not have an account?</small></p>
-            <a class="btn btn-sm btn-white btn-block" th:href="@{/register}">Create an account for FREE</a>
+            <a th:href="${fbLoginUrl}" class="btn btn-block btn-social btn-facebook block full-width">
+                <i class="fab fa-facebook-f"></i> Sign in with Facebook
+            </a>
+            <a th:href="${googleLoginUrl}" class="btn btn-block btn-social btn-google block full-width">
+                <i class="fab fa-google"></i> Sign in with Google
+            </a>
+
+            <a class="btn btn-sm btn-block btn-primary" th:href="@{/register}">Create an account for FREE</a>
         </form>
 
 

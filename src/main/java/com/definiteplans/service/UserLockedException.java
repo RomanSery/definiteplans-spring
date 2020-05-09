@@ -21,11 +21,14 @@ import org.springframework.security.core.AuthenticationException;
 
 public class UserLockedException extends AuthenticationException {
 
-	public UserLockedException(String msg) {
+	private final String username;
+
+	public UserLockedException(String msg, String username) {
 		super(msg);
+		this.username = username;
 	}
 
-	public UserLockedException(String msg, Throwable t) {
-		super(msg, t);
+	public String getUsername() {
+		return username;
 	}
 }

@@ -27,8 +27,11 @@ public class DpUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found.");
         }
+        if (user.getUserStatus() == UserStatus.DISABLED.getId()) {
+            throw new UsernameNotFoundException("Your account has been disabled.");
+        }
         if(user.getUserStatus() != UserStatus.ACTIVE.getId()) {
-            throw new UserLockedException("You have not confirmed your email address yet, please do that first.");
+            throw new UserLockedException("You have not confirmed your email address yet, please do that first.", username);
         }
 
 

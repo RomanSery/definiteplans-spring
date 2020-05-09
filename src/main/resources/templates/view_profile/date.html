@@ -63,9 +63,9 @@
                 </label>
                 <div class="col">
                     <div th:unless="${has_active_date}" class="input-group m-b">
-                        <textarea class="form-control" cols="100" rows="5" th:field="*{greetingMsg}" required></textarea>
-                        <span class="help-block m-b-none" id="greetingMsgChars"></span>
+                        <textarea class="form-control" cols="100" rows="5" th:field="*{greetingMsg}" required aria-describedby="greetingMsgChars"></textarea>
                     </div>
+                    <small th:unless="${has_active_date}" id="greetingMsgChars" class="form-text text-muted clear"></small>
                     <div th:if="${has_active_date}" class="input-group m-b">
                         <input readonly class="form-control-plaintext" th:field="*{greetingMsg}"></input>
                     </div>

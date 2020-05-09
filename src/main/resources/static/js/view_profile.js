@@ -185,7 +185,7 @@ $(document).ready(function() {
     lightGallery(document.getElementById('main-profile-pic'));
 
     $('#btnMakePlans').click(function () {
-        $('#profileTabsDiv a[href="#tab-4"]').tab('show');
+        $('#profileTabsDiv a[href="#tab-5"]').tab('show');
     });
 
     $('.clockpicker').datetimepicker({
@@ -208,6 +208,8 @@ $(document).ready(function() {
         maxDate: moment().add(14, 'days'),
         format: 'L'
     });
+
+    $("#greetingMsg").limiter(200, $('#greetingMsgChars'));
 
     $('[data-toggle="tooltip"]').tooltip();
 

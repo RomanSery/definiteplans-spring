@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -47,7 +48,7 @@ public class MyProfileController {
     }
 
     @GetMapping("/profile")
-    public ModelAndView editMyProfile() {
+    public ModelAndView editMyProfile(@RequestParam(required = false, name = "pwdupdated") Integer pwdUpdated) {
         User currUser = userService.getCurrentUser();
         if(currUser == null) {
             return new ModelAndView(new RedirectView("/"));
@@ -59,6 +60,7 @@ public class MyProfileController {
         m.addObject("selectedLanguages", currUser.getLanguageIds());
         m.addObject("user_pics", userImageRepository.findByUserId(currUser.getId()));
         m.addObject("blocked_users", userService.getBlockedUserRows());
+        m.addObject("was_pwd_updated", pwdUpdated != null && pwdUpdated == 1);
         return m;
     }
 
