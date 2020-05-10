@@ -136,19 +136,9 @@ public class LoginController {
 
 
     @GetMapping("/resendValidationEmail")
-    public @ResponseBody AjaxResponse resendValidationEmail() {
-        System.out.println("here");
-//        User user = userService.getCurrentUser();
-//        if(user == null) {
-//            return AjaxResponse.error(List.of("Invalid request"));
-//        }
-//
-//        Optional<UserImage> img = userImageRepository.findById(imageId);
-//        if (img.isEmpty()) {
-//            return AjaxResponse.error(List.of("Invalid request"));
-//        }
-//        userImageRepository.delete(img.get());
-        return AjaxResponse.success("Deleted");
+    public @ResponseBody AjaxResponse resendValidationEmail(@RequestParam("email") String email) {
+        userService.resendValidationEmail(email);
+        return AjaxResponse.success("Success");
     }
 
 

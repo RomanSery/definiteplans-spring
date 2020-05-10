@@ -127,6 +127,10 @@ public class UserService {
     public User createUser(String email, String name, String socialLoginId) {
         User user = userRepository.findByEmail(email);
         if(user != null) {
+            if(user.getUserStatus() == UserStatus.PENDING_EMAIL_VALIDATION.getId()) {
+                user.setUserStatus(UserStatus.ACTIVE.getId());
+                saveUser(user, false);
+            }
             return user;
         }
 

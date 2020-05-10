@@ -8,5 +8,6 @@ import com.definiteplans.dom.User;
 
 public interface SearchUsersRepository {
 
-    List<User> browsePagedResults(User currUser, int first, int count, SearchPrefs prefs);
+    List<User> browsePagedResults(User currUser, int firstResult, int maxResults, SearchPrefs prefs);
+    int getNumResults(User currUser, SearchPrefs prefs);
 }

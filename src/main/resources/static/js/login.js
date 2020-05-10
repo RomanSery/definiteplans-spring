@@ -3,17 +3,9 @@
 definitePlansScripts.resentValidationEmail = function (email) {
     console.log("here");
     $.ajax({
-        type: "GET", url: '/resendValidationEmail',
-        beforeSend: function (xhr) {
-            //definitePlansScripts.makeBtnLoading('btnBlockUser');
-        },
-        error: function () {
-            //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
-        },
+        type: "GET", url: '/resendValidationEmail?email=' + email,
         success: function (data) {
-            //definitePlansScripts.stopBtnLoading('btnBlockUser');
-            //alert("User has been blocked");
-            //window.location = '/browse';
+            $('#resend-email-div').html('Sent, check your email!')
         }
     });
 };

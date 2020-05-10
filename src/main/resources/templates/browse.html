@@ -37,6 +37,20 @@
 
     <div class="alert alert-success" id="search-num-results">
         [[${numResults}]] results
+
+        <nav class="float-right">
+            <ul class="pagination">
+                <li class="page-item" th:if="${pagination.showPrev}">
+                    <a class="page-link" href="javascript:;" aria-label="Previous" th:page-num="${pagination.prevPage}"><span aria-hidden="true">&laquo;</span></a>
+                </li>
+                <li class="page-item" th:if="${pagination.showPrev}"><a class="page-link" href="javascript:;" th:text="${pagination.prevPage + 1}" th:page-num="${pagination.prevPage}"></a></li>
+                <li class="page-item active"><a class="page-link" href="javascript:;" th:text="${pagination.currPage + 1}"></a></li>
+                <li class="page-item" th:if="${pagination.showNext}"><a class="page-link" href="javascript:;" th:text="${pagination.nextPage + 1}" th:page-num="${pagination.nextPage}"></a></li>
+                <li class="page-item" th:if="${pagination.showNext}">
+                    <a class="page-link" href="javascript:;" aria-label="Next" th:page-num="${pagination.nextPage}"><span aria-hidden="true">&raquo;</span></a>
+                </li>
+            </ul>
+        </nav>
     </div>
     <div class="row" >
         <div class="col-lg-3" th:each="profile: ${profiles}">

@@ -28,7 +28,7 @@
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-row px-2">
                     <div class="form-group browse-filter col">
                         Height:
                     </div>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-row px-2">
                     <div class="form-group browse-filter col-sm">
                         <select class="form-control doit-select2" data-placeholder="Distance from me" th:field="*{distance}">
                             <option value="0">Any distance from me</option>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-row px-2">
                     <div class="form-group browse-filter col-sm">
                         <select class="form-control doit-select2" data-placeholder="State" th:field="*{state}">
                             <option value="0">Any State</option>
@@ -65,7 +65,7 @@
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-row px-2">
                     <div class="form-group browse-filter col-sm">
                         <select class="form-control doit-select2" data-placeholder="Gender" multiple th:field="*{genders}">
                             <option th:each="o : ${genders}" th:value="${o.id}" th:text="${o.enumValue}"></option>
@@ -74,7 +74,7 @@
                 </div>
 
 
-                <div class="form-row">
+                <div class="form-row px-2">
                     <div class="form-group browse-filter col-sm">
                         <select class="form-control doit-select2" data-placeholder="Ethnicity" multiple th:field="*{ethnicties}">
                             <option th:each="o : ${ethnicities}" th:value="${o.id}" th:text="${o.enumValue}"></option>
@@ -164,12 +164,15 @@
         </div>
     </div>
 
-    <div class="row">
+
+    <div class="row px-2 py-2">
         <div class="col">
-            <button class="btn btn-primary btn-md" type="submit" id="btnFilter" name="btnFilter">Filter</button>
+            <button class="btn btn-primary btn-md full-width" type="submit" id="btnFilter" name="btnFilter">Filter</button>
         </div>
+    </div>
+    <div class="row px-2 py-2">
         <div class="col">
-            <a th:href="@{/browse/reset}" class="btn btn-primary btn-md" id="btnReset" name="btnReset">Reset</a>
+            <a th:href="@{/browse/reset}" class="btn btn-danger btn-md full-width">Reset</a>
         </div>
     </div>
 

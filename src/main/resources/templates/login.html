@@ -20,7 +20,7 @@
 
         <div th:if="${param.error != null}" class="alert alert-danger" th:utext="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
 
-        <div th:if="${param.locked != null}" class="alert alert-danger">
+        <div th:if="${param.locked != null}" class="alert alert-danger" id="resend-email-div">
             You have not confirmed your email address yet, please do that first.
             <a href="javascript:;" id="resend-confirm-email" th:email="${email}">Re-send validation email</a>
         </div>

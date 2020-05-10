@@ -2,12 +2,14 @@ package com.definiteplans.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.AjaxResponse;
+import com.definiteplans.controller.model.Pagination;
 import com.definiteplans.controller.model.SearchResult;
 import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dom.DefiniteDate;
@@ -34,6 +37,8 @@ public class BrowseController {
     private final EnumValueService enumValueService;
     private final DateService dateService;
     private final DefiniteDateRepository definiteDateRepository;
+
+    private static final int numPerPage = 8;
 
     public BrowseController(UserService userService, SearchService searchService, EnumValueService enumValueService, DateService dateService, DefiniteDateRepository definiteDateRepository) {
         this.userService = userService;
@@ -55,9 +60,11 @@ public class BrowseController {
         Utils.addEnumValues(m, enumValueService, currUser);
         m.addObject("prefs", currUser.getSearchPrefs());
 
-        List<SearchResult> results = getSearchResults(currUser);
+        List<SearchResult> results = getSearchResults(currUser, 0);
+        int numResults = searchService.getNumSearchResults(currUser);
         m.addObject("profiles", results);
-        m.addObject("numResults", results.size());
+        m.addObject("numResults", numResults);
+        m.addObject("pagination", getPagination(0, numResults));
         return m;
     }
 
@@ -84,18 +91,20 @@ public class BrowseController {
     }
 
 
-    @RequestMapping("/refresh-browse-results")
-    public String refreshBrowsingResults(ModelMap m) {
+    @RequestMapping(value = {"/refresh-browse-results", "/refresh-browse-results/{pageNum}"})
+    public String refreshBrowsingResults(ModelMap m, @PathVariable(name = "pageNum", required = false) Optional<Integer> pageNum) {
         User currUser = userService.getCurrentUser();
-        List<SearchResult> results = getSearchResults(currUser);
+        List<SearchResult> results = getSearchResults(currUser, pageNum.isPresent() ? pageNum.get() : 0);
+        int numResults = searchService.getNumSearchResults(currUser);
         m.addAttribute("profiles", results);
-        m.addAttribute("numResults", results.size());
+        m.addAttribute("numResults", numResults);
+        m.addAttribute("pagination", getPagination(pageNum.isPresent() ? pageNum.get() : 0, numResults));
         return "browse :: search-results";
     }
 
-    private List<SearchResult> getSearchResults( User currUser) {
+    private List<SearchResult> getSearchResults(User currUser, Integer page) {
 
-        List<User> profiles = searchService.getSearchResults(currUser, 0, 0);
+        List<User> profiles = searchService.getSearchResults(currUser, numPerPage, page);
         List<SearchResult> searchResults = new ArrayList<>(profiles.size());
         for(User u : profiles) {
 
@@ -113,5 +122,22 @@ public class BrowseController {
         }
 
         return searchResults;
+    }
+
+
+    private Pagination getPagination(Integer page, int numResults) {
+        int totalPages = (numResults + numPerPage - 1) / numPerPage;
+
+        if(page == null) {
+            page = 0;
+        }
+
+        boolean showPrev = page > 0;
+        boolean showNext = page < (totalPages - 1);
+        int currPage = page;
+        int prevPage = page - 1;
+        int nextPage = page + 1;
+
+        return new Pagination(prevPage, currPage, nextPage, showPrev, showNext, totalPages);
     }
 }

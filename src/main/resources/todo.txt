@@ -1,10 +1,7 @@
-when logging and user is not active, it shows error message but also need to show link to resent email with confirmation link
-
-implement remember me login
-
+browse page paging
 reset filters button in browse page
 
-browse page paging
+implement remember me login
 
 dont allow making plans or appearing in search results if user profile incomplete
 
@@ -29,5 +26,6 @@ finish all emails related to dates, accepted, declined, changed, etc, reminders
 handle user's timezone when displaying dates
 
 org.springframework.security.authentication.BadCredentialsException: Bad credentials
+org.springframework.security.authentication.InternalAuthenticationServiceException: password cannot be null - notify if fb/google user trying to login with pwd
 
 alert("User has been blocked");
