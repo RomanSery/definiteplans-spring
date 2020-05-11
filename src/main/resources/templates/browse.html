@@ -5,32 +5,38 @@
     <script th:src="@{/js/browse.js}"></script>
 </head>
 
+<div th:fragment="browse" th:remove="tag">
+    <div class="alert alert-success" th:if="${was_blocked}">
+        That user has been blocked.  If you wish to un-block them, go to your settings.
+    </div>
 
-<div th:fragment="browse" class="row">
-    <div class="col-md-3">
-        <div class="ibox ">
-            <div class="ibox-title">
-                <h5>Filters</h5>
-            </div>
-            <div>
-                <div class="">
-                    <div th:replace="fragments/filters::browse-filters"></div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>Filters</h5>
+                </div>
+                <div>
+                    <div class="">
+                        <div th:replace="fragments/filters::browse-filters"></div>
+                    </div>
                 </div>
             </div>
+
         </div>
 
-    </div>
-
-    <div class="text-center" id="loading-indicator" style="display: none;">
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+        <div class="text-center" id="loading-indicator" style="display: none;">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
-    </div>
 
-    <div class="col-md-9" id="search-results-cont">
-        <div th:replace="browse::search-results"></div>
+        <div class="col-md-9" id="search-results-cont">
+            <div th:replace="browse::search-results"></div>
+        </div>
     </div>
 </div>
+
 
 
 <div th:fragment="search-results" th:remove="tag">

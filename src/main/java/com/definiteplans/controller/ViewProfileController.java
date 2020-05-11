@@ -21,6 +21,7 @@ import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
+import com.definiteplans.service.ChatService;
 import com.definiteplans.service.DateService;
 import com.definiteplans.service.EnumValueService;
 import com.definiteplans.service.UserService;
@@ -33,14 +34,16 @@ public class ViewProfileController {
     private final DateService dateService;
     private final DefiniteDateRepository definiteDateRepository;
     private final UserImageRepository userImageRepository;
+    private final ChatService chatService;
 
-    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueService enumValueService, DateService dateService, DefiniteDateRepository definiteDateRepository, UserImageRepository userImageRepository) {
+    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueService enumValueService, DateService dateService, DefiniteDateRepository definiteDateRepository, UserImageRepository userImageRepository, ChatService chatService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.enumValueService = enumValueService;
         this.dateService = dateService;
         this.definiteDateRepository = definiteDateRepository;
         this.userImageRepository = userImageRepository;
+        this.chatService = chatService;
     }
 
     @GetMapping("/profiles/")
@@ -90,6 +93,7 @@ public class ViewProfileController {
         m.addObject("aboutMe", profile.getAboutMePretty());
         m.addObject("interests", profile.getInterestsPretty());
         m.addObject("user_pics", userImageRepository.findByUserId(profile.getId()));
+        m.addObject("chat_thread", chatService.getChatMsgs(currUser, profile));
 
         setDateAttributes(currUser, profile, m.getModelMap());
         return m;

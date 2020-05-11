@@ -1,19 +1,21 @@
 <form id="settingsForm" th:fragment="settings" th:action="@{/me/settings}" th:object="${user}" method="POST" data-parsley-validate>
+
+    <br>
+
     <div class="alert alert-primary" role="alert" id="settings-info-saved" style="display:none;"></div>
     <div class="alert alert-danger" role="alert" id="settings-info-errors" style="display:none;"></div>
 
+
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label>Email notifications</label>
-            <div class="radio">
-                <div class="checkbox"><label> <input type="checkbox" th:field="*{sendNotifications}"> <i></i> Enabled </label></div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" th:field="*{sendNotifications}">
+                <label class="custom-control-label" for="sendNotifications1">Enable Email notifications</label>
             </div>
         </div>
-        <div class="form-group col-md-6" id="sendToContainerDiv">
-            <label>Send to</label>
-            <input class="form-control" type="text" th:field="*{notificationsEmail}">
-        </div>
     </div>
+
+
     <div class="form-row">
         <div class="form-group col-md-12">
             <label>Visible to ages</label>

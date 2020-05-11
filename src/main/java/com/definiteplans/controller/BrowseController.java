@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -49,13 +50,14 @@ public class BrowseController {
     }
 
     @GetMapping("/browse")
-    public ModelAndView browse() {
+    public ModelAndView browse(@RequestParam(required = false, name = "blocked") Integer blocked) {
         User currUser = userService.getCurrentUser();
         if(currUser == null) {
             return new ModelAndView(new RedirectView("/"));
         }
 
         ModelAndView m = new ModelAndView("browse");
+        m.addObject("was_blocked", blocked != null && blocked == 1);
         m.addObject("title", "Browse Profiles");
         Utils.addEnumValues(m, enumValueService, currUser);
         m.addObject("prefs", currUser.getSearchPrefs());

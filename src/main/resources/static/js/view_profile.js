@@ -18,8 +18,7 @@ definitePlansScripts.blockUser = function () {
                 },
                 success: function (data) {
                     definitePlansScripts.stopBtnLoading('btnBlockUser');
-                    alert("User has been blocked");
-                    window.location = '/browse';
+                    window.location = '/browse?blocked=1';
                 }
             });
         }
@@ -210,6 +209,7 @@ $(document).ready(function() {
     });
 
     $("#greetingMsg").limiter(200, $('#greetingMsgChars'));
+    $("#chatMessage").limiter(1000, $('#chatMsgChars'));
 
     $('[data-toggle="tooltip"]').tooltip();
 

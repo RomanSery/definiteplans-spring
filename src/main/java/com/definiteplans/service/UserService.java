@@ -101,7 +101,6 @@ public class UserService {
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setSendNotifications(true);
-        user.setNotificationsEmail(user.getEmail());
         user.setCreationDate(DateUtil.now());
         user.setLastModifiedDate(DateUtil.now());
         user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());

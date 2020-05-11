@@ -1,9 +1,4 @@
-browse page paging
-reset filters button in browse page
-
 implement remember me login
-
-dont allow making plans or appearing in search results if user profile incomplete
 
 delete my account - what happens if you have a date with someone and they delete their account
 
@@ -28,4 +23,10 @@ handle user's timezone when displaying dates
 org.springframework.security.authentication.BadCredentialsException: Bad credentials
 org.springframework.security.authentication.InternalAuthenticationServiceException: password cannot be null - notify if fb/google user trying to login with pwd
 
-alert("User has been blocked");
+what happens when you go directly to profile url of someone you cant see in search results? (they blocked you, or age visibility, incomplete profile)
+
+showUploadErr
+
+show notification somewhere when you have an unread chat message, maybe in header and in calendar view
+
+send email for chat msg

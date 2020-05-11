@@ -42,6 +42,9 @@ public class DateUtil {
     }
 
     public static int getAge(LocalDate dob) {
+        if(dob == null) {
+            return 0;
+        }
         return (int) Math.abs(ChronoUnit.YEARS.between(dob, LocalDate.now()));
     }
 

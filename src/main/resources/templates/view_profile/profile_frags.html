@@ -15,7 +15,7 @@
             <p th:unless="${isOnline}"><span class="badge badge-info" th:utext="${lastOnline}"></span></p>
             <p th:if="${isOnline}"><span class="badge badge-primary">Online!</span></p>
 
-            <div class="user-button" wicket:id="actionButtonsContainer"  th:if="${!isViewingSelf}">
+            <div class="user-button" wicket:id="actionButtonsContainer"  th:if="${!isViewingSelf && currUserInfo.isProfileComplete()}">
                 <div class="row">
                     <div class="col-md-6">
                         <button type="button" class="btn btn-success btn-sm btn-block" id="btnMakePlans"><i class="fa fa-envelope"></i> Make Plans</button>
@@ -117,54 +117,29 @@
 
 <div th:fragment="chat" th:remove="tag">
     <div class="ibox chat-view">
-        <div class="row">
-
+        <div class="row" th:if="${chat_thread != null and !chat_thread.isEmpty()}">
             <div class="chat-discussion">
-
-                <div class="chat-message left">
-                    <img class="message-avatar" src="img/a1.jpg" alt="">
+                <div class="chat-message left" th:each="msg : ${chat_thread}">
+                    <img class="message-avatar" th:src="${msg.img}" alt="">
                     <div class="message">
-                        <a class="message-author" href="#"> Michael Smith </a>
-                        <span class="message-date"> Mon Jan 26 2015 - 18:39:23 </span>
-                        <span class="message-content">
-											Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                                            </span>
+                        <span class="message-author" th:text="${msg.displayName}"></span>
+                        <span class="message-date" th:text="${msg.date}"></span>
+                        <span class="message-content" th:text="${msg.msg}"></span>
                     </div>
                 </div>
-                <div class="chat-message right">
-                    <img class="message-avatar" src="img/a4.jpg" alt="">
-                    <div class="message">
-                        <a class="message-author" href="#"> Karl Jordan </a>
-                        <span class="message-date">  Fri Jan 25 2015 - 11:12:36 </span>
-                        <span class="message-content">
-											Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover.
-                                            </span>
-                    </div>
-                </div>
-                <div class="chat-message right">
-                    <img class="message-avatar" src="img/a2.jpg" alt="">
-                    <div class="message">
-                        <a class="message-author" href="#"> Michael Smith </a>
-                        <span class="message-date">  Fri Jan 25 2015 - 11:12:36 </span>
-                        <span class="message-content">
-											There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration.
-                                            </span>
-                    </div>
-                </div>
-
             </div>
         </div>
 
-        <div class="row">
-            <div class="chat-message-form">
-
-                <div class="form-group">
-
-                    <textarea class="form-control message-input" name="message" placeholder="Enter message text" spellcheck="false"></textarea>
+        <form th:action="@{/chat/send}" method="post" id="chatForm" name="chatForm">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <textarea class="form-control" name="chatMessage" id="chatMessage" placeholder="Enter message text" required aria-describedby="chatMsgChars"></textarea>
+                        <small id="chatMsgChars" class="form-text text-muted clear"></small>
+                    </div>
                 </div>
-
             </div>
-        </div>
+        </form>
 
     </div>
 

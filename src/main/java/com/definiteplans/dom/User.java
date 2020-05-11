@@ -129,10 +129,7 @@ public class User implements Serializable {
     private LocalDateTime lastLoginDate;
 
     @Column(name = "send_notifications")
-    private boolean sendNotifications;
-
-    @Column(name = "notifications_email")
-    private String notificationsEmail;
+    private boolean sendNotifications = true;
 
     @Column(name = "age_min", nullable = false)
     private int ageMin;

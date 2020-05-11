@@ -124,7 +124,6 @@ public class MyProfileController {
         User currUser = userService.getCurrentUser();
         if(currUser != null) {
             currUser.setSendNotifications(update.isSendNotifications());
-            currUser.setNotificationsEmail(update.getNotificationsEmail());
             currUser.setAgeMax(update.getAgeMax());
             currUser.setAgeMin(update.getAgeMin());
             userService.saveUser(currUser, true);
