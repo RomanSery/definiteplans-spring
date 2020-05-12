@@ -119,24 +119,34 @@
     <div class="ibox chat-view">
         <div class="row" th:if="${chat_thread != null and !chat_thread.isEmpty()}">
             <div class="chat-discussion">
-                <div class="chat-message left" th:each="msg : ${chat_thread}">
-                    <img class="message-avatar" th:src="${msg.img}" alt="">
-                    <div class="message">
-                        <span class="message-author" th:text="${msg.displayName}"></span>
-                        <span class="message-date" th:text="${msg.date}"></span>
-                        <span class="message-content" th:text="${msg.msg}"></span>
+                <th:block th:each="msg : ${chat_thread}" th:remove="tag">
+                    <div class="chat-message" th:classappend="${msg.userId == profile.id} ? left : right">
+                        <img class="message-avatar" th:src="${msg.img}" alt="">
+                        <div class="message">
+                            <span class="message-author" th:text="${msg.displayName}"></span>
+                            <span class="message-date" th:text="${msg.date}"></span>
+                            <span class="message-content" th:text="${msg.msg}"></span>
+                        </div>
                     </div>
-                </div>
+                </th:block>
             </div>
         </div>
 
-        <form th:action="@{/chat/send}" method="post" id="chatForm" name="chatForm">
+        <form th:action="@{/chat/send}" method="post" id="chatForm" data-parsley-validate>
+            <input type="hidden" th:value="${profile.id}" name="profileId">
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <textarea class="form-control" name="chatMessage" id="chatMessage" placeholder="Enter message text" required aria-describedby="chatMsgChars"></textarea>
+                        <textarea class="form-control" name="chatMessage" id="chatMessage" placeholder="Enter message text"
+                                  aria-describedby="chatMsgChars" required data-parsley-maxlength="500"></textarea>
                         <small id="chatMsgChars" class="form-text text-muted clear"></small>
                     </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <button class="btn btn-primary btn-lg" type="submit" id="sendChatBtn">Send</button>
                 </div>
             </div>
         </form>

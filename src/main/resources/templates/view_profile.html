@@ -2,6 +2,9 @@
 <html th:replace="~{fragments/layout::authenticatedLayout(~{::view_profile}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="header-content" th:remove="tag">
+    <script type="text/javascript">
+        definitePlansScripts.viewing_profile_id = [[${profile.id}]];
+    </script>
     <script th:src="@{/js/view_profile.js}"></script>
 </head>
 
@@ -44,7 +47,7 @@
                                 </div>
                             </div>
                             <div id="tab-4" class="tab-pane">
-                                <div class="panel-body">
+                                <div class="panel-body" id="chatThreadDiv">
                                     <div th:replace="view_profile/profile_frags::chat" th:remove="tag"></div>
                                 </div>
                             </div>

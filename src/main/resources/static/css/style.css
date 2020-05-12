@@ -6347,6 +6347,7 @@ dd.project-people {
   padding: 15px;
   height: 400px;
   overflow-y: auto;
+  width: 100%;
 }
 .chat-users {
   overflow-y: auto;

@@ -179,6 +179,49 @@ definitePlansScripts.feedbackForm = function() {
     });
 };
 
+
+definitePlansScripts.chat = function () {
+    $("#chatForm").submit(function (event) {
+        if(confirm('Are you sure you want to send this message?')) {
+            $.ajax({
+                type: "POST", url: '/chat/send', data: $('#chatForm').serialize(),
+                beforeSend: function (xhr) {
+                    definitePlansScripts.makeBtnLoading('sendChatBtn');
+                    var token = $('#_csrf').attr('content');
+                    var header = $('#_csrf_header').attr('content');
+                    xhr.setRequestHeader(header, token);
+                },
+                error: function () {
+                    alert('Sorry, there was some error. Please try again.');
+                },
+                success: function (data) {
+                    definitePlansScripts.stopBtnLoading('sendChatBtn');
+                    definitePlansScripts.refreshChatThread();
+                }
+            });
+            return false;
+        }
+    });
+};
+
+definitePlansScripts.refreshChatThread = function () {
+    $.ajax({
+        type: "GET", url: '/refresh-chat-thread/' + definitePlansScripts.viewing_profile_id,
+        error: function () {
+            alert('Sorry, there was some error. Please try again.');
+        },
+        success: function (data) {
+            $("#chatThreadDiv").html(data);
+            $('#loading-indicator').hide();
+        },
+        beforeSend: function () {
+            $("#chatThreadDiv").html("");
+            $('#loading-indicator').show();
+        }
+    });
+    return false;
+};
+
 $(document).ready(function() {
     lightGallery(document.getElementById('profile-light-gallery'));
     lightGallery(document.getElementById('main-profile-pic'));
@@ -208,12 +251,15 @@ $(document).ready(function() {
         format: 'L'
     });
 
+    $('#chatForm').parsley();
+
     $("#greetingMsg").limiter(200, $('#greetingMsgChars'));
-    $("#chatMessage").limiter(1000, $('#chatMsgChars'));
+    $("#chatMessage").limiter(500, $('#chatMsgChars'));
 
     $('[data-toggle="tooltip"]').tooltip();
 
     definitePlansScripts.blockUser();
     definitePlansScripts.dateBtns();
     definitePlansScripts.feedbackForm();
+    definitePlansScripts.chat();
 });
