@@ -15,14 +15,11 @@ add another tab to profile, with chat view.  limit 6 messages per person (or som
 add security checks for dateService, make sure user updating date has access to it.
 look through all controller/service methods, make sure the actions being done make sense and are allowed.
 
-finish landing page/calendar view
+finish landing page/calendar view (show unread chat message notifications)
 
 finish all emails related to dates, accepted, declined, changed, etc, reminders
 
 handle user's timezone when displaying dates
-
-org.springframework.security.authentication.BadCredentialsException: Bad credentials
-org.springframework.security.authentication.InternalAuthenticationServiceException: password cannot be null - notify if fb/google user trying to login with pwd
 
 what happens when you go directly to profile url of someone you cant see in search results? (they blocked you, or age visibility, incomplete profile)
 
@@ -31,6 +28,3 @@ showUploadErr
 show notification somewhere when you have an unread chat message, maybe in header and in calendar view
 
 send email for chat msg
-
-if youve already registered with an email, but try to login with fb/google it should not allow it like it is right now.  it should say
-you've already registered with that email, pleaes login with google or fb, depending on which one you already registered with.

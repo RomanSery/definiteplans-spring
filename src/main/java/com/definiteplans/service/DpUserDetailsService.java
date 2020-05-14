@@ -1,6 +1,7 @@
 package com.definiteplans.service;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.User;
+import com.definiteplans.dom.enumerations.LoginErrorType;
 import com.definiteplans.dom.enumerations.UserStatus;
 
 @Service
@@ -25,15 +27,23 @@ public class DpUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found.");
+            throw new LoginException(LoginErrorType.NOT_FOUND, username);
         }
         if (user.getUserStatus() == UserStatus.DISABLED.getId()) {
-            throw new UsernameNotFoundException("Your account has been disabled.");
+            throw new LoginException(LoginErrorType.DISABLED, username);
         }
         if(user.getUserStatus() != UserStatus.ACTIVE.getId()) {
-            throw new UserLockedException("You have not confirmed your email address yet, please do that first.", username);
+            throw new LoginException(LoginErrorType.PENDING, username);
         }
 
+        if(StringUtils.isBlank(user.getPassword())) {
+            if(!StringUtils.isBlank(user.getFbId())) {
+                throw new LoginException(LoginErrorType.FB_NO_PWD, username);
+            }
+            if(!StringUtils.isBlank(user.getGoogleSubId())) {
+                throw new LoginException(LoginErrorType.GOOGLE_NO_PWD, username);
+            }
+        }
 
         org.springframework.security.core.userdetails.User.UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(String.valueOf(user.getId()));
         builder.password(user.getPassword());

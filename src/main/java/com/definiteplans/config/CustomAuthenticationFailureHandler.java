@@ -10,7 +10,8 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
-import com.definiteplans.service.UserLockedException;
+import com.definiteplans.dom.enumerations.LoginErrorType;
+import com.definiteplans.service.LoginException;
 
 @Component("authenticationFailureHandler")
 public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -18,17 +19,17 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
     @Override
     public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) throws IOException, ServletException {
 
-        if(exception.getCause() instanceof UserLockedException) {
-            UserLockedException ex = (UserLockedException) exception.getCause();
-            setDefaultFailureUrl("/login?locked=true&email=" + ex.getUsername());
+        if(exception.getCause() instanceof LoginException) {
+            LoginException ex = (LoginException) exception.getCause();
+            setDefaultFailureUrl("/login?loginerror="+ex.getType().getId()+"&email=" + ex.getUsername());
         } else {
-            setDefaultFailureUrl("/login?error=true");
+            setDefaultFailureUrl("/login?loginerror="+ LoginErrorType.NOT_FOUND.getId());
         }
 
 
         super.onAuthenticationFailure(request, response, exception);
 
-        if(exception.getCause() instanceof UserLockedException) {
+        if(exception.getCause() instanceof LoginException) {
             request.getSession()
                     .setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, exception.getMessage());
         }

@@ -18,7 +18,7 @@
             <div class="user-button" wicket:id="actionButtonsContainer"  th:if="${!isViewingSelf && currUserInfo.isProfileComplete()}">
                 <div class="row">
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-success btn-sm btn-block" id="btnMakePlans"><i class="fa fa-envelope"></i> Make Plans</button>
+                        <button type="button" class="btn btn-success btn-sm btn-block btnMakePlans"><i class="fa fa-envelope"></i> Make Plans</button>
                     </div>
                     <div class="col-md-6">
                         <button type="button" class="btn btn-danger btn-sm btn-block" id="btnBlockUser" th:profile-id="${profile.id}">
@@ -116,6 +116,15 @@
 
 
 <div th:fragment="chat" th:remove="tag">
+
+    <p class="alert alert-info">
+        <strong th:if="${num_remaining_msgs > 0}">You can still send up to [[${num_remaining_msgs}]] messages to [[${profile.displayName}]].</strong>
+        <strong th:if="${num_remaining_msgs == 0}">You can't send any more messages.  If you would like to meet, <a href="javascript:;" class="btnMakePlans">make plans!</a></strong>
+        <br>
+        <small>Why do we limit the number of messages?</small>
+    </p>
+
+
     <div class="ibox chat-view">
         <div class="row" th:if="${chat_thread != null and !chat_thread.isEmpty()}">
             <div class="chat-discussion">
@@ -132,7 +141,7 @@
             </div>
         </div>
 
-        <form th:action="@{/chat/send}" method="post" id="chatForm" data-parsley-validate>
+        <form th:action="@{/chat/send}" th:if="${num_remaining_msgs > 0}" method="post" id="chatForm" data-parsley-validate>
             <input type="hidden" th:value="${profile.id}" name="profileId">
             <div class="row">
                 <div class="col">

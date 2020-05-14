@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,7 @@ import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.controller.model.PwdUpdate;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.User;
+import com.definiteplans.dom.enumerations.LoginErrorType;
 import com.definiteplans.dom.enumerations.UserStatus;
 import com.definiteplans.email.EmailService;
 import com.definiteplans.service.UserService;
@@ -41,9 +43,19 @@ public class LoginController {
     @GetMapping("/login")
     public ModelAndView login(@RequestParam(required = false, name = "reset") Integer reset,
                               @RequestParam(required = false, name = "confirmed") Integer confirmed,
-                              @RequestParam(required = false, name = "email") String email) {
+                              @RequestParam(required = false, name = "email") String email,
+                              @RequestParam(required = false, name = "loginerror") Integer loginerror) {
 
         ModelAndView m = new ModelAndView("login");
+
+        if(loginerror != null) {
+            LoginErrorType type = LoginErrorType.getById(loginerror);
+            if(type != null) {
+                m.addObject("login_error_type", type.getId());
+                m.addObject("login_error", type.getDescription());
+            }
+        }
+
         m.addObject("title", "Login");
         m.addObject("email", email);
         m.addObject("was_pwd_reset", reset != null && reset == 1);

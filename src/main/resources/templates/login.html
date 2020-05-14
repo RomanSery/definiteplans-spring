@@ -18,11 +18,9 @@
             Thanks for confirming your email, please continue to login.
         </div>
 
-        <div th:if="${param.error != null}" class="alert alert-danger" th:utext="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
-
-        <div th:if="${param.locked != null}" class="alert alert-danger" id="resend-email-div">
-            You have not confirmed your email address yet, please do that first.
-            <a href="javascript:;" id="resend-confirm-email" th:email="${email}">Re-send validation email</a>
+        <div th:if="${login_error != null}" class="alert alert-danger" id="login-error-div">
+            [[${login_error}]]
+            <a th:if="${login_error_type == 3}" href="javascript:;" id="resend-confirm-email" th:email="${email}">Re-send validation email</a>
         </div>
 
         <p>Login in. To see it in action.</p>

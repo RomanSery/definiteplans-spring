@@ -8,9 +8,6 @@ public interface GenericEnum extends Serializable {
     }		
 
 	String getDescription();
-    default String getDescription(Module m) {
-        return getDescription();
-    }
 	void setDescription(String description);
 	int getId();
 }

@@ -44,7 +44,7 @@ public class ChatController {
             return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
         }
 
-        userService.sendChatMsg(profileId, chatMessage);
+        chatService.sendChatMsg(profileId, chatMessage);
         return AjaxResponse.success("Sent");
     }
 
@@ -58,6 +58,7 @@ public class ChatController {
         User profile = found.get();
         m.addAttribute("profile", profile);
         m.addAttribute("chat_thread", chatService.getChatMsgs(currUser, profile));
+        m.addAttribute("num_remaining_msgs", chatService.getNumMsgsRemaining(currUser, profile));
         return "view_profile/profile_frags :: chat";
     }
 

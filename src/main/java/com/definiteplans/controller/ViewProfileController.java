@@ -94,7 +94,7 @@ public class ViewProfileController {
         m.addObject("interests", profile.getInterestsPretty());
         m.addObject("user_pics", userImageRepository.findByUserId(profile.getId()));
         m.addObject("chat_thread", chatService.getChatMsgs(currUser, profile));
-
+        m.addObject("num_remaining_msgs", chatService.getNumMsgsRemaining(currUser, profile));
         setDateAttributes(currUser, profile, m.getModelMap());
         return m;
     }

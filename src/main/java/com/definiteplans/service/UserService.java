@@ -18,13 +18,11 @@ import org.springframework.stereotype.Service;
 import com.definiteplans.controller.model.BlockedUserRow;
 import com.definiteplans.controller.model.PwdUpdate;
 import com.definiteplans.dao.BlockedUserRepository;
-import com.definiteplans.dao.ChatMsgRepository;
 import com.definiteplans.dao.UserEmailRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.UserTokenRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.BlockedUser;
-import com.definiteplans.dom.ChatMsg;
 import com.definiteplans.dom.EnumValue;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.UserEmail;
@@ -49,10 +47,10 @@ public class UserService {
     private final EmailService emailService;
     private final UserTokenRepository userTokenRepository;
     private final UserEmailRepository userEmailRepository;
-    private final ChatMsgRepository chatMsgRepository;
 
     public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                       EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, BlockedUserRepository blockedUserRepository, EmailService emailService, UserTokenRepository userTokenRepository, UserEmailRepository userEmailRepository, ChatMsgRepository chatMsgRepository) {
+                       EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, BlockedUserRepository blockedUserRepository,
+                       EmailService emailService, UserTokenRepository userTokenRepository, UserEmailRepository userEmailRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.enumValueService = enumValueService;
@@ -61,7 +59,6 @@ public class UserService {
         this.emailService = emailService;
         this.userTokenRepository = userTokenRepository;
         this.userEmailRepository = userEmailRepository;
-        this.chatMsgRepository = chatMsgRepository;
     }
 
     public boolean changeUserPassword(final User user, final PwdUpdate pwdUpdate) {
@@ -401,24 +398,4 @@ public class UserService {
         return StringUtils.join(languages, ",");
     }
 
-    public void sendChatMsg(Integer toProfileId, String chatMessage) {
-        User currUser = getCurrentUser();
-        if(currUser == null) {
-            return;
-        }
-
-        Optional<User> found = userRepository.findById(toProfileId);
-        if(found.isEmpty()) {
-            return;
-        }
-
-        User sendTo = found.get();
-
-        ChatMsg msg = new ChatMsg();
-        msg.setFromId(currUser.getId());
-        msg.setToId(sendTo.getId());
-        msg.setMessage(chatMessage);
-        msg.setSentDate(DateUtil.now());
-        chatMsgRepository.save(msg);
-    }
 }

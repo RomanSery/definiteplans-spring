@@ -18,14 +18,22 @@ package com.definiteplans.service;
 
 import org.springframework.security.core.AuthenticationException;
 
+import com.definiteplans.dom.enumerations.LoginErrorType;
 
-public class UserLockedException extends AuthenticationException {
+
+public class LoginException extends AuthenticationException {
 
 	private final String username;
+	private final LoginErrorType type;
 
-	public UserLockedException(String msg, String username) {
-		super(msg);
+	public LoginException(LoginErrorType type, String username) {
+		super(type.getDescription());
+		this.type = type;
 		this.username = username;
+	}
+
+	public LoginErrorType getType() {
+		return type;
 	}
 
 	public String getUsername() {

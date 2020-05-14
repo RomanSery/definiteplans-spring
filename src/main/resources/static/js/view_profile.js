@@ -213,6 +213,10 @@ definitePlansScripts.refreshChatThread = function () {
         success: function (data) {
             $("#chatThreadDiv").html(data);
             $('#loading-indicator').hide();
+            definitePlansScripts.chat();
+            $('.btnMakePlans').click(function () {
+                $('#profileTabsDiv a[href="#tab-5"]').tab('show');
+            });
         },
         beforeSend: function () {
             $("#chatThreadDiv").html("");
@@ -226,7 +230,7 @@ $(document).ready(function() {
     lightGallery(document.getElementById('profile-light-gallery'));
     lightGallery(document.getElementById('main-profile-pic'));
 
-    $('#btnMakePlans').click(function () {
+    $('.btnMakePlans').click(function () {
         $('#profileTabsDiv a[href="#tab-5"]').tab('show');
     });
 

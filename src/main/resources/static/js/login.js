@@ -5,7 +5,7 @@ definitePlansScripts.resentValidationEmail = function (email) {
     $.ajax({
         type: "GET", url: '/resendValidationEmail?email=' + email,
         success: function (data) {
-            $('#resend-email-div').html('Sent, check your email!')
+            $('#login-error-div').html('Sent, check your email!')
         }
     });
 };

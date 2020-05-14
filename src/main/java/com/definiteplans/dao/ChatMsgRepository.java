@@ -15,4 +15,6 @@ public interface ChatMsgRepository extends JpaRepository<ChatMsg, Integer> {
 
     @Query("FROM ChatMsg where fromId = :currUserId OR toId = :currUserId OR fromId = :profileId OR toId = :profileId order by sentDate asc")
     List<ChatMsg> getChat(@Param("currUserId") int currUserId, @Param("profileId") int profileId);
+
+    long countByFromIdAndToId(@Param("fromId") int fromId, @Param("toId") int toId);
 }
