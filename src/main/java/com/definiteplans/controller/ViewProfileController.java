@@ -60,11 +60,11 @@ public class ViewProfileController {
         }
         Optional<User> found = userRepository.findById(userId);
         if(found.isEmpty()) {
-            return new ModelAndView(new RedirectView("/browse"));
+            return new ModelAndView(new RedirectView("/browse?notfound=1"));
         }
         User profile = found.get();
         if(!userService.canViewProfile(currUser, profile)) {
-            return new ModelAndView(new RedirectView("/browse"));
+            return new ModelAndView(new RedirectView("/browse?notfound=1"));
         }
 
 

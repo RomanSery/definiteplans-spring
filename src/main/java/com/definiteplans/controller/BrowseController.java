@@ -50,7 +50,8 @@ public class BrowseController {
     }
 
     @GetMapping("/browse")
-    public ModelAndView browse(@RequestParam(required = false, name = "blocked") Integer blocked) {
+    public ModelAndView browse(@RequestParam(required = false, name = "blocked") Integer blocked,
+                               @RequestParam(required = false, name = "notfound") Integer notFound) {
         User currUser = userService.getCurrentUser();
         if(currUser == null) {
             return new ModelAndView(new RedirectView("/"));
@@ -58,6 +59,7 @@ public class BrowseController {
 
         ModelAndView m = new ModelAndView("browse");
         m.addObject("was_blocked", blocked != null && blocked == 1);
+        m.addObject("not_found", notFound != null && notFound == 1);
         m.addObject("title", "Browse Profiles");
         Utils.addEnumValues(m, enumValueService, currUser);
         m.addObject("prefs", currUser.getSearchPrefs());

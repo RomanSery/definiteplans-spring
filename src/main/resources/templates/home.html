@@ -21,7 +21,10 @@
                 themeSystem: 'bootstrap',
                 defaultView: 'dayGridMonth',
                 defaultDate: '2020-04-07',
+                events: [(${calendar_events})]
+            });
 
+            /*
                 events: [
                     {
                         title: 'All Day Event',
@@ -37,8 +40,7 @@
                         url: 'http://google.com/',
                         start: '2020-04-28'
                     }
-                ]
-            });
+                ]*/
 
             calendar.render();
 
@@ -52,24 +54,35 @@
 
     <div class="row animated fadeInDown">
         <div class="col-lg-3">
+            <div class="widget style1 lazur-bg">
+                <div class="row">
+                    <div class="col-4">
+                        <i class="fa fa-envelope-o fa-5x"></i>
+                    </div>
+                    <div class="col-8 text-right">
+                        <span> New messages </span>
+                        <h2 class="font-bold">260</h2>
+                    </div>
+                </div>
+            </div>
             <div class="ibox ">
                 <div class="ibox-title">
                     <h5>Requires your action</h5>
                 </div>
                 <div class="ibox-content">
 
-                </div>
-            </div>
-            <div class="ibox ">
-                <div class="ibox-content">
-                    <h2>Upcoming dates</h2>
+                    <div th:each="item : ${action_items}">
+                        <a th:href="${item.url}"><div class="external-event navy-bg" th:text="${item.desc}"></div></a>
+                    </div>
+
+                    <a href="browse" th:if="${action_items == null or action_items.isEmpty()}">Nothing needs your attention. Go set up some dates!</a>
                 </div>
             </div>
         </div>
         <div class="col-lg-9">
             <div class="ibox ">
                 <div class="ibox-title">
-                    <h5>Striped Table </h5>
+                    <h5>Upcoming dates</h5>
                 </div>
                 <div class="ibox-content">
                     <div id="calendar"></div>

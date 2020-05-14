@@ -18,7 +18,7 @@
 
     <div class="form-row">
         <div class="form-group col-md-12">
-            <label>Visible to ages</label>
+            <label>Visible to ages <br><small>Users outside this age range won't be able to see you.  That means that you won't be able to see them either!</small></label>
             <select class="form-control" th:field="*{ageMin}">
                 <option value="0">Select</option>
                 <option th:each="g : ${ages}" th:value="${g}" th:text="${g}"></option>

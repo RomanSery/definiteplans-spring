@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import com.definiteplans.controller.model.ActionItem;
 import com.definiteplans.controller.model.DateFeedback;
 import com.definiteplans.controller.model.DateProposal;
 import com.definiteplans.controller.model.PastDateRow;
@@ -286,5 +287,45 @@ public class DateService {
 
         //dateLetterManager.onSubmittedPostDateFeedback(dd, isOwner(dd));
         return true;
+    }
+
+    public List<ActionItem> getRequiresMyAction(User currUser, List<DefiniteDate> upComingDates) {
+
+        List<ActionItem> toReturn = new ArrayList<>();
+
+        for(DefiniteDate dd : upComingDates) {
+
+            int profileId = currUser.getId() == dd.getOwnerUserId() ? dd.getDateeUserId() : dd.getOwnerUserId();
+            Optional<User> found = userRepository.findById(profileId);
+            if(found.isEmpty()) {
+                continue;
+            }
+            String displayName = found.get().getDisplayName();
+
+            LocalDateTime doingWhen = dd.getDoingWhen();
+            boolean isOwner = currUser.getId() == dd.getOwnerUserId();
+
+            DateParticipantStatus myStatus = DateParticipantStatus.getById((dd.getOwnerUserId() == currUser.getId()) ? dd.getOwnerStatusId() : dd.getDateeStatusId());
+            boolean isTooLateToAccept = (doingWhen != null && DateUtil.isInThePast(doingWhen));
+            boolean gaveFeedback = isOwner ? dd.isOwnerGaveFeedback() : dd.isDateeGaveFeedback();
+
+            String actionDesc = null;
+            if (dd.getDateStatusId() == DateStatus.NEGOTIATION.getId() && myStatus == DateParticipantStatus.NEEDS_TO_REPLY) {
+                actionDesc = "You should reply to " + displayName +"'s date proposal";
+            }
+            if (dd.getDateStatusId() == DateStatus.APPROVED.getId() && isTooLateToAccept && !gaveFeedback) {
+                actionDesc = "Please give feedback for your date with " + displayName;
+            }
+
+            if (StringUtils.isBlank(actionDesc)) {
+                continue;
+            }
+
+
+            String url = "/profiles/" + profileId;
+            toReturn.add(new ActionItem(url, actionDesc));
+        }
+
+        return toReturn;
     }
 }

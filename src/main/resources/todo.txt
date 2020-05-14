@@ -4,13 +4,9 @@ delete my account - what happens if you have a date with someone and they delete
 
 what happens if you are chatting or have a date with someone and they block you
 
-clarify settings in edit profile - visible to ages, also means you wont be able to see them!
-
 update loading buttons the same way i do for block user on view profile page
 
-
 add another tab to profile, with chat view.  limit 6 messages per person (or some #)
-
 
 add security checks for dateService, make sure user updating date has access to it.
 look through all controller/service methods, make sure the actions being done make sense and are allowed.
@@ -20,8 +16,6 @@ finish landing page/calendar view (show unread chat message notifications)
 finish all emails related to dates, accepted, declined, changed, etc, reminders
 
 handle user's timezone when displaying dates
-
-what happens when you go directly to profile url of someone you cant see in search results? (they blocked you, or age visibility, incomplete profile)
 
 showUploadErr
 

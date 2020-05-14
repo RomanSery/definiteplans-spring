@@ -150,8 +150,8 @@ public class UserService {
         User newUser = new User();
         newUser.setEmail(email);
         newUser.setDisplayName(name);
-        newUser.setCreationDate(LocalDateTime.now());
-        newUser.setLastModifiedDate(LocalDateTime.now());
+        newUser.setCreationDate(DateUtil.now());
+        newUser.setLastModifiedDate(DateUtil.now());
         newUser.setUserStatus(UserStatus.ACTIVE.getId());
         newUser = userRepository.save(newUser);
 
