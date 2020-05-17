@@ -48,19 +48,33 @@
                     </div>
                 </div>
             </div>
-            <div class="ibox ">
-                <div class="ibox-title">
-                    <h5>Requires your action</h5>
-                </div>
+            <div class="ibox">
+                <div class="ibox-title"><h5>Requires your action</h5></div>
                 <div class="ibox-content">
-
                     <div th:each="item : ${action_items}">
                         <a th:href="${item.url}"><div class="external-event navy-bg" th:text="${item.desc}"></div></a>
                     </div>
-
                     <a href="browse" th:if="${action_items == null or action_items.isEmpty()}">Nothing needs your attention. Go set up some dates!</a>
                 </div>
             </div>
+
+            <div class="ibox" th:if="${date_details != null and !date_details.isEmpty()}">
+                <div class="ibox-title"><h5>Dates</h5></div>
+                <div class="ibox-content">
+                    <div class="list-group" th:each="item : ${date_details}">
+                        <a th:href="${item.url}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1" th:text="${item.desc}"></h5>
+                            </div>
+                            <p class="mb-1" th:text="${item.desc2}"></p>
+                            <small class="text-muted" th:text="${item.date}"></small>
+                        </a>
+                    </div>
+
+
+                </div>
+            </div>
+
         </div>
         <div class="col-lg-9">
             <div class="ibox ">

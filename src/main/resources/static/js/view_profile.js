@@ -249,10 +249,12 @@ $(document).ready(function() {
         }, format: 'LT'
     });
 
-    $('.datepicker').datetimepicker({
-        minDate: 'now',
+    $('.dp-datepicker').datetimepicker({
+        minDate: moment().subtract(1, 'days'),
         maxDate: moment().add(14, 'days'),
         format: 'L'
+    }).next().on("click", function(){
+        jQuery(this).prev().focus();
     });
 
     $('#chatForm').parsley();

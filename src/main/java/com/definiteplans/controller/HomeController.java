@@ -42,8 +42,10 @@ public class HomeController {
 
         List<DefiniteDate> upComingDates = definiteDateRepository.getMyUpcomingDates(currUser.getId());
         List<ActionItem> requiresAction = dateService.getRequiresMyAction(currUser, upComingDates);
+        List<ActionItem> dateDetails = dateService.getUpComingDatesDetail(currUser, upComingDates);
 
         m.addObject("action_items", requiresAction);
+        m.addObject("date_details", dateDetails);
         m.addObject("calendar_events", getCalendarEventsJSON(currUser, upComingDates));
         return m;
     }
@@ -63,14 +65,11 @@ public class HomeController {
                 }
                 String displayName = found.get().getDisplayName();
                 String url = "/profiles/" + profileId;
-                String descTemplate = "Date with %s \n %s, %s";
-                String desc = String.format(descTemplate, displayName, dd.getDoingWhat(), dd.getLocationName());
 
-
-                obj.put("title", desc);
+                obj.put("title", "Date with " + displayName);
                 obj.put("start", DateUtil.printISODateTime(dd.getDoingWhen()));
                 obj.put("url", url);
-                obj.put("color", (dd.getDateStatusId() == DateStatus.APPROVED.getId()) ? "green" : "red");
+                obj.put("backgroundColor", (dd.getDateStatusId() == DateStatus.APPROVED.getId()) ? "green" : "red");
 
                 dates.put(obj);
             } catch (JSONException e) {

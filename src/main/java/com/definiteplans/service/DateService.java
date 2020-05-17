@@ -328,4 +328,30 @@ public class DateService {
 
         return toReturn;
     }
+
+
+    public List<ActionItem> getUpComingDatesDetail(User currUser, List<DefiniteDate> upComingDates) {
+
+        List<ActionItem> toReturn = new ArrayList<>();
+
+        for(DefiniteDate dd : upComingDates) {
+
+            int profileId = currUser.getId() == dd.getOwnerUserId() ? dd.getDateeUserId() : dd.getOwnerUserId();
+            Optional<User> found = userRepository.findById(profileId);
+            if(found.isEmpty()) {
+                continue;
+            }
+            String displayName = found.get().getDisplayName();
+
+            LocalDateTime doingWhen = dd.getDoingWhen();
+            String actionDesc = "Date with " + displayName;
+            String desc2 = dd.getDoingWhat();
+            String desc3 = dd.getLocationName();
+
+            String url = "/profiles/" + profileId;
+            toReturn.add(new ActionItem(url, actionDesc, desc2, desc3, DateUtil.printDateTime(doingWhen)));
+        }
+
+        return toReturn;
+    }
 }

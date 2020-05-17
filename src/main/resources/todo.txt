@@ -22,3 +22,5 @@ showUploadErr
 show notification somewhere when you have an unread chat message, maybe in header and in calendar view
 
 send email for chat msg
+
+adjust maxLenghths for fields when proposing a date, (35 is too short)
