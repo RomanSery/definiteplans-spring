@@ -5,15 +5,18 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.definiteplans.controller.model.CurrUserInfo;
+import com.definiteplans.dao.ChatMsgRepository;
 import com.definiteplans.dom.User;
 import com.definiteplans.service.UserService;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
     private final UserService userService;
+    private final ChatMsgRepository chatMsgRepository;
 
-    public GlobalControllerAdvice(UserService userService) {
+    public GlobalControllerAdvice(UserService userService, ChatMsgRepository chatMsgRepository) {
         this.userService = userService;
+        this.chatMsgRepository = chatMsgRepository;
     }
 
     @ModelAttribute("currUserInfo")
@@ -28,6 +31,7 @@ public class GlobalControllerAdvice {
         info.setCurrUserImg(userService.getProfileImg(currUser, true));
         info.setCurrUserId(currUser.getId());
         info.setProfileComplete(currUser.isComplete());
+        info.setNumUnreadMsgs(chatMsgRepository.getNumUnreadChatMsgs(currUser.getId()));
 
         if(!currUser.isComplete()) {
             info.setMissingFields(currUser.getMissingFields());

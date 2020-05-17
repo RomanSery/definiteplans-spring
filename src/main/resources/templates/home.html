@@ -37,14 +37,14 @@
 
     <div class="row animated fadeInDown">
         <div class="col-lg-3">
-            <div class="widget style1 lazur-bg">
+            <div class="widget style1 lazur-bg" th:if="${currUserInfo.numUnreadMsgs > 0}">
                 <div class="row">
                     <div class="col-4">
                         <i class="fa fa-envelope-o fa-5x"></i>
                     </div>
                     <div class="col-8 text-right">
                         <span> New messages </span>
-                        <h2 class="font-bold">260</h2>
+                        <h2 class="font-bold" th:text="${currUserInfo.numUnreadMsgs}">260</h2>
                     </div>
                 </div>
             </div>

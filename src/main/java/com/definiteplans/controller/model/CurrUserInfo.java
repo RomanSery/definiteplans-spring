@@ -15,6 +15,7 @@ public class CurrUserInfo implements Serializable {
     private String currUserDisplayName;
     private String currUserImg;
     private int currUserId;
+    private long numUnreadMsgs;
 
     private boolean isProfileComplete;
     private List<String> missingFields;

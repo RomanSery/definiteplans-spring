@@ -85,6 +85,7 @@ public class ChatService {
         msg.setToId(sendTo.getId());
         msg.setMessage(chatMessage);
         msg.setSentDate(DateUtil.now());
+        msg.setIsRead(false);
         chatMsgRepository.save(msg);
     }
 
