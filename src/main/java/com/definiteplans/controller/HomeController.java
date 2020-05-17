@@ -63,14 +63,14 @@ public class HomeController {
                 }
                 String displayName = found.get().getDisplayName();
                 String url = "/profiles/" + profileId;
+                String descTemplate = "Date with %s \n %s, %s";
+                String desc = String.format(descTemplate, displayName, dd.getDoingWhat(), dd.getLocationName());
 
-                obj.put("title", displayName);
+
+                obj.put("title", desc);
                 obj.put("start", DateUtil.printISODateTime(dd.getDoingWhen()));
-                //obj.put("allDay", false);
                 obj.put("url", url);
                 obj.put("color", (dd.getDateStatusId() == DateStatus.APPROVED.getId()) ? "green" : "red");
-                obj.put("desc", "TEST");
-                //obj.put("desc", dd.getDoingWhat() + " with " + displayName + "<br />" + dd.getLocationName() + "<br />" + dd.getLocationAddr() + ((dd.getDateStatusId() == DateStatus.APPROVED.getId()) ? "" : "<br /> (Pending)"));
 
                 dates.put(obj);
             } catch (JSONException e) {
