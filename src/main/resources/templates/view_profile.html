@@ -23,7 +23,9 @@
                             <li><a class="nav-link" th:classappend="${!has_active_date} ? active : ''" data-toggle="tab" href="#tab-1">Basic</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-2">More</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-3"><i class="fas fa-images fa-lg"></i></a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-4"><i class="fa fa-comments fa-lg"></i></a></li>
+                            <li>
+                                <a class="nav-link" th:classappend="${has_unread_msgs} ? active : ''" data-toggle="tab" href="#tab-4"><i class="fa fa-comments fa-lg"></i></a>
+                            </li>
                             <li th:if="${!isViewingSelf && currUserInfo.isProfileComplete()}">
                                 <a class="nav-link" th:classappend="${has_active_date} ? active : ''" data-toggle="tab" href="#tab-5"><i class="fa fa-calendar fa-lg"></i></a>
                             </li>
@@ -46,7 +48,7 @@
                                     <div th:replace="view_profile/profile_frags::pics" th:remove="tag"></div>
                                 </div>
                             </div>
-                            <div id="tab-4" class="tab-pane">
+                            <div id="tab-4" class="tab-pane" th:classappend="${has_unread_msgs} ? active : ''">
                                 <div class="panel-body" id="chatThreadDiv">
                                     <div th:replace="view_profile/profile_frags::chat" th:remove="tag"></div>
                                 </div>

@@ -9971,3 +9971,12 @@ body.md-skin {
 .browse-filter {
   margin-bottom: 5px;
 }
+
+
+.a-no-deco {
+  color: #ffffff !important; text-decoration: none !important;
+}
+
+a.a-no-deco:hover {
+  color: #ffffff !important; text-decoration: none !important;
+}

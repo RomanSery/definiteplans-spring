@@ -46,6 +46,20 @@
         </ul>
         <ul class="nav navbar-top-links navbar-right">
             <li>
+
+                <a href="/" th:if="${currUserInfo.numUnreadMsgs > 0}" class="widget style1 navy-bg a-no-deco">
+                    <div class="row vertical-align">
+                        <div class="col">
+                            <i class="fa fa-envelope-o fa-2x"></i>
+                        </div>
+                        <div class="text-right">
+                            <h2 class="font-bold" th:text="${currUserInfo.numUnreadMsgs}">10</h2>
+                        </div>
+                    </div>
+
+                </a>
+            </li>
+            <li>
                 <a href="#" th:href="@{/logout}">
                     <i class="fa fa-sign-out"></i> Log out
                 </a>

@@ -48,6 +48,15 @@
                     </div>
                 </div>
             </div>
+            <div class="ibox" th:if="${currUserInfo.numUnreadMsgs > 0}">
+                <div class="ibox-content">
+                    <div th:each="msg : ${unread_msgs}">
+                        <a th:href="${msg.url}"><div class="external-event navy-bg" th:text="${msg.desc}"></div></a>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="ibox">
                 <div class="ibox-title"><h5>Requires your action</h5></div>
                 <div class="ibox-content">

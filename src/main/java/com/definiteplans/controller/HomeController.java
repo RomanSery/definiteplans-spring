@@ -13,6 +13,7 @@ import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.enumerations.DateStatus;
+import com.definiteplans.service.ChatService;
 import com.definiteplans.service.DateService;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
@@ -26,12 +27,14 @@ public class HomeController {
     private final DefiniteDateRepository definiteDateRepository;
     private final DateService dateService;
     private final UserRepository userRepository;
+    private final ChatService chatService;
 
-    public HomeController(UserService userService, DefiniteDateRepository definiteDateRepository, DateService dateService, UserRepository userRepository) {
+    public HomeController(UserService userService, DefiniteDateRepository definiteDateRepository, DateService dateService, UserRepository userRepository, ChatService chatService) {
         this.userService = userService;
         this.definiteDateRepository = definiteDateRepository;
         this.dateService = dateService;
         this.userRepository = userRepository;
+        this.chatService = chatService;
     }
 
     @GetMapping("/")
@@ -47,6 +50,7 @@ public class HomeController {
         m.addObject("action_items", requiresAction);
         m.addObject("date_details", dateDetails);
         m.addObject("calendar_events", getCalendarEventsJSON(currUser, upComingDates));
+        m.addObject("unread_msgs", chatService.getMyUnreadMsgs(currUser));
         return m;
     }
 

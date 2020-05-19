@@ -13,6 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.UserTokenRepository;
+import com.definiteplans.dom.ChatMsg;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.UserToken;
 import com.definiteplans.util.DateUtil;
@@ -94,6 +95,28 @@ public class EmailService {
             smtpService.sendEmail("reset_pwd.fmt", subject, user.getEmail(), context);
         } catch (Exception e) {
             logger.error("failed to send reset pwd email", e);
+        }
+    }
+
+
+    public void sendNewChatMsgEmail(ChatMsg msg, User sentTo, User sentFrom) {
+
+        if(msg == null || sentTo == null || sentFrom == null) {
+            return;
+        }
+
+        try {
+            Map<String, String> context = new HashMap<>();
+            context.put("name", sentTo.getDisplayName());
+            context.put("fromName", sentFrom.getDisplayName());
+
+            UriComponents uriComponents = UriComponentsBuilder.fromPath(getBaseUrl() + "/profiles/" + sentFrom.getId()).build();
+            context.put("viewProfileUrl", uriComponents.toUriString());
+
+            String subject = sentFrom.getDisplayName() + " sent you a message!";
+            smtpService.sendEmail("new_msg.fmt", subject, sentTo.getEmail(), context);
+        } catch (Exception e) {
+            logger.error("failed sendNewChatMsgEmail", e);
         }
     }
 

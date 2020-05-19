@@ -1,0 +1,7 @@
+Hey ${name},
+
+You received a new message from ${fromName}.
+
+Take a look here:
+
+${viewProfileUrl}

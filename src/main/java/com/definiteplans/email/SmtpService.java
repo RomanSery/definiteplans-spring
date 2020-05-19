@@ -46,7 +46,7 @@ public class SmtpService {
         helper.setSubject(subject);
         helper.setFrom(from);
         helper.setTo(to);
-        helper.setText(body, true);
+        helper.setText(body, false);
 
         sender.send(message);
 

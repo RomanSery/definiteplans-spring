@@ -16,6 +16,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.controller.model.DateFeedback;
 import com.definiteplans.controller.model.DateProposal;
+import com.definiteplans.dao.ChatMsgRepository;
 import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dao.UserImageRepository;
 import com.definiteplans.dao.UserRepository;
@@ -35,8 +36,9 @@ public class ViewProfileController {
     private final DefiniteDateRepository definiteDateRepository;
     private final UserImageRepository userImageRepository;
     private final ChatService chatService;
+    private final ChatMsgRepository chatMsgRepository;
 
-    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueService enumValueService, DateService dateService, DefiniteDateRepository definiteDateRepository, UserImageRepository userImageRepository, ChatService chatService) {
+    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueService enumValueService, DateService dateService, DefiniteDateRepository definiteDateRepository, UserImageRepository userImageRepository, ChatService chatService, ChatMsgRepository chatMsgRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.enumValueService = enumValueService;
@@ -44,6 +46,7 @@ public class ViewProfileController {
         this.definiteDateRepository = definiteDateRepository;
         this.userImageRepository = userImageRepository;
         this.chatService = chatService;
+        this.chatMsgRepository = chatMsgRepository;
     }
 
     @GetMapping("/profiles/")
@@ -96,6 +99,11 @@ public class ViewProfileController {
         m.addObject("chat_thread", chatService.getChatMsgs(currUser, profile));
         m.addObject("num_remaining_msgs", chatService.getNumMsgsRemaining(currUser, profile));
         setDateAttributes(currUser, profile, m.getModelMap());
+
+        if(!isViewingSelf) {
+            chatMsgRepository.markRead(profile.getId(), currUser.getId());
+        }
+
         return m;
     }
 
@@ -134,6 +142,8 @@ public class ViewProfileController {
 
         m.addAttribute("date", activeDate != null ? new DateProposal(activeDate) : new DateProposal());
         m.addAttribute("has_active_date", activeDate != null && activeDate.getId() > 0);
+        m.addAttribute("has_unread_msgs", chatMsgRepository.getNumUnreadChatMsgs(profile.getId(), currUser.getId()) > 0);
+
         m.addAttribute("feedback", new DateFeedback(activeDate != null ? activeDate.getId() : 0));
 
         dateService.setDateAttributes(m, currUser, profile, activeDate);

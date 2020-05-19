@@ -9,11 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.definiteplans.controller.model.ActionItem;
 import com.definiteplans.controller.model.ChatRow;
 import com.definiteplans.dao.ChatMsgRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.ChatMsg;
 import com.definiteplans.dom.User;
+import com.definiteplans.email.EmailService;
 import com.definiteplans.util.DateUtil;
 
 @Service
@@ -23,13 +25,15 @@ public class ChatService {
     private final UserService userService;
     private final ChatMsgRepository chatMsgRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     public static final int MAX_CHAT_MSGS = 6;
 
-    public ChatService(UserService userService, ChatMsgRepository chatMsgRepository, UserRepository userRepository) {
+    public ChatService(UserService userService, ChatMsgRepository chatMsgRepository, UserRepository userRepository, EmailService emailService) {
         this.userService = userService;
         this.chatMsgRepository = chatMsgRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     public int getNumMsgsRemaining(User currUser, User profile) {
@@ -86,7 +90,28 @@ public class ChatService {
         msg.setMessage(chatMessage);
         msg.setSentDate(DateUtil.now());
         msg.setIsRead(false);
-        chatMsgRepository.save(msg);
+        msg = chatMsgRepository.save(msg);
+
+        emailService.sendNewChatMsgEmail(msg, sendTo, currUser);
     }
 
+
+    public List<ActionItem> getMyUnreadMsgs(User currUser) {
+
+        List<ActionItem> toReturn = new ArrayList<>();
+
+        List<ChatMsg> msgs = chatMsgRepository.getMyUnreadChatMsgs(currUser.getId());
+        for(ChatMsg msg : msgs) {
+
+            Optional<User> found = userRepository.findById(msg.getFromId());
+            if(found.isEmpty()) {
+                continue;
+            }
+            String displayName = found.get().getDisplayName();
+            String url = "/profiles/" + msg.getFromId();
+            toReturn.add(new ActionItem(url, displayName + " sent you a message!"));
+        }
+
+        return toReturn;
+    }
 }
