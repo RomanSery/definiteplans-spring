@@ -1,6 +1,6 @@
 implement remember me login
 
-delete my account - what happens if you have a date with someone and they delete their account
+delete my account - what happens if you have a date with someone and they delete their account - need to delte all my msgs, dates, imgs, etc
 
 what happens if you are chatting or have a date with someone and they block you
 
@@ -18,3 +18,5 @@ showUploadErr
 adjust maxLenghths for fields when proposing a date, (35 is too short)
 
 when you block someone, delete all the messages and dates between you two
+
+add validations (length, maybe other things) to user displayname (first name)

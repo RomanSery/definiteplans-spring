@@ -296,6 +296,9 @@ definitePlansScripts.lg_profile_gallery = null;
 definitePlansScripts.timestamp = Date.now();
 
 $(document).ready(function() {
+
+    $('#deleteAccountForm').parsley();
+
     definitePlansScripts.initLg();
     definitePlansScripts.basicInfo();
     definitePlansScripts.initImageUpload();

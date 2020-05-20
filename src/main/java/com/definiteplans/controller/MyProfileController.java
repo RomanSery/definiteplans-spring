@@ -148,6 +148,21 @@ public class MyProfileController {
     }
 
 
+    @PostMapping("/delete/account")
+    public @ResponseBody
+    AjaxResponse deleteMyAccount(@ModelAttribute("deleteAccountConfirm") Boolean deleteAccountConfirm, @ModelAttribute("mypassword") String myPwd,
+                             BindingResult bindingResult) {
+//        ChatController.MsgValidator.validate(chatMessage, profileId, bindingResult);
+//        if (bindingResult.hasErrors()) {
+//            return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
+//        }
+//
+//        chatService.sendChatMsg(profileId, chatMessage);
+        return AjaxResponse.success("Sent");
+    }
+
+
+
     private static class ProfileValidator {
         private static void validateBasicInfo(User obj, Errors e, UserRepository userRepository, ZipCodeRepository zipCodeRepository) {
             ValidationUtils.rejectIfEmpty(e, "displayName", "", "First Name is required");
