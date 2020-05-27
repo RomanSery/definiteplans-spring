@@ -1,7 +1,5 @@
 implement remember me login
 
-delete my account - what happens if you have a date with someone and they delete their account - need to delte all my msgs, dates, imgs, etc
-
 what happens if you are chatting or have a date with someone and they block you
 
 update loading buttons the same way i do for block user on view profile page
