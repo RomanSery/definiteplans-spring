@@ -20,3 +20,5 @@ adjust maxLenghths for fields when proposing a date, (35 is too short)
 when you block someone, delete all the messages and dates between you two
 
 add validations (length, maybe other things) to user displayname (first name)
+
+secuirty rules for firebase storage

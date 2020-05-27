@@ -291,14 +291,41 @@ definitePlansScripts.refreshBlockedList = function () {
 };
 
 
+definitePlansScripts.deleteAccount = function () {
+
+    $('#deleteAccountForm').parsley();
+
+    $("#deleteAccountForm").submit(function (event) {
+        $.ajax({
+            type: "POST", url: '/me/delete/account', data: $('#deleteAccountForm').serialize(),
+            beforeSend: function (xhr) {
+                var token = $('#_csrf').attr('content');
+                var header = $('#_csrf_header').attr('content');
+                xhr.setRequestHeader(header, token);
+            },
+            error: function () {
+                alert('Sorry, there was some error. Please try again.');
+            },
+            success: function (data) {
+                if(data.status == "ERR") {
+                    $('#deleteAccountResult').show();
+                    $('#deleteAccountResult').html(data.msg);
+                } else {
+                    window.location = '/login?deleted=1';
+                }
+            }
+        });
+        return false;
+    });
+};
+
 
 definitePlansScripts.lg_profile_gallery = null;
 definitePlansScripts.timestamp = Date.now();
 
 $(document).ready(function() {
 
-    $('#deleteAccountForm').parsley();
-
+    definitePlansScripts.deleteAccount();
     definitePlansScripts.initLg();
     definitePlansScripts.basicInfo();
     definitePlansScripts.initImageUpload();
@@ -308,8 +335,8 @@ $(document).ready(function() {
 
 
 // Your web app's Firebase configuration
-var firebaseConfig = {
-    apiKey: "AIzaSyBJxI3c-hcRfiEdaNHkqhTkeZovbR1RoLw",
+const firebaseConfig = {
+    apiKey: "AIzaSyD04U3zDvt8bVsQQIVvlQO5Gok1TRX5wgY",
     authDomain: "ultra-compound-851.firebaseapp.com",
     databaseURL: "https://ultra-compound-851.firebaseio.com",
     projectId: "ultra-compound-851",
@@ -318,6 +345,7 @@ var firebaseConfig = {
     appId: "1:947515066542:web:413c40377db4022467453f",
     measurementId: "G-8LRFEF2NGM"
 };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();

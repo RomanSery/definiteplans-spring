@@ -18,6 +18,12 @@
             Thanks for confirming your email, please continue to login.
         </div>
 
+        <div class="alert alert-success" th:if="${was_deleted}">
+            Your account and all of your data has been deleted.  Come back some time!
+        </div>
+
+
+
         <div th:if="${login_error != null}" class="alert alert-danger" id="login-error-div">
             [[${login_error}]]
             <a th:if="${login_error_type == 3}" href="javascript:;" id="resend-confirm-email" th:email="${email}">Re-send validation email</a>

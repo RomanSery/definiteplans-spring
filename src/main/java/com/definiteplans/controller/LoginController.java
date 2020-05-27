@@ -44,6 +44,7 @@ public class LoginController {
     public ModelAndView login(@RequestParam(required = false, name = "reset") Integer reset,
                               @RequestParam(required = false, name = "confirmed") Integer confirmed,
                               @RequestParam(required = false, name = "email") String email,
+                              @RequestParam(required = false, name = "deleted") Integer deleted,
                               @RequestParam(required = false, name = "loginerror") Integer loginerror) {
 
         ModelAndView m = new ModelAndView("login");
@@ -60,6 +61,7 @@ public class LoginController {
         m.addObject("email", email);
         m.addObject("was_pwd_reset", reset != null && reset == 1);
         m.addObject("was_confirmed", confirmed != null && confirmed == 1);
+        m.addObject("was_deleted", deleted != null && deleted == 1);
 
         m.addObject("fbLoginUrl", OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/facebook");
         m.addObject("googleLoginUrl", OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/google");

@@ -28,7 +28,25 @@ CREATE TABLE `blocked_user` (
   `blocked_user_id` int(10) unsigned NOT NULL,
   `blocked_date` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `chat_msg`
+--
+
+DROP TABLE IF EXISTS `chat_msg`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `chat_msg` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `from_id` int(11) NOT NULL,
+  `to_id` int(11) NOT NULL,
+  `sent_date` datetime NOT NULL,
+  `message` text NOT NULL,
+  `is_read` bit(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +60,7 @@ CREATE TABLE `definite_date` (
   `date_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `doing_what` varchar(45) NOT NULL,
   `location_name` varchar(45) NOT NULL,
-  `doing_when_date` datetime NOT NULL,
+  `doing_when` datetime NOT NULL,
   `owner_id` int(10) unsigned NOT NULL,
   `datee_id` int(10) unsigned NOT NULL,
   `created_date` datetime NOT NULL,
@@ -64,10 +82,8 @@ CREATE TABLE `definite_date` (
   `greeting_msg` varchar(300) NOT NULL,
   `owner_no_show` bit(1) DEFAULT NULL,
   `datee_no_show` bit(1) DEFAULT NULL,
-  `timezone` varchar(45) NOT NULL,
-  `doing_when_time` datetime DEFAULT NULL,
   PRIMARY KEY (`date_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,6 +102,38 @@ CREATE TABLE `enum_value` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `fb_user`
+--
+
+DROP TABLE IF EXISTS `fb_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `fb_user` (
+  `user_id` int(11) NOT NULL,
+  `fb_id` varchar(100) NOT NULL,
+  `access_token` text,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `google_user`
+--
+
+DROP TABLE IF EXISTS `google_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `google_user` (
+  `user_id` int(11) NOT NULL,
+  `sub_id` varchar(100) NOT NULL,
+  `access_token` text,
+  `id_token` text,
+  `img_url` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `sent_email`
 --
 
@@ -100,7 +148,7 @@ CREATE TABLE `sent_email` (
   `to_addr` varchar(200) DEFAULT NULL,
   `sent_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,21 +184,21 @@ CREATE TABLE `user` (
   `dob` datetime DEFAULT NULL,
   `about_me` varchar(300) DEFAULT NULL,
   `interests` varchar(300) DEFAULT NULL,
-  `gender` smallint(5) unsigned DEFAULT NULL,
+  `gender` smallint(5) unsigned NOT NULL,
   `languages` varchar(45) DEFAULT NULL,
   `state` char(2) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
   `neighborhood` varchar(45) DEFAULT NULL,
-  `country` smallint(5) unsigned DEFAULT NULL,
-  `ethnicity` smallint(5) unsigned DEFAULT NULL,
-  `height` tinyint(3) unsigned DEFAULT NULL,
-  `smokes` smallint(5) unsigned DEFAULT NULL,
-  `religion` smallint(5) unsigned DEFAULT NULL,
-  `education` smallint(5) unsigned DEFAULT NULL,
-  `income` smallint(5) unsigned DEFAULT NULL,
-  `kids` smallint(5) unsigned DEFAULT NULL,
-  `wants_kids` smallint(5) unsigned DEFAULT NULL,
-  `marital_status` smallint(5) unsigned DEFAULT NULL,
+  `country` smallint(5) unsigned NOT NULL,
+  `ethnicity` smallint(5) unsigned NOT NULL,
+  `height` tinyint(3) unsigned NOT NULL,
+  `smokes` smallint(5) unsigned NOT NULL,
+  `religion` smallint(5) unsigned NOT NULL,
+  `education` smallint(5) unsigned NOT NULL,
+  `income` smallint(5) unsigned NOT NULL,
+  `kids` smallint(5) unsigned NOT NULL,
+  `wants_kids` smallint(5) unsigned NOT NULL,
+  `marital_status` smallint(5) unsigned NOT NULL,
   `last_login_date` datetime DEFAULT NULL,
   `send_notifications` bit(1) DEFAULT NULL,
   `notifications_email` varchar(200) DEFAULT NULL,
@@ -161,9 +209,25 @@ CREATE TABLE `user` (
   `full_img_url` varchar(500) DEFAULT NULL,
   `thumb_img_url` varchar(500) DEFAULT NULL,
   `is_complete` bit(1) NOT NULL,
+  `fb_id` varchar(100) DEFAULT NULL,
+  `google_sub_id` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_email`
+--
+
+DROP TABLE IF EXISTS `user_email`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `user_email` (
+  `email` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +247,7 @@ CREATE TABLE `user_image` (
   `timestamp` varchar(45) DEFAULT NULL,
   `creation_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -200,7 +264,7 @@ CREATE TABLE `user_token` (
   `creation_date` datetime NOT NULL,
   `expiration` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,72 +292,28 @@ CREATE TABLE `zip_code` (
 --
 -- Dumping routines for database 'definiteplans'
 --
-/*!50003 DROP PROCEDURE IF EXISTS `Register` */;
+/*!50003 DROP PROCEDURE IF EXISTS `DELETE_ACCOUNT` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Register`(
-IN user_status_id tinyint(4),
-IN email varchar(200),
-IN display_name varchar(200),
-IN pwd varchar(200),
-IN salt varchar(200),
-IN postalCode varchar(45),
-IN facebook_id varchar(45),
-IN facebook_account bit(1),
-IN google_id varchar(45),
-IN google_account bit(1),
-IN dob datetime,
-IN gender SMALLINT(5),
-IN city varchar(45),
-IN state char(2),
-OUT saved_user_id INT,
-OUT err_msg TEXT
-)
-proc_label:BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DELETE_ACCOUNT`(IN user_to_delete INT)
+BEGIN
 
-DECLARE exit handler for sqlexception
-BEGIN      		
-	GET DIAGNOSTICS CONDITION 1 err_msg = MESSAGE_TEXT;
-	set saved_user_id = -1;
-	rollback;
-END;
-
-
-START TRANSACTION;
-
-IF EXISTS(select * from user u where u.email = email)
-THEN	
-	set saved_user_id = -2;
-	rollback;
-	LEAVE proc_label;
-END IF;
-
-insert into user 
-(
-`user_status_id`, `email`, `display_name`, `pwd`, `salt`,
-`postalCode`, `facebook_id`, `facebook_account`,
-`google_id`, `google_account`,
-`create_date`,`updated_date`,`dob`,`gender`,
-`city`, `state`,`send_notifications`,`notifications_email`,`age_min`,`age_max`) 
-values 
-(
-user_status_id, email, display_name, pwd, salt,
-postalCode, facebook_id, facebook_account,
-google_id, google_account,
-sysdate(),sysdate(), dob, gender,
-city, state, 1, email, 18, 99
-);
-
-SET saved_user_id = LAST_INSERT_ID();
-
-COMMIT;
+    DELETE from blocked_user where user_id = user_to_delete;
+	DELETE from chat_msg where from_id = user_to_delete or to_id = user_to_delete;
+    DELETE from definite_date where owner_id = user_to_delete or datee_id = user_to_delete;
+	DELETE from fb_user where user_id = user_to_delete;
+	DELETE from google_user where user_id = user_to_delete;
+	DELETE from user where id = user_to_delete;
+	DELETE from user_email where user_id = user_to_delete;
+    DELETE from user_image where user_id = user_to_delete;
+    DELETE from user_token where user_id = user_to_delete;
 
 END ;;
 DELIMITER ;
@@ -311,4 +331,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-30 17:04:47
+-- Dump completed on 2020-05-24 10:16:45

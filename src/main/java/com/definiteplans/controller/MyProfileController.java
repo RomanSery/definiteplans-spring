@@ -2,9 +2,13 @@ package com.definiteplans.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -61,6 +65,7 @@ public class MyProfileController {
         m.addObject("user_pics", userImageRepository.findByUserId(currUser.getId()));
         m.addObject("blocked_users", userService.getBlockedUserRows());
         m.addObject("was_pwd_updated", pwdUpdated != null && pwdUpdated == 1);
+        m.addObject("hasPwd", currUser.hasPwd());
         return m;
     }
 
@@ -150,15 +155,19 @@ public class MyProfileController {
 
     @PostMapping("/delete/account")
     public @ResponseBody
-    AjaxResponse deleteMyAccount(@ModelAttribute("deleteAccountConfirm") Boolean deleteAccountConfirm, @ModelAttribute("mypassword") String myPwd,
-                             BindingResult bindingResult) {
-//        ChatController.MsgValidator.validate(chatMessage, profileId, bindingResult);
-//        if (bindingResult.hasErrors()) {
-//            return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
-//        }
-//
-//        chatService.sendChatMsg(profileId, chatMessage);
-        return AjaxResponse.success("Sent");
+    AjaxResponse deleteMyAccount(HttpServletRequest request, @ModelAttribute("deleteAccountConfirm") Boolean deleteAccountConfirm,
+                                 @ModelAttribute("mypassword") String myPwd, BindingResult bindingResult) {
+        User currUser = userService.getCurrentUser();
+        ProfileValidator.validateDeleteAccount(currUser, bindingResult, deleteAccountConfirm, myPwd, userService);
+        if (bindingResult.hasErrors()) {
+            return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
+        }
+
+        userService.deleteAccount();
+
+        new SecurityContextLogoutHandler().logout(request, null, null);
+
+        return AjaxResponse.success("Done");
     }
 
 
@@ -179,7 +188,18 @@ public class MyProfileController {
             }
             if (zipCodeRepository.findById(obj.getPostalCode()).isEmpty()) {
                 e.reject("validZip", "Please enter a valid zip code.");
-                return;
+            }
+        }
+
+        private static void validateDeleteAccount(User currUser, Errors e, Boolean deleteAccountConfirm, String myPwd, UserService userService) {
+            if (BooleanUtils.isNotTrue(deleteAccountConfirm)) {
+                e.reject("confirm", "Confirm that you want to delete your account.");
+            }
+            if (currUser.hasPwd() && StringUtils.isBlank(myPwd)) {
+                e.reject("invalidPwd", "Invalid password. Please try again");
+            }
+            if (currUser.hasPwd() && !userService.isCorrectPwd(myPwd, currUser)) {
+                e.reject("invalidPwd", "Invalid password. Please try again");
             }
         }
     }

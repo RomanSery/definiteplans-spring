@@ -1,4 +1,6 @@
-<form id="settingsForm" th:fragment="settings" th:action="@{/me/settings}" th:object="${user}" method="POST" data-parsley-validate>
+<div th:fragment="settings" th:remove="tag">
+
+<form id="settingsForm" th:action="@{/me/settings}" th:object="${user}" method="POST" data-parsley-validate>
 
     <br>
 
@@ -44,53 +46,53 @@
 
     <hr>
 
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAccountModal">
+    <button type="button" class="btn btn-danger delete-account-modal-btn" data-toggle="modal" data-target="#deleteAccountModal">
         Delete my account
     </button>
 
-
-
-    <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="deleteAccountForm" th:action="@{/me/delete/account}" method="POST" data-parsley-validate>
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Delete my account</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-    
-                        <div class="form-row">
-                            <div class="form-group col">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="deleteAccountConfirm" name="deleteAccountConfirm" >
-                                    <label class="custom-control-label" for="deleteAccountConfirm">Yes, I wish to delete my account.</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="currpwd" class="col-sm-2 col-form-label">Enter Password</label>
-                            <div class="col">
-                                <input type="password" class="form-control" id="mypassword" name="mypassword" required data-parsley-minlength="8">
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Canel</button>
-                        <button type="submit" class="btn btn-danger">Delete my account</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
 </form>
 
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="deleteAccountForm" method="POST" data-parsley-validate>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete my account</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="alert alert-danger" role="alert" id="deleteAccountResult" style="display:none;"></div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="deleteAccountConfirm" name="deleteAccountConfirm" required>
+                                <label class="custom-control-label" for="deleteAccountConfirm">Yes, I wish to delete my account.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" th:if="${hasPwd}">
+                        <label for="currpwd" class="col-sm-2 col-form-label">Enter Password</label>
+                        <div class="col">
+                            <input type="password" class="form-control" id="mypassword" name="mypassword" required data-parsley-minlength="8">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete my account</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+</div>
 
 <div th:fragment="blocked-list-frag" th:remove="tag">
 

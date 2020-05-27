@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.ActionItem;
 import com.definiteplans.dao.DefiniteDateRepository;
@@ -40,6 +41,9 @@ public class HomeController {
     @GetMapping("/")
     public ModelAndView homePage(){
         User currUser = userService.getCurrentUser();
+        if(currUser == null) {
+            return new ModelAndView(new RedirectView("/login"));
+        }
 
         ModelAndView m = new ModelAndView("home");
 

@@ -398,4 +398,9 @@ public class UserService {
         return StringUtils.join(languages, ",");
     }
 
+
+    public void deleteAccount() {
+        int currUserId = getCurrentUserId();
+        userRepository.deleteAccount(currUserId);
+    }
 }
