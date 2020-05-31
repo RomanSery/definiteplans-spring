@@ -90,6 +90,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().anyRequest().authenticated();
 
+
+
         // Config for Login Form
         http.authorizeRequests().and().formLogin()
                 .loginPage("/login")
@@ -101,7 +103,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Config for Logout Page
                 .and().logout().invalidateHttpSession(true).clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout");
+                .logoutSuccessUrl("/login?logout")
+        .and().rememberMe().rememberMeParameter("remember").userDetailsService(dpUserDetailsService);
 
         http.oauth2Client();
         http.oauth2Login().userInfoEndpoint()

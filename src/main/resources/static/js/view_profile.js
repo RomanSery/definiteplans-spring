@@ -30,53 +30,59 @@ definitePlansScripts.dateBtns = function () {
     $('#proposePlanBtn').click(function () {
         const profileId = $(this).attr('profile-id');
         if(confirm('Are you sure you want to propose this date?')) {
-            $.ajax({
-                type: "POST", url: '/dates/propose', data: $('#definiteDateForm').serialize(),
-                beforeSend: function (xhr) {
-                    definitePlansScripts.makeBtnLoading('proposePlanBtn');
+            definitePlansScripts.dateFormParsley.validate();
+            if(definitePlansScripts.dateFormParsley.isValid() == true) {
+                $.ajax({
+                    type: "POST", url: '/dates/propose', data: $('#definiteDateForm').serialize(),
+                    beforeSend: function (xhr) {
+                        definitePlansScripts.makeBtnLoading('proposePlanBtn');
 
-                    var token = $('#_csrf').attr('content');
-                    var header = $('#_csrf_header').attr('content');
-                    xhr.setRequestHeader(header, token);
-                },
-                error: function () {
-                    //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
-                },
-                success: function (data) {
-                    if(data.status == "ERR") {
-                        $('#definiteDateFormErrors').show();
-                        $('#definiteDateFormErrors').html(data.msg);
+                        var token = $('#_csrf').attr('content');
+                        var header = $('#_csrf_header').attr('content');
+                        xhr.setRequestHeader(header, token);
+                    },
+                    error: function () {
+                        //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                    },
+                    success: function (data) {
+                        if(data.status == "ERR") {
+                            $('#definiteDateFormErrors').show();
+                            $('#definiteDateFormErrors').html(data.msg);
+                        }
+                        definitePlansScripts.stopBtnLoading('proposePlanBtn');
+                        definitePlansScripts.refreshMakePlans(profileId);
                     }
-                    definitePlansScripts.stopBtnLoading('proposePlanBtn');
-                    definitePlansScripts.refreshMakePlans(profileId);
-                }
-            });
+                });
+            }
         }
     });
 
     $('#proposeChange').click(function () {
         const profileId = $(this).attr('profile-id');
         if(confirm('Are you sure you want to change this date?')) {
-            $.ajax({
-                type: "POST", url: '/dates/change', data: $('#definiteDateForm').serialize(),
-                beforeSend: function (xhr) {
-                    definitePlansScripts.makeBtnLoading('proposeChange');
-                    var token = $('#_csrf').attr('content');
-                    var header = $('#_csrf_header').attr('content');
-                    xhr.setRequestHeader(header, token);
-                },
-                error: function () {
-                    //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
-                },
-                success: function (data) {
-                    if(data.status == "ERR") {
-                        $('#definiteDateFormErrors').show();
-                        $('#definiteDateFormErrors').html(data.msg);
+            definitePlansScripts.dateFormParsley.validate();
+            if(definitePlansScripts.dateFormParsley.isValid() == true) {
+                $.ajax({
+                    type: "POST", url: '/dates/change', data: $('#definiteDateForm').serialize(),
+                    beforeSend: function (xhr) {
+                        definitePlansScripts.makeBtnLoading('proposeChange');
+                        var token = $('#_csrf').attr('content');
+                        var header = $('#_csrf_header').attr('content');
+                        xhr.setRequestHeader(header, token);
+                    },
+                    error: function () {
+                        //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                    },
+                    success: function (data) {
+                        if(data.status == "ERR") {
+                            $('#definiteDateFormErrors').show();
+                            $('#definiteDateFormErrors').html(data.msg);
+                        }
+                        definitePlansScripts.stopBtnLoading('proposeChange');
+                        definitePlansScripts.refreshMakePlans(profileId);
                     }
-                    definitePlansScripts.stopBtnLoading('proposeChange');
-                    definitePlansScripts.refreshMakePlans(profileId);
-                }
-            });
+                });
+            }
         }
     });
 
@@ -258,6 +264,7 @@ $(document).ready(function() {
     });
 
     $('#chatForm').parsley();
+    definitePlansScripts.dateFormParsley = $('#definiteDateForm').parsley();
 
     $("#greetingMsg").limiter(200, $('#greetingMsgChars'));
     $("#chatMessage").limiter(500, $('#chatMsgChars'));

@@ -1,6 +1,6 @@
 implement remember me login
 
-what happens if you are chatting or have a date with someone and they block you
+
 
 update loading buttons the same way i do for block user on view profile page
 
@@ -12,10 +12,6 @@ finish all emails related to dates, accepted, declined, changed, etc, reminders
 handle user's timezone when displaying dates
 
 showUploadErr
-
-adjust maxLenghths for fields when proposing a date, (35 is too short)
-
-when you block someone, delete all the messages and dates between you two
 
 add validations (length, maybe other things) to user displayname (first name)
 

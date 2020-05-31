@@ -245,6 +245,18 @@ public class DateService {
     }
 
 
+    public void onBlockUser(int currUserId, int userToBlock) {
+        DefiniteDate dd = definiteDateRepository.getActiveDate(currUserId, userToBlock);
+        if (dd != null) {
+            boolean isOwner = (currUserId == dd.getOwnerUserId());
+            dd.setParticipantLastUpdate(isOwner, DateUtil.now());
+            dd.setDateStatusId(DateStatus.DELETED.getId());
+            dd.setParticipantStatusId(isOwner, DateParticipantStatus.DECLINED.getId());
+            definiteDateRepository.save(dd);
+            //dateLetterManager.onDateUpdated(dd, DatePanel.SubmitType.DECLINE, isOwner);
+        }
+    }
+
 
     public boolean submitDateFeedback(User currUser, DateFeedback feedback, DefiniteDate dd) {
 

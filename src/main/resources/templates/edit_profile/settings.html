@@ -33,18 +33,20 @@
         </div>
     </div>
 
-    <div id="blocked-users-list">
-        <div th:replace="edit_profile/settings::blocked-list-frag"></div>
-    </div>
-
     <div class="form-row">
         <div class="form-group col-md-4">
             <button class="btn btn-primary btn-lg" type="submit">Save changes</button>
         </div>
     </div>
 
+    <hr/>
 
-    <hr>
+    <div id="blocked-users-list">
+        <div th:replace="edit_profile/settings::blocked-list-frag"></div>
+    </div>
+
+    <br>
+    <hr/>
 
     <button type="button" class="btn btn-danger delete-account-modal-btn" data-toggle="modal" data-target="#deleteAccountModal">
         Delete my account

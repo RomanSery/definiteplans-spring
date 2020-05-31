@@ -47,10 +47,11 @@ public class UserService {
     private final EmailService emailService;
     private final UserTokenRepository userTokenRepository;
     private final UserEmailRepository userEmailRepository;
+    private final DateService dateService;
 
     public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
                        EnumValueService enumValueService, ZipCodeRepository zipCodeRepository, BlockedUserRepository blockedUserRepository,
-                       EmailService emailService, UserTokenRepository userTokenRepository, UserEmailRepository userEmailRepository) {
+                       EmailService emailService, UserTokenRepository userTokenRepository, UserEmailRepository userEmailRepository, DateService dateService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.enumValueService = enumValueService;
@@ -59,6 +60,7 @@ public class UserService {
         this.emailService = emailService;
         this.userTokenRepository = userTokenRepository;
         this.userEmailRepository = userEmailRepository;
+        this.dateService = dateService;
     }
 
     public boolean changeUserPassword(final User user, final PwdUpdate pwdUpdate) {
@@ -337,17 +339,7 @@ public class UserService {
         blocked.setBlockedDate(DateUtil.now());
         blockedUserRepository.save(blocked);
 
-        //TODO
-//        DefiniteDate dd = this.dateService.getActiveDate(currUser, userToBlock);
-//        if (dd != null) {
-//            boolean isOwner = (currUser.getId() == dd.getOwnerUserId());
-//            dd.setParticipantLastUpdate(isOwner, DateUtil.getCurrentServerTime());
-//            dd.setDateStatusId(DateStatus.DELETED.getId());
-//            dd.setParticipantStatusId(isOwner, DateParticipantStatus.DECLINED.getId());
-//            this.dateService.save(dd);
-//            this.dateLetterManager.onDateUpdated(dd, DatePanel.SubmitType.DECLINE, isOwner);
-//        }
-
+        dateService.onBlockUser(currUserId, userId);
         return true;
     }
 
