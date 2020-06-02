@@ -323,23 +323,23 @@ public class UserService {
 
     public boolean blockUser(int userId) {
 
-        int currUserId = getCurrentUserId();
-        if(currUserId <= 0 || userId <= 0) {
+        User currUser = getCurrentUser();
+        if(currUser == null || userId <= 0) {
             return false;
         }
 
-        if(blockedUserRepository.countByUserIdAndBlockedUserId(currUserId, userId) > 0) {
+        if(blockedUserRepository.countByUserIdAndBlockedUserId(currUser.getId(), userId) > 0) {
             //already blocked
             return true;
         }
 
         BlockedUser blocked = new BlockedUser();
-        blocked.setUserId(currUserId);
+        blocked.setUserId(currUser.getId());
         blocked.setBlockedUserId(userId);
         blocked.setBlockedDate(DateUtil.now());
         blockedUserRepository.save(blocked);
 
-        dateService.onBlockUser(currUserId, userId);
+        dateService.onBlockUser(currUser, userId);
         return true;
     }
 

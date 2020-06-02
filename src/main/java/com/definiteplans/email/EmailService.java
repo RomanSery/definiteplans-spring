@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.definiteplans.dao.UnsubscriberRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.UserTokenRepository;
 import com.definiteplans.dom.ChatMsg;
+import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.UserToken;
+import com.definiteplans.dom.enumerations.SubmitType;
 import com.definiteplans.util.DateUtil;
 
 @Service
@@ -24,14 +28,16 @@ public class EmailService {
     private final SmtpService smtpService;
     private final UserTokenRepository userTokenRepository;
     private final UserRepository userRepository;
+    private final UnsubscriberRepository unsubscriberRepository;
 
-    public EmailService(SmtpService smtpService, UserTokenRepository userTokenRepository, UserRepository userRepository) {
+    public EmailService(SmtpService smtpService, UserTokenRepository userTokenRepository, UserRepository userRepository, UnsubscriberRepository unsubscriberRepository) {
         this.smtpService = smtpService;
         this.userTokenRepository = userTokenRepository;
         this.userRepository = userRepository;
+        this.unsubscriberRepository = unsubscriberRepository;
     }
 
-    private String getBaseUrl() {
+    public static String getBaseUrl() {
         return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
     }
 
@@ -105,6 +111,11 @@ public class EmailService {
             return;
         }
 
+        if(unsubscriberRepository.findById(sentTo.getEmail()).isPresent()) {
+            logger.info("skipping email due to unsub: {}", sentTo.getEmail());
+            return;
+        }
+
         try {
             Map<String, String> context = new HashMap<>();
             context.put("name", sentTo.getDisplayName());
@@ -119,5 +130,27 @@ public class EmailService {
             logger.error("failed sendNewChatMsgEmail", e);
         }
     }
+
+
+
+    public void sendEmail(String template, Map<String, String> context, String subject, String toEmail) {
+        if(StringUtils.isBlank(template) || StringUtils.isBlank(subject) || StringUtils.isBlank(toEmail)) {
+            return;
+        }
+
+        if(unsubscriberRepository.findById(toEmail).isPresent()) {
+            logger.info("skipping email due to unsub: {}", toEmail);
+            return;
+        }
+
+        try {
+            smtpService.sendEmail(template, subject, toEmail, context);
+        } catch (Exception e) {
+            logger.error("failed sendEmail template={}, subject={}", template, subject, e);
+            e.printStackTrace();
+        }
+
+    }
+
 
 }

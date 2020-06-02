@@ -1,17 +1,17 @@
-$toName,
+${toName},
 
-$otherPersonName has declined the following date:  
+${otherPersonName} has declined the following date:
 
-"$greeting"
+"${greeting}"
 
-What: $what
+What: ${what}
 
 Where: 
-$whereName
-$whereLocation
+${whereName}
+${whereLocation}
 
 When:
-$dateWhen
+${dateWhen}
 
 At least you won't be wasting each others time!  Keep making more dates.
 You have to get through the no's to get to the yeses,  good luck!

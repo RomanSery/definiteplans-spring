@@ -1,20 +1,20 @@
-$toName,
+${toName},
 
-$instructions
+${otherPersonNameMsg}
 
-"$greeting"
+"${greeting}"
 
-What: $what
+What: ${what}
 
 Where: 
-$whereName
-$whereLocation
+${whereName}
+${whereLocation}
 
 When:
-$dateWhen
+${dateWhen}
 
-Use the below url to view this date:
-$viewProfileUrl
+Use the below url to respond:
+${viewProfileUrl}
 
 
 General Tips:

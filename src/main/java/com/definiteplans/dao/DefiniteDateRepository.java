@@ -23,9 +23,6 @@ public interface DefiniteDateRepository extends JpaRepository<DefiniteDate, Inte
     @Query("FROM DefiniteDate where dateStatusId not in (3,4) and (ownerUserId = :userId or dateeUserId = :userId)")
     List<DefiniteDate> getMyUpcomingDates(@Param("userId") int userId);
 
-    @Query("FROM DefiniteDate where emailReminderSent = 0 and dateStatusId = 2")
-    List<DefiniteDate> getDatesToSendReminderFor();
-
     @Query("FROM DefiniteDate where postDateEmailSent = 0 and dateStatusId = 2")
     List<DefiniteDate> getDatesToSendFeedbackReminderFor();
 }

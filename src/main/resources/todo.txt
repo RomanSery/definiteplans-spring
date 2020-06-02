@@ -1,7 +1,5 @@
 implement remember me login
 
-
-
 update loading buttons the same way i do for block user on view profile page
 
 add security checks for dateService, make sure user updating date has access to it.
@@ -13,6 +11,8 @@ handle user's timezone when displaying dates
 
 showUploadErr
 
-add validations (length, maybe other things) to user displayname (first name)
-
 secuirty rules for firebase storage
+
+add unsub link to emails
+
+when giving post-date feedback, form doesnt update correctly. (feedback form doesnt dissappear)

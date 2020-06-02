@@ -21,8 +21,8 @@
             </ul>
 
             <div class="form-group">
-                <input class="form-control" placeholder="First name" type="text" th:field="*{displayName}"
-                       required data-parsley-length="[2, 15]">
+                <input class="form-control" placeholder="Display Name" type="text" th:field="*{displayName}"
+                       required data-parsley-length="[5, 15]">
             </div>
             <div class="form-group">
                 <input class="form-control" data-mask="99/99/9999" placeholder="Date of birth (mm/dd/yyyy)" type="text" th:field="*{dob}" required>

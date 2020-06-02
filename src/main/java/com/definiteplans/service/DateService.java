@@ -3,12 +3,16 @@ package com.definiteplans.service;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.definiteplans.controller.model.ActionItem;
 import com.definiteplans.controller.model.DateFeedback;
@@ -21,6 +25,7 @@ import com.definiteplans.dom.User;
 import com.definiteplans.dom.enumerations.DateParticipantStatus;
 import com.definiteplans.dom.enumerations.DateStatus;
 import com.definiteplans.dom.enumerations.SubmitType;
+import com.definiteplans.email.EmailService;
 import com.definiteplans.util.DateUtil;
 
 import static com.definiteplans.dom.enumerations.DateParticipantStatus.NEEDS_TO_REPLY;
@@ -30,10 +35,12 @@ import static com.definiteplans.dom.enumerations.DateParticipantStatus.WAITING_F
 public class DateService {
     private final DefiniteDateRepository definiteDateRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
-    public DateService(DefiniteDateRepository definiteDateRepository, UserRepository userRepository) {
+    public DateService(DefiniteDateRepository definiteDateRepository, UserRepository userRepository, EmailService emailService) {
         this.definiteDateRepository = definiteDateRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     public DefiniteDate createNew(User currUser, User profile) {
@@ -190,7 +197,7 @@ public class DateService {
 
         definiteDateRepository.save(date);
 
-        //dateLetterManager.onDateUpdated(dd, type, DatePanel.this.isOwner(dd));
+        onDateUpdated(date, currUser, SubmitType.PROPOSE_NEW_PLAN);
 
         return true;
     }
@@ -239,21 +246,21 @@ public class DateService {
 
         definiteDateRepository.save(date);
 
-        //dateLetterManager.onDateUpdated(dd, type, DatePanel.this.isOwner(dd));
+        onDateUpdated(date, currUser, type);
 
         return true;
     }
 
 
-    public void onBlockUser(int currUserId, int userToBlock) {
-        DefiniteDate dd = definiteDateRepository.getActiveDate(currUserId, userToBlock);
+    public void onBlockUser(User currUser, int userToBlock) {
+        DefiniteDate dd = definiteDateRepository.getActiveDate(currUser.getId(), userToBlock);
         if (dd != null) {
-            boolean isOwner = (currUserId == dd.getOwnerUserId());
+            boolean isOwner = (currUser.getId() == dd.getOwnerUserId());
             dd.setParticipantLastUpdate(isOwner, DateUtil.now());
             dd.setDateStatusId(DateStatus.DELETED.getId());
             dd.setParticipantStatusId(isOwner, DateParticipantStatus.DECLINED.getId());
             definiteDateRepository.save(dd);
-            //dateLetterManager.onDateUpdated(dd, DatePanel.SubmitType.DECLINE, isOwner);
+            onDateUpdated(dd, currUser, SubmitType.DECLINE);
         }
     }
 
@@ -297,7 +304,7 @@ public class DateService {
             }
         }
 
-        //dateLetterManager.onSubmittedPostDateFeedback(dd, isOwner(dd));
+        onSubmittedPostDateFeedback(dd, currUser);
         return true;
     }
 
@@ -365,5 +372,98 @@ public class DateService {
         }
 
         return toReturn;
+    }
+
+
+
+
+    private User getToUser(DefiniteDate date, boolean isOwner) {
+        Optional<User> found;
+        if (isOwner) {
+            found = userRepository.findById(date.getDateeUserId());
+        } else {
+            found = userRepository.findById(date.getOwnerUserId());
+        }
+        return found.isPresent() ? found.get() : null;
+    }
+    private User getOtherUser(DefiniteDate date, boolean isOwner) {
+        Optional<User> found;
+        if (isOwner) {
+            found = userRepository.findById(date.getOwnerUserId());
+        } else {
+            found = userRepository.findById(date.getDateeUserId());
+        }
+        return found.isPresent() ? found.get() : null;
+    }
+
+
+    private void onSubmittedPostDateFeedback(DefiniteDate date, User currUser) {
+
+        boolean isOwner = (currUser.getId() == date.getOwnerUserId());
+        User toUser = getToUser(date, isOwner);
+        if (toUser == null || !toUser.isSendNotifications()) {
+            return;
+        }
+
+        User otherUser = getOtherUser(date, isOwner);
+        if(otherUser == null) {
+            return;
+        }
+
+        Map<String, String> context = new HashMap<>();
+        context.put("toName", toUser.getDisplayName());
+        context.put("otherPersonName", otherUser.getDisplayName());
+
+        String subject = otherUser.getDisplayName() + "'s post-date feedback";
+        boolean wantsMore = isOwner ? date.isOwnerWantsMore() : date.isDateeWantsMore();
+        String template = wantsMore ? "date_onSubmittedPostDateFeedback_WantsMore.fmt" : "date_onSubmittedPostDateFeedback_NoMore.fmt";
+
+        emailService.sendEmail(template, context, subject, toUser.getEmail());
+    }
+
+    private void onDateUpdated(DefiniteDate date, User currUser, SubmitType type) {
+        boolean isOwner = (currUser.getId() == date.getOwnerUserId());
+
+        User toUser = getToUser(date, isOwner);
+        if (toUser == null || !toUser.isSendNotifications()) {
+            return;
+        }
+
+        User otherUser = getOtherUser(date, isOwner);
+        if(otherUser == null) {
+            return;
+        }
+
+        Map<String, String> context = new HashMap<>();
+        context.put("toName", toUser.getDisplayName());
+        context.put("otherPersonName", otherUser.getDisplayName());
+        context.put("greeting", date.getGreetingMsg());
+        context.put("what", date.getDoingWhat());
+        context.put("whereName", date.getLocationName());
+        context.put("dateWhen", DateUtil.printDateTime(date.getDoingWhen()));
+
+        UriComponents uriComponents = UriComponentsBuilder.fromPath(EmailService.getBaseUrl() + "/profiles/" + otherUser.getId()).build();
+        context.put("viewProfileUrl", uriComponents.toUriString());
+
+        String template = null;
+        String subject = null;
+        if (type == SubmitType.PROPOSE_NEW_PLAN) {
+            context.put("otherPersonNameMsg", otherUser.getDisplayName() + " has proposed the following date:");
+            subject = otherUser.getDisplayName() + " has proposed a date";
+            template = "date_onDateUpdate.fmt";
+        } else if (type == SubmitType.PROPOSE_CHANGE) {
+            context.put("otherPersonNameMsg", otherUser.getDisplayName() + " has proposed the following change to your date:");
+            subject = otherUser.getDisplayName() + " has proposed a change to your date";
+            template = "date_onDateUpdate.fmt";
+        } else if (type == SubmitType.ACCEPT) {
+            context.put("otherPersonNameMsg", otherUser.getDisplayName() + " has accepted the following date:");
+            subject = otherUser.getDisplayName() + " has accepted your date";
+            template = "date_onDateUpdate.fmt";
+        } else if (type == SubmitType.DECLINE) {
+            subject = otherUser.getDisplayName() + " has declined your date";
+            template = "date_onDeclineDate.fmt";
+        }
+
+        emailService.sendEmail(template, context, subject, toUser.getEmail());
     }
 }

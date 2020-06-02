@@ -174,7 +174,7 @@ public class MyProfileController {
 
     private static class ProfileValidator {
         private static void validateBasicInfo(User obj, Errors e, UserRepository userRepository, ZipCodeRepository zipCodeRepository) {
-            ValidationUtils.rejectIfEmpty(e, "displayName", "", "First Name is required");
+            ValidationUtils.rejectIfEmpty(e, "displayName", "", "Display Name is required");
             ValidationUtils.rejectIfEmpty(e, "dob", "", "Date of Birth is required");
             ValidationUtils.rejectIfEmpty(e, "gender", "", "Gender is required");
             ValidationUtils.rejectIfEmpty(e, "postalCode", "", "Postal Code is required");
@@ -188,6 +188,9 @@ public class MyProfileController {
             }
             if (zipCodeRepository.findById(obj.getPostalCode()).isEmpty()) {
                 e.reject("validZip", "Please enter a valid zip code.");
+            }
+            if(obj.getDisplayName() != null && (obj.getDisplayName().length() < 5 || obj.getDisplayName().length() > 15)) {
+                e.reject("displayNameInvalid", "Display name must be 5-15 characters long.");
             }
         }
 
