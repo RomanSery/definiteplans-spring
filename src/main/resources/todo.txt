@@ -5,8 +5,6 @@ update loading buttons the same way i do for block user on view profile page
 add security checks for dateService, make sure user updating date has access to it.
 look through all controller/service methods, make sure the actions being done make sense and are allowed.
 
-finish all emails related to dates, accepted, declined, changed, etc, reminders
-
 handle user's timezone when displaying dates
 
 showUploadErr
