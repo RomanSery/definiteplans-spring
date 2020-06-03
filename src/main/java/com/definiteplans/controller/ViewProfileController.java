@@ -24,29 +24,31 @@ import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
 import com.definiteplans.service.ChatService;
 import com.definiteplans.service.DateService;
-import com.definiteplans.service.EnumValueService;
+import com.definiteplans.service.PrivacyCheckerService;
 import com.definiteplans.service.UserService;
 
 @Controller
 public class ViewProfileController {
     private final UserService userService;
     private final UserRepository userRepository;
-    private final EnumValueService enumValueService;
     private final DateService dateService;
     private final DefiniteDateRepository definiteDateRepository;
     private final UserImageRepository userImageRepository;
     private final ChatService chatService;
     private final ChatMsgRepository chatMsgRepository;
+    private final PrivacyCheckerService privacyCheckerService;
 
-    public ViewProfileController(UserService userService, UserRepository userRepository, EnumValueService enumValueService, DateService dateService, DefiniteDateRepository definiteDateRepository, UserImageRepository userImageRepository, ChatService chatService, ChatMsgRepository chatMsgRepository) {
+    public ViewProfileController(UserService userService, UserRepository userRepository,
+                                 DateService dateService, DefiniteDateRepository definiteDateRepository, UserImageRepository userImageRepository,
+                                 ChatService chatService, ChatMsgRepository chatMsgRepository, PrivacyCheckerService privacyCheckerService) {
         this.userService = userService;
         this.userRepository = userRepository;
-        this.enumValueService = enumValueService;
         this.dateService = dateService;
         this.definiteDateRepository = definiteDateRepository;
         this.userImageRepository = userImageRepository;
         this.chatService = chatService;
         this.chatMsgRepository = chatMsgRepository;
+        this.privacyCheckerService = privacyCheckerService;
     }
 
     @GetMapping("/profiles/")
@@ -66,7 +68,7 @@ public class ViewProfileController {
             return new ModelAndView(new RedirectView("/browse?notfound=1"));
         }
         User profile = found.get();
-        if(!userService.canViewProfile(currUser, profile)) {
+        if(!privacyCheckerService.canViewProfile(currUser, profile)) {
             return new ModelAndView(new RedirectView("/browse?notfound=1"));
         }
 

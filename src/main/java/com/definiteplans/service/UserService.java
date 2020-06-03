@@ -251,41 +251,6 @@ public class UserService {
         return StringUtils.join(components, "<br>");
     }
 
-
-    public boolean canViewProfile(User currUser, User profile) {
-        if(profile == null) {
-            return false;
-        }
-        boolean isViewingSelf = currUser.getId() == profile.getId();
-        if(isViewingSelf) {
-            return true;
-        }
-
-        List<BlockedUser> arr = blockedUserRepository.findByUserId(profile.getId());
-        for (BlockedUser bu : arr) {
-            if (bu.getBlockedUserId() == currUser.getId()) {
-                return false;
-            }
-        }
-        arr = blockedUserRepository.findByUserId(currUser.getId());
-        for (BlockedUser bu : arr) {
-            if (bu.getBlockedUserId() == profile.getId()) {
-                return false;
-            }
-        }
-
-        int myAge = DateUtil.getAge(currUser.getDob());
-        if ( (profile.getAgeMax() > 0 && myAge > profile.getAgeMax()) || (myAge < profile.getAgeMin())) {
-            return false;
-        }
-        int profileAge = DateUtil.getAge(profile.getDob());
-        if ( (currUser.getAgeMax() > 0 && profileAge > currUser.getAgeMax()) || profileAge < currUser.getAgeMin()) {
-            return false;
-        }
-
-        return true;
-    }
-
     public Integer getUserIdFromToken(Integer id, Integer uid, String tokenStr) {
         if(id == null || uid == null || StringUtils.isBlank(tokenStr)) {
             return null;

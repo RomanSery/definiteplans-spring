@@ -2,7 +2,6 @@ implement remember me login
 
 update loading buttons the same way i do for block user on view profile page
 
-
 handle user's timezone when displaying dates
 
 showUploadErr

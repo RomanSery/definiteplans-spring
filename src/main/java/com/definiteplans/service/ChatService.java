@@ -26,14 +26,16 @@ public class ChatService {
     private final ChatMsgRepository chatMsgRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final PrivacyCheckerService privacyCheckerService;
 
     public static final int MAX_CHAT_MSGS = 6;
 
-    public ChatService(UserService userService, ChatMsgRepository chatMsgRepository, UserRepository userRepository, EmailService emailService) {
+    public ChatService(UserService userService, ChatMsgRepository chatMsgRepository, UserRepository userRepository, EmailService emailService, PrivacyCheckerService privacyCheckerService) {
         this.userService = userService;
         this.chatMsgRepository = chatMsgRepository;
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.privacyCheckerService = privacyCheckerService;
     }
 
     public int getNumMsgsRemaining(User currUser, User profile) {
@@ -84,7 +86,7 @@ public class ChatService {
             return;
         }
 
-        if(!userService.canViewProfile(currUser, sendTo)) {
+        if(!privacyCheckerService.canViewProfile(currUser, sendTo)) {
             return;
         }
 
