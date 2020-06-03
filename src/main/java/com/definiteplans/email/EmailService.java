@@ -1,5 +1,6 @@
 package com.definiteplans.email;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -16,10 +17,8 @@ import com.definiteplans.dao.UnsubscriberRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.UserTokenRepository;
 import com.definiteplans.dom.ChatMsg;
-import com.definiteplans.dom.DefiniteDate;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.UserToken;
-import com.definiteplans.dom.enumerations.SubmitType;
 import com.definiteplans.util.DateUtil;
 
 @Service
@@ -49,11 +48,7 @@ public class EmailService {
             return;
         }
 
-        UserToken token = new UserToken();
-        token.setUserId(user.getId());
-        token.setCreationDate(DateUtil.now());
-        token.setToken(UUID.randomUUID().toString());
-        token = userTokenRepository.save(token);
+        UserToken token = getToken(user.getId(), null);
 
         try {
             Map<String, String> context = new HashMap<>();
@@ -80,12 +75,7 @@ public class EmailService {
             return;
         }
 
-        UserToken token = new UserToken();
-        token.setUserId(user.getId());
-        token.setCreationDate(DateUtil.now());
-        token.setExpiration(DateUtil.now().plusHours(1));
-        token.setToken(UUID.randomUUID().toString());
-        token = userTokenRepository.save(token);
+        UserToken token = getToken(user.getId(), DateUtil.now().plusHours(1));
 
         try {
             Map<String, String> context = new HashMap<>();
@@ -116,6 +106,8 @@ public class EmailService {
             return;
         }
 
+        UserToken token = getToken(sentTo.getId(), null);
+
         try {
             Map<String, String> context = new HashMap<>();
             context.put("name", sentTo.getDisplayName());
@@ -123,6 +115,7 @@ public class EmailService {
 
             UriComponents uriComponents = UriComponentsBuilder.fromPath(getBaseUrl() + "/profiles/" + sentFrom.getId()).build();
             context.put("viewProfileUrl", uriComponents.toUriString());
+            context.put("unsubLink", getUnsubUrl(token));
 
             String subject = sentFrom.getDisplayName() + " sent you a message!";
             smtpService.sendEmail("new_msg.fmt", subject, sentTo.getEmail(), context);
@@ -132,18 +125,20 @@ public class EmailService {
     }
 
 
-
-    public void sendEmail(String template, Map<String, String> context, String subject, String toEmail) {
-        if(StringUtils.isBlank(template) || StringUtils.isBlank(subject) || StringUtils.isBlank(toEmail)) {
+    public void sendEmail(String template, Map<String, String> context, String subject, User sendTo) {
+        if(sendTo == null || StringUtils.isBlank(template) || StringUtils.isBlank(subject)) {
             return;
         }
 
+        String toEmail = sendTo.getEmail();
         if(unsubscriberRepository.findById(toEmail).isPresent()) {
             logger.info("skipping email due to unsub: {}", toEmail);
             return;
         }
 
         try {
+            UserToken token = getToken(sendTo.getId(), null);
+            context.put("unsubLink", getUnsubUrl(token));
             smtpService.sendEmail(template, subject, toEmail, context);
         } catch (Exception e) {
             logger.error("failed sendEmail template={}, subject={}", template, subject, e);
@@ -153,4 +148,20 @@ public class EmailService {
     }
 
 
+    private UserToken getToken(int userId, LocalDateTime expiration) {
+        UserToken token = new UserToken();
+        token.setUserId(userId);
+        token.setCreationDate(DateUtil.now());
+        token.setExpiration(expiration);
+        token.setToken(UUID.randomUUID().toString());
+        token = userTokenRepository.save(token);
+        return token;
+    }
+
+    private String getUnsubUrl(UserToken token) {
+        UriComponents unsubLink = UriComponentsBuilder.fromPath(getBaseUrl() + "/unsub")
+                .query("id={tokenId}&uid={uid}&token={token}")
+                .buildAndExpand(String.valueOf(token.getId()), String.valueOf(token.getUserId()), token.getToken());
+        return unsubLink.toUriString();
+    }
 }

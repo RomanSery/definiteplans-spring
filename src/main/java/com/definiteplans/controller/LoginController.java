@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,23 +20,28 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.controller.model.PwdUpdate;
+import com.definiteplans.dao.UnsubscriberRepository;
 import com.definiteplans.dao.UserRepository;
+import com.definiteplans.dom.Unsubscriber;
 import com.definiteplans.dom.User;
 import com.definiteplans.dom.enumerations.LoginErrorType;
 import com.definiteplans.dom.enumerations.UserStatus;
 import com.definiteplans.email.EmailService;
 import com.definiteplans.service.UserService;
+import com.definiteplans.util.DateUtil;
 
 @Controller
 public class LoginController {
     private final EmailService emailService;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final UnsubscriberRepository unsubscriberRepository;
 
-    public LoginController(EmailService emailService, UserService userService, UserRepository userRepository) {
+    public LoginController(EmailService emailService, UserService userService, UserRepository userRepository, UnsubscriberRepository unsubscriberRepository) {
         this.emailService = emailService;
         this.userService = userService;
         this.userRepository = userRepository;
+        this.unsubscriberRepository = unsubscriberRepository;
     }
 
     @GetMapping("/login")
@@ -153,6 +157,33 @@ public class LoginController {
     public @ResponseBody AjaxResponse resendValidationEmail(@RequestParam("email") String email) {
         userService.resendValidationEmail(email);
         return AjaxResponse.success("Success");
+    }
+
+
+    @GetMapping("/unsub")
+    public ModelAndView unsubscribe(@RequestParam("id") Integer id, @RequestParam("uid") Integer uid,
+                                    @RequestParam("token") String token) {
+        Integer userId = userService.getUserIdFromToken(id, uid, token);
+        if(userId == null) {
+            ModelAndView m = new ModelAndView("invalid_link");
+            m.addObject("title", "Invalid Link");
+            return m;
+        }
+
+        Optional<User> found = userRepository.findById(userId);
+        if(found.isPresent()) {
+            User u = found.get();
+            Unsubscriber unsub = new Unsubscriber();
+            unsub.setEmail(u.getEmail());
+            unsub.setUnsubDate(DateUtil.now());
+            unsubscriberRepository.save(unsub);
+        }
+
+
+
+        ModelAndView m = new ModelAndView("unsubscribed");
+        m.addObject("title", "Successfully Unsubscribed");
+        return m;
     }
 
 

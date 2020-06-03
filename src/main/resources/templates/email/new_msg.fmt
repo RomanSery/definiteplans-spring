@@ -5,3 +5,7 @@ You received a new message from ${fromName}.
 Take a look here:
 
 ${viewProfileUrl}
+
+
+To unsubscribe from all future emails, use the below link:
+${unsubLink}

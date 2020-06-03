@@ -11,6 +11,4 @@ showUploadErr
 
 secuirty rules for firebase storage
 
-add unsub link to emails
-
 when giving post-date feedback, form doesnt update correctly. (feedback form doesnt dissappear)

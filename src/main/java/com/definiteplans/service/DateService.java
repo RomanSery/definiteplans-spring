@@ -418,7 +418,7 @@ public class DateService {
         boolean wantsMore = isOwner ? date.isOwnerWantsMore() : date.isDateeWantsMore();
         String template = wantsMore ? "date_onSubmittedPostDateFeedback_WantsMore.fmt" : "date_onSubmittedPostDateFeedback_NoMore.fmt";
 
-        emailService.sendEmail(template, context, subject, toUser.getEmail());
+        emailService.sendEmail(template, context, subject, toUser);
     }
 
     private void onDateUpdated(DefiniteDate date, User currUser, SubmitType type) {
@@ -464,6 +464,6 @@ public class DateService {
             template = "date_onDeclineDate.fmt";
         }
 
-        emailService.sendEmail(template, context, subject, toUser.getEmail());
+        emailService.sendEmail(template, context, subject, toUser);
     }
 }
