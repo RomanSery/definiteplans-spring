@@ -253,6 +253,9 @@ public class UserService {
 
 
     public boolean canViewProfile(User currUser, User profile) {
+        if(profile == null) {
+            return false;
+        }
         boolean isViewingSelf = currUser.getId() == profile.getId();
         if(isViewingSelf) {
             return true;

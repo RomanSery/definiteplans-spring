@@ -84,6 +84,10 @@ public class ChatService {
             return;
         }
 
+        if(!userService.canViewProfile(currUser, sendTo)) {
+            return;
+        }
+
         ChatMsg msg = new ChatMsg();
         msg.setFromId(currUser.getId());
         msg.setToId(sendTo.getId());

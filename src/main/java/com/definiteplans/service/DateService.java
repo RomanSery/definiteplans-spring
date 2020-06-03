@@ -36,11 +36,13 @@ public class DateService {
     private final DefiniteDateRepository definiteDateRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final UserService userService;
 
-    public DateService(DefiniteDateRepository definiteDateRepository, UserRepository userRepository, EmailService emailService) {
+    public DateService(DefiniteDateRepository definiteDateRepository, UserRepository userRepository, EmailService emailService, UserService userService) {
         this.definiteDateRepository = definiteDateRepository;
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.userService = userService;
     }
 
     public DefiniteDate createNew(User currUser, User profile) {
@@ -184,6 +186,10 @@ public class DateService {
             return false;
         }
 
+        if(!userService.canViewProfile(currUser, datee.get())) {
+            return false;
+        }
+
         DefiniteDate date = new DefiniteDate(proposal);
 
         date.setCreatedDate(DateUtil.now());
@@ -205,6 +211,11 @@ public class DateService {
 
     public boolean updateDate(User currUser, SubmitType type, DefiniteDate date) {
         boolean isOwner = currUser.getId() == date.getOwnerUserId();
+
+        User otherUser = getOtherUser(date, isOwner);
+        if(!userService.canViewProfile(currUser, otherUser)) {
+            return false;
+        }
 
         date.setParticipantLastUpdate(isOwner, DateUtil.now());
 
@@ -268,6 +279,11 @@ public class DateService {
     public boolean submitDateFeedback(User currUser, DateFeedback feedback, DefiniteDate dd) {
 
         boolean isOwner = currUser.getId() == dd.getOwnerUserId();
+
+        User otherUser = getOtherUser(dd, isOwner);
+        if(!userService.canViewProfile(currUser, otherUser)) {
+            return false;
+        }
 
         if (isOwner) {
             dd.setOwnerWantsMore(feedback.getParticipantWantsMore());

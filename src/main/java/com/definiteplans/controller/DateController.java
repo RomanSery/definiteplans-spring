@@ -1,6 +1,7 @@
 package com.definiteplans.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -44,7 +45,9 @@ public class DateController {
             return AjaxResponse.error(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList()));
         }
 
-        dateService.createDate(userService.getCurrentUser(), proposal);
+        if(!dateService.createDate(userService.getCurrentUser(), proposal)) {
+            return AjaxResponse.error(List.of("Failed to create date"));
+        }
         return AjaxResponse.success("Date made");
     }
 
@@ -59,7 +62,9 @@ public class DateController {
         if(find.isPresent()) {
             DefiniteDate date = find.get();
             date.updateFromProposal(proposal);
-            dateService.updateDate(userService.getCurrentUser(), SubmitType.PROPOSE_CHANGE, date);
+            if(!dateService.updateDate(userService.getCurrentUser(), SubmitType.PROPOSE_CHANGE, date)) {
+                return AjaxResponse.error(List.of("Failed to update date"));
+            }
         }
         return AjaxResponse.success("Date changed");
     }
@@ -68,7 +73,9 @@ public class DateController {
     public @ResponseBody AjaxResponse acceptDate(@PathVariable("dateId") Integer dateId) {
         Optional<DefiniteDate> date = definiteDateRepository.findById(dateId);
         if(date.isPresent()) {
-            dateService.updateDate(userService.getCurrentUser(), SubmitType.ACCEPT, date.get());
+            if(!dateService.updateDate(userService.getCurrentUser(), SubmitType.ACCEPT, date.get())) {
+                return AjaxResponse.error(List.of("Failed to update date"));
+            }
         }
         return AjaxResponse.success("Date accepted");
     }
@@ -77,7 +84,9 @@ public class DateController {
     public @ResponseBody AjaxResponse declineDate(@PathVariable("dateId") Integer dateId) {
         Optional<DefiniteDate> date = definiteDateRepository.findById(dateId);
         if(date.isPresent()) {
-            dateService.updateDate(userService.getCurrentUser(), SubmitType.DECLINE, date.get());
+            if(!dateService.updateDate(userService.getCurrentUser(), SubmitType.DECLINE, date.get())) {
+                return AjaxResponse.error(List.of("Failed to update date"));
+            }
         }
         return AjaxResponse.success("Date declined");
     }
@@ -92,7 +101,9 @@ public class DateController {
 
         Optional<DefiniteDate> date = definiteDateRepository.findById(feedback.getDateId());
         if(date.isPresent()) {
-            dateService.submitDateFeedback(userService.getCurrentUser(), feedback, date.get());
+            if(!dateService.submitDateFeedback(userService.getCurrentUser(), feedback, date.get())) {
+                return AjaxResponse.error(List.of("Failed to submit date feedback"));
+            }
         }
         return AjaxResponse.success("Date declined");
     }
