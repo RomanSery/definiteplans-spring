@@ -20,40 +20,40 @@
 
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" id="profileTabsDiv">
-                            <li><a class="nav-link" th:classappend="${!has_active_date} ? active : ''" data-toggle="tab" href="#tab-1">Basic</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">More</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-3"><i class="fas fa-images fa-lg"></i></a></li>
+                            <li><a class="nav-link" th:classappend="${active_tab == 'tab-1'} ? active : ''" data-toggle="tab" href="#tab-1">Basic</a></li>
+                            <li><a class="nav-link" th:classappend="${active_tab == 'tab-2'} ? active : ''" data-toggle="tab" href="#tab-2">More</a></li>
+                            <li><a class="nav-link" th:classappend="${active_tab == 'tab-3'} ? active : ''" data-toggle="tab" href="#tab-3"><i class="fas fa-images fa-lg"></i></a></li>
                             <li>
-                                <a class="nav-link" th:classappend="${has_unread_msgs} ? active : ''" data-toggle="tab" href="#tab-4"><i class="fa fa-comments fa-lg"></i></a>
+                                <a class="nav-link" th:classappend="${active_tab == 'tab-4'} ? active : ''" data-toggle="tab" href="#tab-4"><i class="fa fa-comments fa-lg"></i></a>
                             </li>
                             <li th:if="${!isViewingSelf && currUserInfo.isProfileComplete()}">
-                                <a class="nav-link" th:classappend="${has_active_date} ? active : ''" data-toggle="tab" href="#tab-5"><i class="fa fa-calendar fa-lg"></i></a>
+                                <a class="nav-link" th:classappend="${active_tab == 'tab-5'} ? active : ''" data-toggle="tab" href="#tab-5"><i class="fa fa-calendar fa-lg"></i></a>
                             </li>
                         </ul>
 
 
                         <div class="tab-content">
-                            <div id="tab-1" class="tab-pane" th:classappend="${!has_active_date} ? active : ''">
+                            <div id="tab-1" class="tab-pane" th:classappend="${active_tab == 'tab-1'} ? active : ''">
                                 <div class="panel-body">
                                     <div th:replace="view_profile/profile_frags::basicInfo" th:remove="tag"></div>
                                 </div>
                             </div>
-                            <div id="tab-2" class="tab-pane">
+                            <div id="tab-2" class="tab-pane" th:classappend="${active_tab == 'tab-2'} ? active : ''">
                                 <div class="panel-body">
                                     <div th:replace="view_profile/profile_frags::aboutMe" th:remove="tag"></div>
                                 </div>
                             </div>
-                            <div id="tab-3" class="tab-pane">
+                            <div id="tab-3" class="tab-pane" th:classappend="${active_tab == 'tab-3'} ? active : ''">
                                 <div class="panel-body">
                                     <div th:replace="view_profile/profile_frags::pics" th:remove="tag"></div>
                                 </div>
                             </div>
-                            <div id="tab-4" class="tab-pane" th:classappend="${has_unread_msgs} ? active : ''">
+                            <div id="tab-4" class="tab-pane" th:classappend="${active_tab == 'tab-4'} ? active : ''">
                                 <div class="panel-body" id="chatThreadDiv">
                                     <div th:replace="view_profile/profile_frags::chat" th:remove="tag"></div>
                                 </div>
                             </div>
-                            <div th:if="${!isViewingSelf}" id="tab-5" class="tab-pane" th:classappend="${has_active_date} ? active : ''">
+                            <div th:if="${!isViewingSelf}" id="tab-5" class="tab-pane" th:classappend="${active_tab == 'tab-5'} ? active : ''">
                                 <div class="panel-body">
                                     <div th:replace="view_profile/date::makePlans" th:remove="tag"></div>
                                     <div th:replace="view_profile/date::feedbackFrag" th:remove="tag"></div>

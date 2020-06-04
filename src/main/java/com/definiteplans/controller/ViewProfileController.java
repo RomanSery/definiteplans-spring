@@ -143,8 +143,16 @@ public class ViewProfileController {
         }
 
         m.addAttribute("date", activeDate != null ? new DateProposal(activeDate) : new DateProposal());
-        m.addAttribute("has_active_date", activeDate != null && activeDate.getId() > 0);
-        m.addAttribute("has_unread_msgs", chatMsgRepository.getNumUnreadChatMsgs(profile.getId(), currUser.getId()) > 0);
+
+        boolean hasActiveDate = activeDate != null && activeDate.getId() > 0;
+        boolean hasUnreadMsgs = chatMsgRepository.getNumUnreadChatMsgs(profile.getId(), currUser.getId()) > 0;
+        if(hasUnreadMsgs) {
+            m.addAttribute("active_tab", "tab-4");
+        } else if(hasActiveDate) {
+            m.addAttribute("active_tab", "tab-5");
+        } else {
+            m.addAttribute("active_tab", "tab-1");
+        }
 
         m.addAttribute("feedback", new DateFeedback(activeDate != null ? activeDate.getId() : 0));
 
