@@ -154,6 +154,7 @@ public class ViewProfileController {
             m.addAttribute("active_tab", "tab-1");
         }
 
+        m.addAttribute("has_active_date", activeDate != null && activeDate.getId() > 0);
         m.addAttribute("feedback", new DateFeedback(activeDate != null ? activeDate.getId() : 0));
 
         dateService.setDateAttributes(m, currUser, profile, activeDate);
