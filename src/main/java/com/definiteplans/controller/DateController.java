@@ -105,7 +105,7 @@ public class DateController {
                 return AjaxResponse.error(List.of("Failed to submit date feedback"));
             }
         }
-        return AjaxResponse.success("Date declined");
+        return AjaxResponse.success("Feedback submitted");
     }
 
 

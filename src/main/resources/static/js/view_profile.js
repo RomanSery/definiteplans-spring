@@ -178,6 +178,7 @@ definitePlansScripts.feedbackForm = function() {
                 success: function (data) {
                     definitePlansScripts.stopBtnLoading('submitFeedbackBtn');
                     definitePlansScripts.refreshMakePlans(profileId);
+                    $('#dateFeedbackForm').hide();
                 }
             });
             return false;

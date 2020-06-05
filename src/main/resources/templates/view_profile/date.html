@@ -1,5 +1,5 @@
 
-<div th:fragment="makePlans" id="make-plans-frag">
+<div th:fragment="makePlans" th:remove="tag">
 
     <form class="form-horizontal" id="definiteDateForm" th:object="${date}" method="POST" data-parsley-validate>
         <input type="hidden" th:value="${ownerUserId}" th:field="*{ownerUserId}">

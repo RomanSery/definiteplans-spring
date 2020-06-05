@@ -55,7 +55,9 @@
                             </div>
                             <div th:if="${!isViewingSelf}" id="tab-5" class="tab-pane" th:classappend="${active_tab == 'tab-5'} ? active : ''">
                                 <div class="panel-body">
-                                    <div th:replace="view_profile/date::makePlans" th:remove="tag"></div>
+                                    <div id="make-plans-frag">
+                                        <div th:replace="view_profile/date::makePlans" th:remove="tag"></div>
+                                    </div>
                                     <div th:replace="view_profile/date::feedbackFrag" th:remove="tag"></div>
                                     <div th:replace="view_profile/date::pastDates" th:remove="tag"></div>
                                 </div>
