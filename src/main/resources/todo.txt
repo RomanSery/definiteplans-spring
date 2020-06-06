@@ -1,7 +1,5 @@
 implement remember me login
 
-update loading buttons the same way i do for block user on view profile page
-
-showUploadErr
-
 secuirty rules for firebase storage
+
+DateValidator //TODO

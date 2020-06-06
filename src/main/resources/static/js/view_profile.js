@@ -14,7 +14,7 @@ definitePlansScripts.blockUser = function () {
                     xhr.setRequestHeader(header, token);
                 },
                 error: function () {
-                    definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                    definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
                 },
                 success: function (data) {
                     definitePlansScripts.stopBtnLoading('btnBlockUser');
@@ -42,7 +42,7 @@ definitePlansScripts.dateBtns = function () {
                         xhr.setRequestHeader(header, token);
                     },
                     error: function () {
-                        //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                        definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
                     },
                     success: function (data) {
                         if(data.status == "ERR") {
@@ -71,7 +71,7 @@ definitePlansScripts.dateBtns = function () {
                         xhr.setRequestHeader(header, token);
                     },
                     error: function () {
-                        //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                        definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
                     },
                     success: function (data) {
                         if(data.status == "ERR") {
@@ -99,7 +99,7 @@ definitePlansScripts.dateBtns = function () {
                     xhr.setRequestHeader(header, token);
                 },
                 error: function () {
-                    //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                    definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
                 },
                 success: function (data) {
                     if(data.status == "ERR") {
@@ -126,7 +126,7 @@ definitePlansScripts.dateBtns = function () {
                     xhr.setRequestHeader(header, token);
                 },
                 error: function () {
-                    //definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                    definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
                 },
                 success: function (data) {
                     if(data.status == "ERR") {
@@ -145,7 +145,7 @@ definitePlansScripts.refreshMakePlans = function (profileId) {
     $.ajax({
         type: "GET", url: '/refresh-make-plans/' + profileId,
         error: function () {
-            alert('Sorry, there was some error. Please try again.');
+            definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
         },
         success: function (data) {
             $("#make-plans-frag").html(data);
@@ -173,7 +173,7 @@ definitePlansScripts.feedbackForm = function() {
                     xhr.setRequestHeader(header, token);
                 },
                 error: function () {
-                    alert('Sorry, there was some error. Please try again.');
+                    definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
                 },
                 success: function (data) {
                     definitePlansScripts.stopBtnLoading('submitFeedbackBtn');
@@ -199,7 +199,7 @@ definitePlansScripts.chat = function () {
                     xhr.setRequestHeader(header, token);
                 },
                 error: function () {
-                    alert('Sorry, there was some error. Please try again.');
+                    definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
                 },
                 success: function (data) {
                     definitePlansScripts.stopBtnLoading('sendChatBtn');
@@ -215,7 +215,7 @@ definitePlansScripts.refreshChatThread = function () {
     $.ajax({
         type: "GET", url: '/refresh-chat-thread/' + definitePlansScripts.viewing_profile_id,
         error: function () {
-            alert('Sorry, there was some error. Please try again.');
+            definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
         },
         success: function (data) {
             $("#chatThreadDiv").html(data);

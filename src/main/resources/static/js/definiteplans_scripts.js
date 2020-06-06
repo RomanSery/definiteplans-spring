@@ -44,6 +44,27 @@ definitePlansScripts.stopBtnLoadingObj = function (btn) {
 	definitePlansScripts.origBtnHtml.delete(btn.attr('id'));
 };
 
+definitePlansScripts.showErrorMsg = function (msg) {
+	$('#progressMsgDiv').empty().hide();
+	$('#customSuccessMsgDiv').empty().hide();
+
+	$('#customErrMsgDiv').empty().show();
+	$('#customErrMsgDiv').html(msg);
+};
+definitePlansScripts.showUploadProgress = function (msg) {
+	$('#customErrMsgDiv').empty().hide();
+	$('#customSuccessMsgDiv').empty().hide();
+
+	$('#progressMsgDiv').empty().show();
+	$('#progressMsgDiv').html(msg);
+};
+definitePlansScripts.showSuccess = function (msg) {
+	$('#customErrMsgDiv').empty().hide();
+	$('#progressMsgDiv').empty().hide();
+
+	$('#customSuccessMsgDiv').empty().show();
+	$('#customSuccessMsgDiv').html(msg);
+};
 
 
 definitePlansScripts.origBtnHtml = new Map();

@@ -5,14 +5,14 @@ definitePlansScripts.filterSearchResults = function () {
         $.ajax({
             type: "POST", url: '/browse/filter', data: $('#filtersForm').serialize(),
             error: function () {
-                alert('Sorry, there was some error. Please try again.');
+                definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
 
                 $.ajax({
                     type: "GET", url: '/refresh-browse-results',
                     error: function () {
-                        alert('Sorry, there was some error. Please try again.');
+                        definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
                     },
                     success: function (data) {
                         $("#search-results-cont").html(data);
@@ -42,7 +42,7 @@ definitePlansScripts.paginate = function (pageNum) {
     $.ajax({
         type: "GET", url: '/refresh-browse-results/' + pageNum,
         error: function () {
-            alert('Sorry, there was some error. Please try again.');
+            definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
         },
         success: function (data) {
             $("#search-results-cont").html(data);

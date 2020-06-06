@@ -9,7 +9,7 @@ definitePlansScripts.basicInfo = function () {
         $.ajax({
             type: "POST", url: '/me/basic', data: $('#basicInfoForm').serialize(),
             error: function () {
-                alert('Sorry, there was some error. Please try again.');
+                definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
                 definitePlansScripts.showSaveResult(data, 'basic');
@@ -22,7 +22,7 @@ definitePlansScripts.basicInfo = function () {
         $.ajax({
             type: "POST", url: '/me/details', data: $('#detailInfoForm').serialize(),
             error: function () {
-                alert('Sorry, there was some error. Please try again.');
+                definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
                 definitePlansScripts.showSaveResult(data, 'detail');
@@ -35,7 +35,7 @@ definitePlansScripts.basicInfo = function () {
         $.ajax({
             type: "POST", url: '/me/settings', data: $('#settingsForm').serialize(),
             error: function () {
-                alert('Sorry, there was some error. Please try again.');
+                definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
                 definitePlansScripts.showSaveResult(data, 'settings');
@@ -62,7 +62,7 @@ definitePlansScripts.refreshUserPics = function () {
     $.ajax({
         type: "GET", url: '/me/refresh-user-pics',
         error: function () {
-            alert('Sorry, there was some error. Please try again.');
+            definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
         },
         beforeSend: function () {
             $('#loading-indicator').show();
@@ -86,7 +86,7 @@ definitePlansScripts.initImageUpload = function () {
         headers: { 'X-CSRF-TOKEN': $('#_csrf').attr('content') },
         createImageThumbnails: true, thumbnailHeight: 128, thumbnailWidth: 128,
         error: function (file, errorMessage) {
-            definitePlansScripts.showUploadErr(errorMessage);
+            definitePlansScripts.showErrorMsg(errorMessage);
             this.removeAllFiles();
         },
         sending: function() {
@@ -108,7 +108,7 @@ definitePlansScripts.initImageUpload = function () {
                     definitePlansScripts.showUploadProgress('Uploading thumbnail: ' + progress + '% done');
                 },
                 function(error) {
-                    definitePlansScripts.showUploadErr(error);
+                    definitePlansScripts.showErrorMsg(error);
                 }, function() {
                     thumbImgUploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                         definitePlansScripts.showUploadProgress('Saving thumbnail...');
@@ -134,7 +134,7 @@ definitePlansScripts.initImageUpload = function () {
                     definitePlansScripts.showUploadProgress('Uploading full size image: ' + progress + '% done');
                 },
                 function(error) {
-                    showUploadErr(error);
+                    definitePlansScripts.showErrorMsg(error);
                 }, function() {
                     fullImgUploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                         definitePlansScripts.showUploadProgress('Saving full size image...');
@@ -160,7 +160,7 @@ definitePlansScripts.saveProfileImg = function (imgType, mimeType, fileName, img
             xhr.setRequestHeader(header, token);
         },
         error: function () {
-            definitePlansScripts.showUploadErr('Sorry, there was some error.');
+            definitePlansScripts.showErrorMsg('Sorry, there was some error.');
         }, success: function (data) {
             if(imgType == 'full') {
                 $('#loading-indicator').hide();
@@ -171,28 +171,6 @@ definitePlansScripts.saveProfileImg = function (imgType, mimeType, fileName, img
     });
 };
 
-
-definitePlansScripts.showUploadErr = function (msg) {
-    $('#uploadProgressDiv').empty().hide();
-    $('#uploadSuccessDiv').empty().hide();
-
-    $('#uploadErrDiv').empty().show();
-    $('#uploadErrDiv').html(msg);
-};
-definitePlansScripts.showUploadProgress = function (msg) {
-    $('#uploadErrDiv').empty().hide();
-    $('#uploadSuccessDiv').empty().hide();
-
-    $('#uploadProgressDiv').empty().show();
-    $('#uploadProgressDiv').html(msg);
-};
-definitePlansScripts.showSuccess = function (msg) {
-    $('#uploadErrDiv').empty().hide();
-    $('#uploadProgressDiv').empty().hide();
-
-    $('#uploadSuccessDiv').empty().show();
-    $('#uploadSuccessDiv').html(msg);
-};
 
 definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, imgUrl, d) {
 
@@ -206,7 +184,7 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
                 xhr.setRequestHeader(header, token);
             },
             error: function () {
-                definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
                 $('#loading-indicator').hide();
@@ -225,7 +203,7 @@ definitePlansScripts.initImgScripts = function (imgType, mimeType, fileName, img
                 xhr.setRequestHeader(header, token);
             },
             error: function () {
-                definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
                 $('#nav-profile-pic').attr('src', data.msg);
@@ -262,7 +240,7 @@ definitePlansScripts.unblockUser = function () {
                     xhr.setRequestHeader(header, token);
                 },
                 error: function () {
-                    definitePlansScripts.showUploadErr('Sorry, there was some error. Please try again.');
+                    definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
                 },
                 success: function (data) {
                     definitePlansScripts.stopBtnLoadingObj(unlockBtn);
@@ -277,7 +255,7 @@ definitePlansScripts.refreshBlockedList = function () {
     $.ajax({
         type: "GET", url: '/me/refresh-blocked-list',
         error: function () {
-            alert('Sorry, there was some error. Please try again.');
+            definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
         },
         beforeSend: function () {
             $('#blocked-loading-indicator').show();
@@ -304,7 +282,7 @@ definitePlansScripts.deleteAccount = function () {
                 xhr.setRequestHeader(header, token);
             },
             error: function () {
-                alert('Sorry, there was some error. Please try again.');
+                definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
             },
             success: function (data) {
                 if(data.status == "ERR") {

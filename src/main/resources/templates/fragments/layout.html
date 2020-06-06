@@ -9,6 +9,11 @@
                 </div>
                 <div class="wrapper wrapper-content">
                     <div class="container">
+
+                        <div class="alert alert-danger" id="customErrMsgDiv" style="display:none;"></div>
+                        <div class="alert alert-info" id="progressMsgDiv" style="display:none;"></div>
+                        <div class="alert alert-success" id="customSuccessMsgDiv" style="display:none;">Saved!</div>
+
                         <div th:replace="${pageContent}"></div>
                         <span th:if="${showDiffFrag}" th:remove="tag">
                             <div th:replace="fragments/what_makes_us_diff::diff-frag"></div>
@@ -34,6 +39,10 @@
                     <div class="container">
 
                         <div th:replace="fragments/missing_fields::warning-frag" th:remove="tag"></div>
+
+                        <div class="alert alert-danger" id="customErrMsgDiv" style="display:none;"></div>
+                        <div class="alert alert-info" id="progressMsgDiv" style="display:none;"></div>
+                        <div class="alert alert-success" id="customSuccessMsgDiv" style="display:none;">Saved!</div>
 
                         <div th:replace="${pageContent}"></div>
                     </div>
