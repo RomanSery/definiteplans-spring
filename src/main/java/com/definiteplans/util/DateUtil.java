@@ -15,7 +15,7 @@ public class DateUtil {
     private static final DateTimeFormatter simpleDateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final DateTimeFormatter fullFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
 
-    private static final ZoneId defaultTimeZone = ZoneId.of("America/New_York");
+    public static final ZoneId defaultTimeZone = ZoneId.of("America/New_York");
 
     public static LocalDateTime now() {
         return LocalDateTime.now(defaultTimeZone);
@@ -24,6 +24,23 @@ public class DateUtil {
     public static boolean isInThePast(LocalDateTime dt) {
         return dt.isBefore(now());
     }
+
+    public static String printDateTime(LocalDateTime dt) {
+        if(dt == null) {
+            return "";
+        }
+        return fullFormatter.format(dt.atZone(defaultTimeZone));
+    }
+    public static String printDateTime(LocalDateTime dt, ZoneId timezone) {
+        if(dt == null) {
+            return "";
+        }
+        if (timezone != null) {
+            return fullFormatter.format(dt.atZone(defaultTimeZone).withZoneSameInstant(timezone));
+        }
+        return printDateTime(dt);
+    }
+
 
     public static int getHoursBetween(LocalDateTime d1, LocalDateTime d2) {
         ZonedDateTime dt1 = ZonedDateTime.of(d1, defaultTimeZone);
@@ -35,48 +52,6 @@ public class DateUtil {
         ZonedDateTime dt1 = ZonedDateTime.of(d1, defaultTimeZone);
         ZonedDateTime dt2 = ZonedDateTime.of(d2, defaultTimeZone);
         return (int) Math.abs(ChronoUnit.MINUTES.between(dt1, dt2));
-    }
-
-    public static boolean isEligible(LocalDate dob) {
-        return getAge(dob) >= 18;
-    }
-
-    public static int getAge(LocalDate dob) {
-        if(dob == null) {
-            return 0;
-        }
-        return (int) Math.abs(ChronoUnit.YEARS.between(dob, LocalDate.now()));
-    }
-
-    public static String printDateTime(LocalDateTime dt) {
-        if(dt == null) {
-            return "";
-        }
-        return fullFormatter.format(dt.atZone(defaultTimeZone));
-    }
-
-
-    public static String printDate(LocalDate d) {
-        if(d == null) {
-            return "";
-        }
-        return simpleDateFormatter.format(d);
-    }
-
-    public static String printISODateTime(LocalDateTime dt) {
-        return dt != null ? DateTimeFormatter.ISO_DATE_TIME.format(dt) : "";
-    }
-
-    public static LocalDate parseDate(String str) {
-        if (StringUtils.isBlank(str)) {
-            return null;
-        }
-
-        try {
-            return LocalDate.parse(str, simpleDateFormatter);
-        } catch (Exception e) {
-           return null;
-        }
     }
 
 
@@ -103,5 +78,36 @@ public class DateUtil {
             return "a few hours ago";
         else
             return "";
+    }
+
+    public static LocalDate parseDate(String str) {
+        if (StringUtils.isBlank(str)) {
+            return null;
+        }
+
+        try {
+            return LocalDate.parse(str, simpleDateFormatter);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String printDate(LocalDate d) {
+        return d == null ? "" : simpleDateFormatter.format(d);
+    }
+
+    public static String printISODateTime(LocalDateTime dt) {
+        return dt != null ? DateTimeFormatter.ISO_DATE_TIME.format(dt.atZone(defaultTimeZone)) : "";
+    }
+
+    public static boolean isEligible(LocalDate dob) {
+        return getAge(dob) >= 18;
+    }
+
+    public static int getAge(LocalDate dob) {
+        if(dob == null) {
+            return 0;
+        }
+        return (int) Math.abs(ChronoUnit.YEARS.between(dob, LocalDate.now()));
     }
 }

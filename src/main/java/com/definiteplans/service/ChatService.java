@@ -1,6 +1,7 @@
 package com.definiteplans.service;
 
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +50,8 @@ public class ChatService {
 
     public List<ChatRow> getChatMsgs(User currUser, User profile) {
 
+        ZoneId timeZone = userService.getUserTimeZone(currUser);
+
         List<ChatMsg> arr = chatMsgRepository.getChat(currUser.getId(), profile.getId());
         List<ChatRow> msgs = new ArrayList<>();
 
@@ -59,7 +62,7 @@ public class ChatService {
             String displayName = isFromMe ? "Me" : profile.getDisplayName();
             String img = isFromMe ? userService.getProfileImg(currUser, true) : userService.getProfileImg(profile, true);
             String content = msg.getMessage();
-            String date = DateUtil.printDateTime(msg.getSentDate());
+            String date = DateUtil.printDateTime(msg.getSentDate(), timeZone);
 
             msgs.add(new ChatRow(userId, displayName, img, content, date));
         }
