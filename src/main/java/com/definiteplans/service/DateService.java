@@ -199,7 +199,6 @@ public class DateService {
         date.setOwnerStatusId(WAITING_FOR_REPLY.getId());
         date.setDateeUserId(datee.get().getId());
         date.setDateeStatusId(NEEDS_TO_REPLY.getId());
-        date.setEmailReminderSent(false);
 
         definiteDateRepository.save(date);
 
@@ -220,7 +219,6 @@ public class DateService {
         date.setParticipantLastUpdate(isOwner, DateUtil.now());
 
         if (type == SubmitType.PROPOSE_CHANGE) {
-            date.setEmailReminderSent(false);
             date.setDateStatusId(DateStatus.NEGOTIATION.getId());
             if (isOwner) {
                 date.setOwnerStatusId(WAITING_FOR_REPLY.getId());
@@ -481,5 +479,15 @@ public class DateService {
         }
 
         emailService.sendEmail(template, context, subject, toUser);
+    }
+
+    public DefiniteDate checkActiveDate(DefiniteDate date) {
+        if(date != null && DateUtil.isInThePast(date.getDoingWhen()) &&
+                (date.getOwnerStatusId() != DateParticipantStatus.ACCEPTED.getId() || date.getDateeStatusId() != DateParticipantStatus.ACCEPTED.getId())) {
+            date.setDateStatusId(DateStatus.DELETED.getId());
+            definiteDateRepository.save(date);
+            return null;
+        }
+        return date;
     }
 }

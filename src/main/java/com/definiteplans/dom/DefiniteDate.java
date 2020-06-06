@@ -62,12 +62,6 @@ public class DefiniteDate implements Serializable {
     @Column(name = "datee_status_id")
     private int dateeStatusId;
 
-    @Column(name = "email_reminder_sent")
-    private boolean emailReminderSent;
-
-    @Column(name = "post_date_email_sent")
-    private boolean postDateEmailSent;
-
     @Column(name = "date_status_id")
     private int dateStatusId;
 

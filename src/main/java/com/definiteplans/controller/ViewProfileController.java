@@ -138,6 +138,7 @@ public class ViewProfileController {
         m.addAttribute("otherPersonName", profile.getDisplayName());
 
         DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), profile.getId());
+        activeDate = dateService.checkActiveDate(activeDate);
         if(activeDate == null) {
             activeDate = dateService.createNew(currUser, profile);
         }

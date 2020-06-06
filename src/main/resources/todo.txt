@@ -7,7 +7,3 @@ handle user's timezone when displaying dates
 showUploadErr
 
 secuirty rules for firebase storage
-
-when giving post-date feedback, form doesnt update correctly. (feedback form doesnt dissappear)
-
-what if the date doingWhen passes but you havent accepted?  UI is wrong

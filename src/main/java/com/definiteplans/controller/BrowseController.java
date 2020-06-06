@@ -117,6 +117,7 @@ public class BrowseController {
             String name = u.getDisplayName() + ((age != null) ? (", " + age) : "");
 
             DefiniteDate activeDate = definiteDateRepository.getActiveDate(currUser.getId(), u.getId());
+            activeDate = dateService.checkActiveDate(activeDate);
             Boolean b = dateService.wantsMore(currUser, u, activeDate);
             boolean isOnline = UserService.isOnlineNow(u);
 
