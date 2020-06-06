@@ -28,15 +28,17 @@ public class ChatService {
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final PrivacyCheckerService privacyCheckerService;
+    private final ZipCodeService zipCodeService;
 
     public static final int MAX_CHAT_MSGS = 6;
 
-    public ChatService(UserService userService, ChatMsgRepository chatMsgRepository, UserRepository userRepository, EmailService emailService, PrivacyCheckerService privacyCheckerService) {
+    public ChatService(UserService userService, ChatMsgRepository chatMsgRepository, UserRepository userRepository, EmailService emailService, PrivacyCheckerService privacyCheckerService, ZipCodeService zipCodeService) {
         this.userService = userService;
         this.chatMsgRepository = chatMsgRepository;
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.privacyCheckerService = privacyCheckerService;
+        this.zipCodeService = zipCodeService;
     }
 
     public int getNumMsgsRemaining(User currUser, User profile) {
@@ -50,7 +52,7 @@ public class ChatService {
 
     public List<ChatRow> getChatMsgs(User currUser, User profile) {
 
-        ZoneId timeZone = userService.getUserTimeZone(currUser);
+        ZoneId timeZone = zipCodeService.getUserTimeZone(currUser);
 
         List<ChatMsg> arr = chatMsgRepository.getChat(currUser.getId(), profile.getId());
         List<ChatRow> msgs = new ArrayList<>();

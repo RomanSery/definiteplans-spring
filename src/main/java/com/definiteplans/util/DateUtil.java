@@ -25,12 +25,6 @@ public class DateUtil {
         return dt.isBefore(now());
     }
 
-    public static String printDateTime(LocalDateTime dt) {
-        if(dt == null) {
-            return "";
-        }
-        return fullFormatter.format(dt.atZone(defaultTimeZone));
-    }
     public static String printDateTime(LocalDateTime dt, ZoneId timezone) {
         if(dt == null) {
             return "";
@@ -38,7 +32,7 @@ public class DateUtil {
         if (timezone != null) {
             return fullFormatter.format(dt.atZone(defaultTimeZone).withZoneSameInstant(timezone));
         }
-        return printDateTime(dt);
+        return fullFormatter.format(dt.atZone(defaultTimeZone));
     }
 
 

@@ -2,6 +2,7 @@ package com.definiteplans.service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,12 +38,14 @@ public class DateService {
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final PrivacyCheckerService privacyCheckerService;
+    private final ZipCodeService zipCodeService;
 
-    public DateService(DefiniteDateRepository definiteDateRepository, UserRepository userRepository, EmailService emailService, PrivacyCheckerService privacyCheckerService) {
+    public DateService(DefiniteDateRepository definiteDateRepository, UserRepository userRepository, EmailService emailService, PrivacyCheckerService privacyCheckerService, ZipCodeService zipCodeService) {
         this.definiteDateRepository = definiteDateRepository;
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.privacyCheckerService = privacyCheckerService;
+        this.zipCodeService = zipCodeService;
     }
 
     public DefiniteDate createNew(User currUser, User profile) {
@@ -80,18 +83,20 @@ public class DateService {
         return date;
     }
 
-    private String getDateInfo(DefiniteDate date) {
+    private String getDateInfo(DefiniteDate date, User currUser) {
+        ZoneId timeZone = zipCodeService.getUserTimeZone(currUser);
+
         List<String> arr = new ArrayList<>();
         arr.add(date.getDoingWhat());
         arr.add(date.getLocationName());
-        arr.add(DateUtil.printDateTime(date.getDoingWhen()));
+        arr.add(DateUtil.printDateTime(date.getDoingWhen(), timeZone));
         return StringUtils.join(arr, "<br>");
     }
 
     public void setDateAttributes(ModelMap m, User currUser, User viewingUser, DefiniteDate dd) {
 
         m.addAttribute("past_dates", getPastDates(currUser, viewingUser));
-        m.addAttribute("date_info", getDateInfo(dd));
+        m.addAttribute("date_info", getDateInfo(dd, currUser));
 
         if(dd == null || dd.getId() == 0) {
             m.addAttribute("has_desc", false);
@@ -100,6 +105,8 @@ public class DateService {
             m.addAttribute("show_feedback_form", false);
             return;
         }
+
+        ZoneId timeZone = zipCodeService.getUserTimeZone(currUser);
 
         LocalDateTime doingWhen = dd.getDoingWhen();
         boolean isOwner = currUser.getId() == dd.getOwnerUserId();
@@ -135,15 +142,15 @@ public class DateService {
         } else {
             String change = isChange ? " change " : " ";
             if (myStatus == WAITING_FOR_REPLY) {
-                infoDesc = "You proposed this" + change + "on " + DateUtil.printDateTime(dd.getParticipantLastUpdate(isOwner)) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
+                infoDesc = "You proposed this" + change + "on " + DateUtil.printDateTime(dd.getParticipantLastUpdate(isOwner), timeZone) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
             } else if (myStatus == NEEDS_TO_REPLY) {
                 if (otherPersonStatus == DateParticipantStatus.ACCEPTED) {
-                    infoDesc = viewingUser.getDisplayName() + " has accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate());
+                    infoDesc = viewingUser.getDisplayName() + " has accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate(), timeZone);
                 } else {
-                    infoDesc = viewingUser.getDisplayName() + " has proposed this" + change + "on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate());
+                    infoDesc = viewingUser.getDisplayName() + " has proposed this" + change + "on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate(), timeZone);
                 }
             } else if (myStatus == DateParticipantStatus.ACCEPTED) {
-                infoDesc = "You have accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate()) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
+                infoDesc = "You have accepted this on " + DateUtil.printDateTime((viewingUser.getId() == dd.getOwnerUserId()) ? dd.getOwnerLastUpdate() : dd.getDateeLastUpdate(), timeZone) + ".  Waiting for " + viewingUser.getDisplayName() + " to reply.";
             }
         }
 
@@ -159,13 +166,14 @@ public class DateService {
     }
 
     public List<PastDateRow> getPastDates(User currUser, User profile) {
+        ZoneId timeZone = zipCodeService.getUserTimeZone(currUser);
         List<DefiniteDate> pastDates = definiteDateRepository.getPastDatesByOwnerAndDatee(currUser.getId(), profile.getId());
 
         List<PastDateRow> rows = new ArrayList<>(pastDates.size());
         for(DefiniteDate dd : pastDates) {
 
             String doingWhat = dd.getDoingWhat();
-            String doingWhen = DateUtil.printDateTime(dd.getDoingWhen());
+            String doingWhen = DateUtil.printDateTime(dd.getDoingWhen(), timeZone);
             String locationName = dd.getLocationName();
             String greetingMsg = '"' + dd.getGreetingMsg() + '"';
             boolean wantsAnotherDate = dd.getOwnerUserId() == profile.getId() ? dd.isOwnerWantsMore() : dd.isDateeWantsMore();
@@ -364,7 +372,7 @@ public class DateService {
 
 
     public List<ActionItem> getUpComingDatesDetail(User currUser, List<DefiniteDate> upComingDates) {
-
+        ZoneId timeZone = zipCodeService.getUserTimeZone(currUser);
         List<ActionItem> toReturn = new ArrayList<>();
 
         for(DefiniteDate dd : upComingDates) {
@@ -382,7 +390,7 @@ public class DateService {
             String desc3 = dd.getLocationName();
 
             String url = "/profiles/" + profileId;
-            toReturn.add(new ActionItem(url, actionDesc, desc2, desc3, DateUtil.printDateTime(doingWhen)));
+            toReturn.add(new ActionItem(url, actionDesc, desc2, desc3, DateUtil.printDateTime(doingWhen, timeZone)));
         }
 
         return toReturn;
@@ -448,13 +456,15 @@ public class DateService {
             return;
         }
 
+        ZoneId timeZone = zipCodeService.getUserTimeZone(currUser);
+
         Map<String, String> context = new HashMap<>();
         context.put("toName", toUser.getDisplayName());
         context.put("otherPersonName", otherUser.getDisplayName());
         context.put("greeting", date.getGreetingMsg());
         context.put("what", date.getDoingWhat());
         context.put("whereName", date.getLocationName());
-        context.put("dateWhen", DateUtil.printDateTime(date.getDoingWhen()));
+        context.put("dateWhen", DateUtil.printDateTime(date.getDoingWhen(), timeZone));
 
         UriComponents uriComponents = UriComponentsBuilder.fromPath(EmailService.getBaseUrl() + "/profiles/" + otherUser.getId()).build();
         context.put("viewProfileUrl", uriComponents.toUriString());

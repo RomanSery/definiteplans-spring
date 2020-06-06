@@ -2,7 +2,6 @@ package com.definiteplans.service;
 
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -125,15 +124,6 @@ public class UserService {
             emailService.sendEmailValidationEmail(found);
         }
     }
-
-    public ZoneId getUserTimeZone(User currUser) {
-        Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
-        if(zip.isPresent()) {
-            return ZoneId.of(zip.get().getTimezone());
-        }
-        return DateUtil.defaultTimeZone;
-    }
-
 
     public User createUser(String email, String name, String socialLoginId) {
         User user = userRepository.findByEmail(email);

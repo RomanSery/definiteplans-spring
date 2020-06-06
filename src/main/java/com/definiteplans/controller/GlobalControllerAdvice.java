@@ -6,17 +6,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.definiteplans.controller.model.CurrUserInfo;
 import com.definiteplans.dao.ChatMsgRepository;
+import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.User;
 import com.definiteplans.service.UserService;
+import com.definiteplans.util.DateUtil;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
     private final UserService userService;
     private final ChatMsgRepository chatMsgRepository;
+    private final UserRepository userRepository;
 
-    public GlobalControllerAdvice(UserService userService, ChatMsgRepository chatMsgRepository) {
+    public GlobalControllerAdvice(UserService userService, ChatMsgRepository chatMsgRepository, UserRepository userRepository) {
         this.userService = userService;
         this.chatMsgRepository = chatMsgRepository;
+        this.userRepository = userRepository;
     }
 
     @ModelAttribute("currUserInfo")
@@ -36,6 +40,9 @@ public class GlobalControllerAdvice {
         if(!currUser.isComplete()) {
             info.setMissingFields(currUser.getMissingFields());
         }
+
+        currUser.setLastLoginDate(DateUtil.now());
+        userRepository.save(currUser);
 
         return info;
     }
