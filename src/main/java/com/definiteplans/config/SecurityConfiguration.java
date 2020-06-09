@@ -2,6 +2,7 @@ package com.definiteplans.config;
 
 
 import java.util.Arrays;
+import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -19,6 +20,8 @@ import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorH
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,11 +36,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final DpUserDetailsService dpUserDetailsService;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final DataSource dataSource;
 
-    public SecurityConfiguration(DpUserDetailsService dpUserDetailsService, AuthenticationFailureHandler authenticationFailureHandler, AuthenticationSuccessHandler authenticationSuccessHandler) {
+    public SecurityConfiguration(DpUserDetailsService dpUserDetailsService, AuthenticationFailureHandler authenticationFailureHandler, AuthenticationSuccessHandler authenticationSuccessHandler, DataSource dataSource) {
         this.dpUserDetailsService = dpUserDetailsService;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.dataSource = dataSource;
     }
 
     @Bean
@@ -67,6 +72,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.setPasswordEncoder(passwordEncoder());
         return auth;
     }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
+    }
+
 
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> authorizationCodeTokenResponseClient() {
@@ -103,8 +116,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Config for Logout Page
                 .and().logout().invalidateHttpSession(true).clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout")
-        .and().rememberMe().rememberMeParameter("remember").userDetailsService(dpUserDetailsService);
+                .logoutSuccessUrl("/login?logout");
+
+        http.rememberMe().
+                tokenRepository(persistentTokenRepository()).
+                rememberMeParameter("remember").
+                rememberMeCookieName("my-remember-me").
+                tokenValiditySeconds(86400).userDetailsService(dpUserDetailsService);
 
         http.oauth2Client();
         http.oauth2Login().userInfoEndpoint()

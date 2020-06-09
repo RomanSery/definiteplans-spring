@@ -1,7 +1,10 @@
 package com.definiteplans.service;
 
 
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,10 +25,19 @@ public class DpUserDetailsService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    private User getUser(String username) {
+        if(NumberUtils.isCreatable(username)) {
+            int userId = NumberUtils.toInt(username);
+            Optional<User> found = userRepository.findById(userId);
+            return found.isPresent() ? found.get() : null;
+        }
+        return userRepository.findByEmail(username);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
+        User user = getUser(username);
         if (user == null) {
             throw new LoginException(LoginErrorType.NOT_FOUND, username);
         }
