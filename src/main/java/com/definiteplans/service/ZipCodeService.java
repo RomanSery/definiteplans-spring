@@ -4,6 +4,7 @@ package com.definiteplans.service;
 import java.time.ZoneId;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class ZipCodeService {
 
 
     public ZoneId getUserTimeZone(User currUser) {
+        if(currUser == null || StringUtils.isBlank(currUser.getPostalCode())) {
+            return DateUtil.defaultTimeZone;
+        }
         Optional<ZipCode> zip = zipCodeRepository.findById(currUser.getPostalCode());
         if(zip.isPresent()) {
             return ZoneId.of(zip.get().getTimezone());

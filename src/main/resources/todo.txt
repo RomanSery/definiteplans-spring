@@ -1,5 +1,8 @@
-implement remember me login
-
 secuirty rules for firebase storage
 
 DateValidator //TODO
+
+
+for launch
+update FB&google apps
+update firebase config

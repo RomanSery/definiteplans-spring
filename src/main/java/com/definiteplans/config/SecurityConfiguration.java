@@ -2,6 +2,7 @@ package com.definiteplans.config;
 
 
 import java.util.Arrays;
+import java.util.UUID;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorH
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -80,6 +82,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return tokenRepository;
     }
 
+    @Bean
+    public RememberMeServices rememberMeServices(String key) {
+        MyPersistentTokenBasedRememberMeServices rememberMeServices =
+                new MyPersistentTokenBasedRememberMeServices(key, dpUserDetailsService, persistentTokenRepository());
+        rememberMeServices.setTokenValiditySeconds(86400);
+        rememberMeServices.setParameter("remember");
+        rememberMeServices.setCookieName("my-remember-me");
+
+        return rememberMeServices;
+    }
+
 
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> authorizationCodeTokenResponseClient() {
@@ -118,11 +131,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout");
 
+        String key = UUID.randomUUID().toString();
+
+        http.rememberMe(new RememberMeConfigurerCustomizer(key));
         http.rememberMe().
                 tokenRepository(persistentTokenRepository()).
-                rememberMeParameter("remember").
-                rememberMeCookieName("my-remember-me").
-                tokenValiditySeconds(86400).userDetailsService(dpUserDetailsService);
+                userDetailsService(dpUserDetailsService).
+                rememberMeServices(rememberMeServices(key));
 
         http.oauth2Client();
         http.oauth2Login().userInfoEndpoint()

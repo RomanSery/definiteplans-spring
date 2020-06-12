@@ -6,8 +6,8 @@ public enum LoginErrorType implements GenericEnum {
     NOT_FOUND(1, "The login credentials you entered do not match our records. <br> Please verify your entry and try again or click 'Forgot Password?' below."),
     DISABLED(2, "Your account has been disabled."),
     PENDING(3, "You have not confirmed your email address yet, please do that first."),
-    FB_NO_PWD(4, "You create this account thru Facebook.  Try logging with Facebook."),
-    GOOGLE_NO_PWD(5, "You create this account thru Google.  Try logging with Google.")
+    FB_NO_PWD(4, "You created this account thru Facebook.  Try logging with Facebook."),
+    GOOGLE_NO_PWD(5, "You created this account thru Google.  Try logging with Google.")
     ;
 
     public static final List<LoginErrorType> VALUES = List.of(LoginErrorType.values());

@@ -26,12 +26,35 @@ public class DpUserDetailsService implements UserDetailsService {
     }
 
     private User getUser(String username) {
+
         if(NumberUtils.isCreatable(username)) {
             int userId = NumberUtils.toInt(username);
-            Optional<User> found = userRepository.findById(userId);
-            return found.isPresent() ? found.get() : null;
+            if(userId > 0) {
+                Optional<User> found = userRepository.findById(userId);
+                return found.isPresent() ? found.get() : null;
+            }
+
+            //must be a social ID
+            User user = userRepository.findByGoogleSubId(username);
+            if(user != null) {
+                return user;
+            }
+            user = userRepository.findByFbId(username);
+            if(user != null) {
+                return user;
+            }
         }
         return userRepository.findByEmail(username);
+    }
+
+    private boolean isSocialLogin(String username) {
+        if(NumberUtils.isCreatable(username)) {
+            int userId = NumberUtils.toInt(username);
+            if(userId == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +71,7 @@ public class DpUserDetailsService implements UserDetailsService {
             throw new LoginException(LoginErrorType.PENDING, username);
         }
 
-        if(StringUtils.isBlank(user.getPassword())) {
+        if(StringUtils.isBlank(user.getPassword()) && !isSocialLogin(username)) {
             if(!StringUtils.isBlank(user.getFbId())) {
                 throw new LoginException(LoginErrorType.FB_NO_PWD, username);
             }
@@ -58,7 +81,7 @@ public class DpUserDetailsService implements UserDetailsService {
         }
 
         org.springframework.security.core.userdetails.User.UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(String.valueOf(user.getId()));
-        builder.password(user.getPassword());
+        builder.password(user.getPassword() != null ? user.getPassword() : "");
         builder.roles("USER");
         return builder.build();
     }

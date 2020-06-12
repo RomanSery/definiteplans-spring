@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<User, Integer>, SearchUser
 
     User findByEmail(@Param("email") String email);
 
+    User findByGoogleSubId(@Param("googleSubId") String googleSubId);
+    User findByFbId(@Param("fbId") String fbId);
 
     @Transactional
     @Procedure("DELETE_ACCOUNT")
