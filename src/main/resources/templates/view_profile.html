@@ -23,7 +23,7 @@
                             <li><a class="nav-link" th:classappend="${active_tab == 'tab-1'} ? active : ''" data-toggle="tab" href="#tab-1">Basic</a></li>
                             <li><a class="nav-link" th:classappend="${active_tab == 'tab-2'} ? active : ''" data-toggle="tab" href="#tab-2">More</a></li>
                             <li><a class="nav-link" th:classappend="${active_tab == 'tab-3'} ? active : ''" data-toggle="tab" href="#tab-3"><i class="fas fa-images fa-lg"></i></a></li>
-                            <li>
+                            <li th:if="${!isViewingSelf && currUserInfo.isProfileComplete()}">
                                 <a class="nav-link" th:classappend="${active_tab == 'tab-4'} ? active : ''" data-toggle="tab" href="#tab-4"><i class="fa fa-comments fa-lg"></i></a>
                             </li>
                             <li th:if="${!isViewingSelf && currUserInfo.isProfileComplete()}">
@@ -48,12 +48,12 @@
                                     <div th:replace="view_profile/profile_frags::pics" th:remove="tag"></div>
                                 </div>
                             </div>
-                            <div id="tab-4" class="tab-pane" th:classappend="${active_tab == 'tab-4'} ? active : ''">
+                            <div th:if="${!isViewingSelf && currUserInfo.isProfileComplete()}" id="tab-4" class="tab-pane" th:classappend="${active_tab == 'tab-4'} ? active : ''">
                                 <div class="panel-body" id="chatThreadDiv">
                                     <div th:replace="view_profile/profile_frags::chat" th:remove="tag"></div>
                                 </div>
                             </div>
-                            <div th:if="${!isViewingSelf}" id="tab-5" class="tab-pane" th:classappend="${active_tab == 'tab-5'} ? active : ''">
+                            <div th:if="${!isViewingSelf && currUserInfo.isProfileComplete()}" id="tab-5" class="tab-pane" th:classappend="${active_tab == 'tab-5'} ? active : ''">
                                 <div class="panel-body">
                                     <div id="make-plans-frag">
                                         <div th:replace="view_profile/date::makePlans" th:remove="tag"></div>

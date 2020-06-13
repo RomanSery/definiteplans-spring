@@ -6,7 +6,7 @@ update firebase config
 
 
 service firebase.storage {
-  match /b/{bucket}/o {        
+  match /b/{bucket}/o {
     match /images/{userId}/{allPaths=**} {
       allow read;
       allow write: if metadataUserId() == userId

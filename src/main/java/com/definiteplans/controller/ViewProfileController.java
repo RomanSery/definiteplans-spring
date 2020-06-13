@@ -1,5 +1,6 @@
 package com.definiteplans.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,8 +99,8 @@ public class ViewProfileController {
         m.addObject("aboutMe", profile.getAboutMePretty());
         m.addObject("interests", profile.getInterestsPretty());
         m.addObject("user_pics", userImageRepository.findByUserId(profile.getId()));
-        m.addObject("chat_thread", chatService.getChatMsgs(currUser, profile));
-        m.addObject("num_remaining_msgs", chatService.getNumMsgsRemaining(currUser, profile));
+        m.addObject("chat_thread", isViewingSelf ? Collections.emptyList() : chatService.getChatMsgs(currUser, profile));
+        m.addObject("num_remaining_msgs", isViewingSelf ? 0 : chatService.getNumMsgsRemaining(currUser, profile));
         setDateAttributes(currUser, profile, m.getModelMap());
 
         if(!isViewingSelf) {
