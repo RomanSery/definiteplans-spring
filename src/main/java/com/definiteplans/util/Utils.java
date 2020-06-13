@@ -37,6 +37,7 @@ public class Utils {
 
         m.addObject("user", currUser);
         m.addObject("curr_user_id", currUser.getId());
+        m.addObject("firebase_id", currUser.getFireBaseId());
         m.addObject("genders", enumValueService.findByType(EnumValueType.GENDER));
         m.addObject("states", State.values());
         m.addObject("ethnicities", enumValueService.findByType(EnumValueType.ETHNICITY));

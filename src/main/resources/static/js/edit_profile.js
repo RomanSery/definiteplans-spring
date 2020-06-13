@@ -99,8 +99,8 @@ definitePlansScripts.initImageUpload = function () {
 
             var storage = firebase.storage();
             var storageRef = storage.ref();
-            var thumbImgMetadata = { contentType: mimeType, userId: definitePlansScripts.curr_user_id, fileName: fileName };
-            var thumbImgRef = storageRef.child('images/'+definitePlansScripts.curr_user_id+'/thumbs/' + definitePlansScripts.timestamp);
+            var thumbImgMetadata = { contentType: mimeType, fileName: fileName, customMetadata: { 'userId': definitePlansScripts.fireb_id } };
+            var thumbImgRef = storageRef.child('images/'+definitePlansScripts.fireb_id+'/thumbs/' + definitePlansScripts.timestamp);
             var thumbImgUploadTask = thumbImgRef.putString(dataUrl, 'data_url', thumbImgMetadata);
             thumbImgUploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                 function(snapshot){
@@ -108,7 +108,8 @@ definitePlansScripts.initImageUpload = function () {
                     definitePlansScripts.showUploadProgress('Uploading thumbnail: ' + progress + '% done');
                 },
                 function(error) {
-                    definitePlansScripts.showErrorMsg(error);
+                    definitePlansScripts.showErrorMsg(error.message);
+                    $('#loading-indicator').hide();
                 }, function() {
                     thumbImgUploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                         definitePlansScripts.showUploadProgress('Saving thumbnail...');
@@ -118,6 +119,7 @@ definitePlansScripts.initImageUpload = function () {
 
         },
         success: function (file, resp) {
+
             const mimeType = file.type;
             const fileName = file.upload.filename;
             const dataUrl = file.dataURL;
@@ -125,8 +127,8 @@ definitePlansScripts.initImageUpload = function () {
 
             var storage = firebase.storage();
             var storageRef = storage.ref();
-            var fullImgMetadata = { contentType: mimeType, userId: definitePlansScripts.curr_user_id, fileName: fileName };
-            var fullImgRef = storageRef.child('images/'+definitePlansScripts.curr_user_id+'/' + definitePlansScripts.timestamp);
+            var fullImgMetadata = { contentType: mimeType, fileName: fileName, customMetadata: { 'userId': definitePlansScripts.fireb_id } };
+            var fullImgRef = storageRef.child('images/'+definitePlansScripts.fireb_id+'/' + definitePlansScripts.timestamp);
             var fullImgUploadTask = fullImgRef.putString(dataUrl, 'data_url', fullImgMetadata);
             fullImgUploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                 function(snapshot){
@@ -134,7 +136,8 @@ definitePlansScripts.initImageUpload = function () {
                     definitePlansScripts.showUploadProgress('Uploading full size image: ' + progress + '% done');
                 },
                 function(error) {
-                    definitePlansScripts.showErrorMsg(error);
+                    definitePlansScripts.showErrorMsg(error.message);
+                    $('#loading-indicator').hide();
                 }, function() {
                     fullImgUploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                         definitePlansScripts.showUploadProgress('Saving full size image...');

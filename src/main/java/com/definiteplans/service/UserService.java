@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -107,6 +108,7 @@ public class UserService {
         user.setCreationDate(DateUtil.now());
         user.setLastModifiedDate(DateUtil.now());
         user.setUserStatus(UserStatus.PENDING_EMAIL_VALIDATION.getId());
+        user.setFireBaseId(UUID.randomUUID().toString());
         user = saveUser(user, true);
 
         userEmailRepository.save(new UserEmail(user.getId(), user.getEmail()));
@@ -154,6 +156,7 @@ public class UserService {
         newUser.setCreationDate(DateUtil.now());
         newUser.setLastModifiedDate(DateUtil.now());
         newUser.setUserStatus(UserStatus.ACTIVE.getId());
+        newUser.setFireBaseId(UUID.randomUUID().toString());
         newUser = userRepository.save(newUser);
 
         userEmailRepository.save(new UserEmail(newUser.getId(), email));

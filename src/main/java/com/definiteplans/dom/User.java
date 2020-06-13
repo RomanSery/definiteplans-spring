@@ -153,6 +153,9 @@ public class User implements Serializable {
     @Column(name = "google_sub_id")
     private String googleSubId;
 
+    @Column(name = "fire_base_id")
+    private String fireBaseId;
+
     public User() {
         super();
     }

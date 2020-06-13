@@ -1,8 +1,20 @@
-secuirty rules for firebase storage
-
 DateValidator //TODO
-
 
 for launch
 update FB&google apps
 update firebase config
+
+
+service firebase.storage {
+  match /b/{bucket}/o {        
+    match /images/{userId}/{allPaths=**} {
+      allow read;
+      allow write: if metadataUserId() == userId
+      	&& request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+  }
+
+  function metadataUserId() { return request.resource.metadata.userId; }
+}
