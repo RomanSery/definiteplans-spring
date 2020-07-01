@@ -110,6 +110,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.requiresChannel().anyRequest().requiresSecure();
+
         // These pages do not require login
         http.authorizeRequests().antMatchers("/login", "/logout", "/forgotpwd",
                 "/forgotpwdthanks", "/register", "/resetpwd", "/unsub", "/confirmemail", "/resendValidationEmail", "/webjars/**", "/fonts/**").permitAll();
