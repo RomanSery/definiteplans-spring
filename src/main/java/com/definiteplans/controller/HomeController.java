@@ -5,10 +5,13 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.definiteplans.controller.model.ActionItem;
+import com.definiteplans.controller.model.AjaxResponse;
 import com.definiteplans.dao.DefiniteDateRepository;
 import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dom.DefiniteDate;
@@ -58,6 +61,10 @@ public class HomeController {
         return m;
     }
 
+    @GetMapping("/health")
+    public @ResponseBody AjaxResponse healthCheck() {
+        return AjaxResponse.success("UP");
+    }
 
     public String getCalendarEventsJSON(User currUser, List<DefiniteDate> upComingDates) {
 
