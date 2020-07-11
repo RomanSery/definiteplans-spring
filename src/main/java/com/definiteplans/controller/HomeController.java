@@ -54,6 +54,7 @@ public class HomeController {
         List<ActionItem> requiresAction = dateService.getRequiresMyAction(currUser, upComingDates);
         List<ActionItem> dateDetails = dateService.getUpComingDatesDetail(currUser, upComingDates);
 
+        m.addObject("title", "Calendar");
         m.addObject("action_items", requiresAction);
         m.addObject("date_details", dateDetails);
         m.addObject("calendar_events", getCalendarEventsJSON(currUser, upComingDates));
@@ -63,12 +64,16 @@ public class HomeController {
 
     @GetMapping("/privacy_policy")
     public ModelAndView privacyPolicy(){
-        return new ModelAndView("privacy_policy");
+        ModelAndView m = new ModelAndView("privacy_policy");
+        m.addObject("title", "Privacy Policy");
+        return m;
     }
 
     @GetMapping("/terms")
     public ModelAndView terms(){
-        return new ModelAndView("terms");
+        ModelAndView m = new ModelAndView("terms");
+        m.addObject("title", "Terms and Conditions");
+        return m;
     }
 
     @GetMapping("/health")
