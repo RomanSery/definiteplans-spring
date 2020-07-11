@@ -61,6 +61,16 @@ public class HomeController {
         return m;
     }
 
+    @GetMapping("/privacy_policy")
+    public ModelAndView privacyPolicy(){
+        return new ModelAndView("privacy_policy");
+    }
+
+    @GetMapping("/terms")
+    public ModelAndView terms(){
+        return new ModelAndView("terms");
+    }
+
     @GetMapping("/health")
     public @ResponseBody AjaxResponse healthCheck() {
         return AjaxResponse.success("UP");

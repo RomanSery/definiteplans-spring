@@ -113,7 +113,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         //http.requiresChannel().anyRequest().requiresSecure();
 
         // These pages do not require login
-        http.authorizeRequests().antMatchers("/login", "/logout", "/forgotpwd", "/health",
+        http.authorizeRequests().antMatchers("/login", "/logout", "/forgotpwd", "/health", "/privacy_policy", "/terms",
                 "/forgotpwdthanks", "/register", "/resetpwd", "/unsub", "/confirmemail", "/resendValidationEmail", "/webjars/**", "/fonts/**").permitAll();
 
         http.authorizeRequests().anyRequest().authenticated();
