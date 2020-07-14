@@ -68,12 +68,14 @@
         <div class="form-group col-md-4">
             <label>Income</label>
             <select class="form-control doit-select2" th:field="*{income}">
+                <option value="0">Select</option>
                 <option th:each="o : ${incomeTypes}" th:value="${o.id}" th:text="${o.enumValue}"></option>
             </select>
         </div>
         <div class="form-group col-md-4">
             <label>Smokes</label>
             <select class="form-control doit-select2" th:field="*{smokes}">
+                <option value="0">Select</option>
                 <option th:each="o : ${smokeTypes}" th:value="${o.id}" th:text="${o.enumValue}"></option>
             </select>
         </div>

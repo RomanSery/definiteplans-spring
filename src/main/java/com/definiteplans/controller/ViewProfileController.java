@@ -27,6 +27,7 @@ import com.definiteplans.service.ChatService;
 import com.definiteplans.service.DateService;
 import com.definiteplans.service.PrivacyCheckerService;
 import com.definiteplans.service.UserService;
+import com.definiteplans.util.Utils;
 
 @Controller
 public class ViewProfileController {
@@ -86,7 +87,7 @@ public class ViewProfileController {
         m.addObject("profileFullImg", userService.getProfileImg(profile, false));
         m.addObject("age", UserService.getProfileAge(profile));
         m.addObject("gender", userService.getProfileVal(profile.getGender()));
-        m.addObject("height", userService.getProfileVal(profile.getHeight()));
+        m.addObject("height", Utils.getHeightById(profile.getHeight()));
         m.addObject("ethnicity", userService.getProfileVal(profile.getEthnicity()));
         m.addObject("maritalStatus", userService.getProfileVal(profile.getMaritalStatus()));
         m.addObject("kids", userService.getProfileVal(profile.getKids()));

@@ -33,6 +33,11 @@ public class Utils {
         }
     }
 
+    public static String getHeightById(int id) {
+        EnumValue value = heightValues.stream().filter(h -> h.getId() == id).findFirst().orElse(null);
+        return value != null ? value.getEnumValue() : "";
+    }
+
     public static void addEnumValues(ModelAndView m, EnumValueService enumValueService, User currUser) {
 
         m.addObject("user", currUser);
