@@ -7,8 +7,24 @@
 </head>
 
 <div class="row" th:fragment="login">
-    <div class="col-lg-4"></div>
-    <div class="col-lg-4 text-center">
+    <div class="col-lg-6">
+
+        <div class="media">
+            <img src="/img/android-chrome-192x192.png" class="mr-3 img-md" alt="...">
+            <div class="media-body">
+                <h1 class="mt-0">LetsDefinitely.com</h1>
+                <p>
+                    Welcome to a new approach to online dating, taking the guesswork out of the equation.  Our service is completely FREE for our users, so get started by creating an account.
+                </p>
+                <h4>Why do we require you to create an account?</h4>
+                <p>
+                    In order to maintain the integrity of our user base and to help protect the privacy of our users.
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-6 text-center">
 
         <div class="alert alert-success" th:if="${was_pwd_reset}">
             Your password was successfully reset, please continue to login.
@@ -58,13 +74,8 @@
             <a class="btn btn-sm btn-block btn-primary" th:href="@{/register}">Create an account for FREE</a>
         </form>
 
-
-
-
-
-
     </div>
-    <div class="col-lg-4"></div>
+
 </div>
 
 </html>
