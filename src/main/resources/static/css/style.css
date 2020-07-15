@@ -9980,3 +9980,11 @@ body.md-skin {
 a.a-no-deco:hover {
   color: #ffffff !important; text-decoration: none !important;
 }
+
+
+.install-banner {
+  align-content: center;
+  display: none;
+  justify-content: center;
+  width: 100%;
+}

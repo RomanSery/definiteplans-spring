@@ -2,6 +2,8 @@
 <html th:fragment="guestLayout(pageContent, headerContent, showDiffFrag)" lang="en" xmlns:th="http://www.thymeleaf.org">
     <div th:replace="fragments/header::standard-header(${headerContent})"></div>
     <body class="top-navigation">
+        <div th:replace="fragments/sw::installAppFrag"></div>
+
         <div id="wrapper">
             <div id="page-wrapper" class="gray-bg">
                 <div class="row border-bottom white-bg">
@@ -31,15 +33,18 @@
             </div>
         </div>
 
+        <div th:replace="fragments/sw::serviceWorkFragment"></div>
+
 
     </body>
 </html>
 
 
-
 <html th:fragment="authenticatedLayout(pageContent, headerContent)" lang="en" xmlns:th="http://www.thymeleaf.org">
     <div th:replace="fragments/header::standard-header(${headerContent})"></div>
     <body class="top-navigation">
+        <div th:replace="fragments/sw::installAppFrag"></div>
+
         <div id="wrapper">
             <div id="page-wrapper" class="gray-bg">
                 <div class="row border-bottom white-bg">
@@ -68,5 +73,8 @@
 
             </div>
         </div>
+
+        <div th:replace="fragments/sw::serviceWorkFragment"></div>
+
     </body>
 </html>

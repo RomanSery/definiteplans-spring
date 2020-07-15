@@ -1,15 +1,27 @@
 <head th:fragment="standard-header(headerContent)">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
     <meta content="all" name="robots">
     <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
     <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="LetsDefinitely.com">
+    <meta name="apple-mobile-web-app-title" content="LetsDefinitely.com">
+    <meta name="theme-color" content="#1ab394">
+    <meta name="msapplication-navbutton-color" content="#1ab394">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-starturl" content="/login">
+
+    <meta name="google-signin-client_id" content="947515066542-9va3gphca7o8rh4m6a9q7ori42gpj4qd.apps.googleusercontent.com">
+
+
     <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
-    <link rel="manifest" href="/img/site.webmanifest">
+    <link rel="manifest" href="/static/img/manifest.json">
 
     <meta content="LetsDefinitely.com is a new approach to online dating, taking the guesswork out of dating.  Get started for FREE!" name="description">
     <meta content="online dating, singles, dating, personals, definite plans, definite dating, love, dating site, LetsDefinitely.com, free personals" name="keywords">

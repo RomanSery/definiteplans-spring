@@ -1,9 +1,10 @@
 {
   "name": "LetsDefinitely.com",
   "start_url": "https://www.letsdefinitely.com",
+  "lang": "en-US",
   "short_name": "LD",
-  "theme_color":"#ffffff",
-  "background_color":"#ffffff",
+  "theme_color":"#1ab394",
+  "background_color":"#1ab394",
   "display":"standalone",
   "description": "LetsDefinitely.com is a new approach to online dating, taking the guesswork out of dating.  Get started for FREE!",
   "icons": [{
