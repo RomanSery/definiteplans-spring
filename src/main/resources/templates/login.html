@@ -64,14 +64,15 @@
             <br>
             <br>
 
-            <a th:href="${fbLoginUrl}" class="btn btn-block btn-social btn-facebook block full-width">
+            <a class="btn btn-sm btn-block btn-primary" th:href="@{/register}">Create an account for FREE</a>
+            <a th:href="${googleLoginUrl}" class="btn btn-block block full-width">
+                <img th:src="@{/img/btn_google_signin_light_normal_web.png}">
+            </a>
+            <a th:href="${fbLoginUrl}" class="btn btn-social btn-facebook">
                 <i class="fab fa-facebook-f"></i> Sign in with Facebook
             </a>
-            <a th:href="${googleLoginUrl}" class="btn btn-block btn-social btn-google block full-width">
-                <i class="fab fa-google"></i> Sign in with Google
-            </a>
 
-            <a class="btn btn-sm btn-block btn-primary" th:href="@{/register}">Create an account for FREE</a>
+
         </form>
 
     </div>

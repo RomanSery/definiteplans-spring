@@ -17,6 +17,9 @@
                         <div class="alert alert-success" id="customSuccessMsgDiv" style="display:none;">Saved!</div>
 
                         <div th:replace="${pageContent}"></div>
+
+                        <br/>
+
                         <span th:if="${showDiffFrag}" th:remove="tag">
                             <div th:replace="fragments/what_makes_us_diff::diff-frag"></div>
                         </span>
