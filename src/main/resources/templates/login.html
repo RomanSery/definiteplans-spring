@@ -9,20 +9,15 @@
 <div class="row" th:fragment="login">
     <div class="col-lg-6">
 
-        <div class="media">
-            <img src="/img/android-chrome-192x192.png" class="mr-3 img-md" alt="...">
-            <div class="media-body">
-                <h1 class="mt-0">LetsDefinitely.com</h1>
-                <p>
-                    Welcome to a new approach to online dating, taking the guesswork out of the equation.  Our service is completely FREE for our users, so get started by creating an account.
-                </p>
-                <h4>Why do we require you to create an account?</h4>
-                <p>
-                    In order to maintain the integrity of our user base and to help protect the privacy of our users.
-                </p>
-            </div>
+        <div class="image-wrapper float-left">
+            <img class="mr-3 img-md" src="/img/android-chrome-192x192.png" alt="">
         </div>
-
+        <div class="single-post-content-wrapper">
+            <h1 class="mt-0">LetsDefinitely.com</h1>
+            Welcome to a new approach to online dating, taking the guesswork out of the equation.  Our service is completely FREE for our users, so get started by creating an account.
+            <h4>Why do we require you to create an account?</h4>
+            In order to maintain the integrity of our user base and to help protect the privacy of our users.
+        </div>
     </div>
     <div class="col-lg-6 text-center">
 
@@ -45,6 +40,8 @@
             <a th:if="${login_error_type == 3}" href="javascript:;" id="resend-confirm-email" th:email="${email}">Re-send validation email</a>
         </div>
 
+        <div class="hr-line-solid  d-sm-block d-xs-block d-md-none"></div>
+
         <p>Login in. To see it in action.</p>
 
         <form id="loginForm" role="form" th:action="@{/login}" method="POST" data-parsley-validate>
@@ -57,14 +54,16 @@
                 <input class="form-control" id="loginpassword" name="loginpassword" placeholder="Password" type="password"
                        required data-parsley-minlength="8">
             </div>
-            <label> <input name="remember" type="checkbox" value="1"> Remember me </label>
-            <button class="btn btn-primary block full-width" type="submit">Login</button>
+            <label>
+                <input name="remember" type="checkbox" value="1"> Remember me
+            </label>
+            <button class="btn btn-primary block full-width btn-rounded" type="submit">Login</button>
+            <br>
+            <a class="btn btn-sm btn-block btn-info btn-rounded" th:href="@{/register}">Create an account for FREE</a>
             <label><a th:href="@{/forgotpwd}"><small>Forgot password?</small></a></label>
 
             <br>
-            <br>
 
-            <a class="btn btn-sm btn-block btn-primary" th:href="@{/register}">Create an account for FREE</a>
             <a th:href="${googleLoginUrl}" class="btn btn-block block full-width">
                 <img th:src="@{/img/btn_google_signin_light_normal_web.png}">
             </a>
