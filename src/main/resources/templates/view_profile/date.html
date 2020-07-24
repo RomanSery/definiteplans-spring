@@ -101,6 +101,7 @@
         <input type="hidden" th:value="${dateId}" th:field="*{dateId}">
         <h3 class="m-t-none m-b">This <strong class="text-success">WILL</strong> be shared with [[${otherPersonName}]]</h3>
 
+        <div class="alert alert-danger" role="alert" id="definiteDateFeedbackFormErrors" style="display:none;"></div>
 
         <div class="form-group row">
             <label for="participantNoShow" class="col-sm-4 col-form-label font-bold">Did [[${otherPersonName}]] show up?</label>

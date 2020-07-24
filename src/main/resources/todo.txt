@@ -1,9 +1,3 @@
-DateValidator //TODO
-
-for launch
-update FB&google apps
-update firebase config
-
 
 service firebase.storage {
   match /b/{bucket}/o {

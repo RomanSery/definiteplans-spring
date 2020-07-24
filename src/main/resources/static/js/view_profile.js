@@ -176,9 +176,16 @@ definitePlansScripts.feedbackForm = function() {
                     definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
                 },
                 success: function (data) {
+                    if(data.status == "ERR") {
+                        $('#definiteDateFeedbackFormErrors').show();
+                        $('#definiteDateFeedbackFormErrors').html(data.msg);
+                    }
                     definitePlansScripts.stopBtnLoading('submitFeedbackBtn');
                     definitePlansScripts.refreshMakePlans(profileId);
-                    $('#dateFeedbackForm').hide();
+
+                    if(data.status == "OK") {
+                        $('#dateFeedbackForm').hide();
+                    }
                 }
             });
             return false;
