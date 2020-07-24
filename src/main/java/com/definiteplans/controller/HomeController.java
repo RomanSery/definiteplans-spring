@@ -83,7 +83,7 @@ public class HomeController {
             viewName = "news_auth";
         }
         ModelAndView m = new ModelAndView(viewName);
-        m.addObject("title", "News");
+        m.addObject("title", "News / Help");
         return m;
     }
 
