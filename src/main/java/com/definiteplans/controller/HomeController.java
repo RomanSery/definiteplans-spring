@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -73,6 +72,18 @@ public class HomeController {
     public ModelAndView terms(){
         ModelAndView m = new ModelAndView("terms");
         m.addObject("title", "Terms and Conditions");
+        return m;
+    }
+
+    @GetMapping("/news")
+    public ModelAndView news(){
+        String viewName = "news_guest";
+        User currUser = userService.getCurrentUser();
+        if(currUser != null) {
+            viewName = "news_auth";
+        }
+        ModelAndView m = new ModelAndView(viewName);
+        m.addObject("title", "News");
         return m;
     }
 
