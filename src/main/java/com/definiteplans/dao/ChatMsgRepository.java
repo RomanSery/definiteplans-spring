@@ -18,7 +18,8 @@ public interface ChatMsgRepository extends JpaRepository<ChatMsg, Integer> {
     @Query("FROM ChatMsg where toId = :currUserId and isRead = false order by sentDate desc")
     List<ChatMsg> getMyUnreadChatMsgs(@Param("currUserId") int currUserId);
 
-    @Query("FROM ChatMsg where fromId = :currUserId OR toId = :currUserId OR fromId = :profileId OR toId = :profileId order by sentDate asc")
+    @Query("FROM ChatMsg where (fromId = :currUserId AND toId = :profileId) OR (fromId = :profileId AND toId = :currUserId) " +
+            "order by sentDate asc")
     List<ChatMsg> getChat(@Param("currUserId") int currUserId, @Param("profileId") int profileId);
 
     @Query("select count(id) FROM ChatMsg where toId = :currUserId and isRead = false")
