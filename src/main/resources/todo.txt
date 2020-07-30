@@ -1,3 +1,5 @@
+Greetings msg in date panel is cut off when its long
+
 
 service firebase.storage {
   match /b/{bucket}/o {
