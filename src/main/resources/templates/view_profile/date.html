@@ -67,7 +67,7 @@
                     </div>
                     <small th:unless="${has_active_date}" id="greetingMsgChars" class="form-text text-muted clear"></small>
                     <div th:if="${has_active_date}" class="input-group m-b">
-                        <input readonly class="form-control-plaintext" th:field="*{greetingMsg}"></input>
+                        <div th:text="*{greetingMsg}" th:remove="tag"></div>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,12 @@
-Greetings msg in date panel is cut off when its long
+you know what would be cool... and adds safety ..
+users cannot send messages or cannot set plans unless they have uploaded a profile picture
+
+
+
+seeing actual feedback is kinda exciting
+like a comment, first impression
+something along those lines
+
 
 
 service firebase.storage {
