@@ -53,12 +53,19 @@ public class LoginController {
 
         ModelAndView m = new ModelAndView("login_new");
 
+        boolean hasMsgToDisplay = false;
+
         if(loginerror != null) {
             LoginErrorType type = LoginErrorType.getById(loginerror);
             if(type != null) {
                 m.addObject("login_error_type", type.getId());
                 m.addObject("login_error", type.getDescription());
+                hasMsgToDisplay = true;
             }
+        }
+
+        if( (reset != null && reset == 1) || (confirmed != null && confirmed == 1) || (deleted != null && deleted == 1)) {
+            hasMsgToDisplay = true;
         }
 
         m.addObject("title", "Login");
@@ -66,6 +73,7 @@ public class LoginController {
         m.addObject("was_pwd_reset", reset != null && reset == 1);
         m.addObject("was_confirmed", confirmed != null && confirmed == 1);
         m.addObject("was_deleted", deleted != null && deleted == 1);
+        m.addObject("has_msg", hasMsgToDisplay);
 
         m.addObject("fbLoginUrl", OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/facebook");
         m.addObject("googleLoginUrl", OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/google");

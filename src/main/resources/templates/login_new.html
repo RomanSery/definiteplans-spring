@@ -15,6 +15,8 @@
 
 <body id="page-top" th:fragment="login">
 
+    <div th:replace="fragments/sw::installAppFrag"></div>
+
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
         <div class="container">
@@ -40,10 +42,6 @@
         <div class="container h-100">
             <div class="row h-100 align-items-center justify-content-center text-center">
                 <div class="col-lg-10 align-self-start">
-
-                    <div class="alert alert-danger" id="customErrMsgDiv" style="display:none;"></div>
-                    <div class="alert alert-info" id="progressMsgDiv" style="display:none;"></div>
-                    <div class="alert alert-success" id="customSuccessMsgDiv" style="display:none;">Saved!</div>
 
                     <h4 class="text-uppercase text-white font-weight-bold">
                         Dating shouldn't be hard
@@ -89,26 +87,26 @@
                     </div>
 
 
-                    <a class="btn btn-primary btn-xl js-scroll-trigger mt-5" id="find-out-more-btn" href="#">Get started</a>
+                    <a th:if="${!has_msg}" class="btn btn-primary btn-xl js-scroll-trigger mt-5" id="find-out-more-btn" href="#">Get started</a>
 
-                    <div id="login-form-container" class="align-items-center justify-content-center text-center d-lg-flex mt-2 invisible">
+                    <div class="alert alert-success" th:if="${was_pwd_reset}">
+                        Your password was successfully reset, please continue to login.
+                    </div>
 
-                        <div class="alert alert-success" th:if="${was_pwd_reset}">
-                            Your password was successfully reset, please continue to login.
-                        </div>
+                    <div class="alert alert-success" th:if="${was_confirmed}">
+                        Thanks for confirming your email, please continue to login.
+                    </div>
 
-                        <div class="alert alert-success" th:if="${was_confirmed}">
-                            Thanks for confirming your email, please continue to login.
-                        </div>
+                    <div class="alert alert-success" th:if="${was_deleted}">
+                        Your account and all of your data has been deleted.  Come back some time!
+                    </div>
 
-                        <div class="alert alert-success" th:if="${was_deleted}">
-                            Your account and all of your data has been deleted.  Come back some time!
-                        </div>
+                    <div th:if="${login_error != null}" class="alert alert-danger" id="login-error-div">
+                        [(${login_error})]
+                        <a th:if="${login_error_type == 3}" href="javascript:;" id="resend-confirm-email" th:email="${email}">Re-send validation email</a>
+                    </div>
 
-                        <div th:if="${login_error != null}" class="alert alert-danger" id="login-error-div">
-                            [(${login_error})]
-                            <a th:if="${login_error_type == 3}" href="javascript:;" id="resend-confirm-email" th:email="${email}">Re-send validation email</a>
-                        </div>
+                    <div id="login-form-container" class="align-items-center justify-content-center text-center d-lg-flex mt-2" th:classappend="${!has_msg} ? invisible : ''">
 
                         <form id="loginForm" role="form" th:action="@{/login}" method="POST" data-parsley-validate>
 
