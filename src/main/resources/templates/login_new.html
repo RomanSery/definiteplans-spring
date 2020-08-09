@@ -46,18 +46,52 @@
                     <div class="alert alert-success" id="customSuccessMsgDiv" style="display:none;">Saved!</div>
 
                     <h4 class="text-uppercase text-white font-weight-bold">
-                        Dating shouldn't be this hard
+                        Dating shouldn't be hard
                     </h4>
 
                     <hr class="divider my-4" />
 
-                    <p class="text-white-75 font-weight-light mb-5">
-                        Welcome to a new approach to online dating, taking the guesswork out of the equation.  Our service is completely FREE for our users, so get started by creating an account.
-                    </p>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 text-center">
+                                <div class="">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle-o fa-stack-2x text-primary"></i>
+                                        <strong class="fa-stack-1x text-white">1</strong>
+                                    </span>
+                                    <h3 class="h4 mb-2 text-white font-weight-bold">Messaging</h3>
+                                    <p class="text-white mb-0">Found someone that catches your eye?  Get to know them just enough to build excitement for the date</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6 text-center">
+                                <div class="">
 
-                    <a class="btn btn-primary btn-xl js-scroll-trigger" id="find-out-more-btn" href="#">Get started</a>
+                                     <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle-o fa-stack-2x text-primary"></i>
+                                        <strong class="fa-stack-1x text-white">2</strong>
+                                    </span>
 
-                    <div id="login-form-container" class="align-items-center justify-content-center text-center d-lg-flex invisible">
+                                    <h3 class="h4 mb-2 text-white font-weight-bold">Definite plans</h3>
+                                    <p class="text-white mb-0">Use our date planner to agree on a date, time, and place to meet. And what kind of activity you will be doing</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6 text-center">
+                                <div class="">
+                                     <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle-o fa-stack-2x text-primary"></i>
+                                        <strong class="fa-stack-1x text-white">3</strong>
+                                    </span>
+                                    <h3 class="h4 mb-2 text-white font-weight-bold">After the date</h3>
+                                    <p class="text-white mb-0">Give your feedback. If you both said yes, plan the next date.  No more guesswork!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <a class="btn btn-primary btn-xl js-scroll-trigger mt-5" id="find-out-more-btn" href="#">Get started</a>
+
+                    <div id="login-form-container" class="align-items-center justify-content-center text-center d-lg-flex mt-2 invisible">
 
                         <div class="alert alert-success" th:if="${was_pwd_reset}">
                             Your password was successfully reset, please continue to login.
