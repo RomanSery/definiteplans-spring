@@ -81,3 +81,11 @@
 
     </body>
 </html>
+
+
+
+
+<html th:fragment="loginLayout(pageContent, headerContent)" lang="en" xmlns:th="http://www.thymeleaf.org">
+    <div th:replace="fragments/header::standard-header(${headerContent})"></div>
+    <div th:replace="${pageContent}"></div>
+</html>

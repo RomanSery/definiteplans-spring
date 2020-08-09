@@ -1,0 +1,181 @@
+<!doctype html>
+<html th:replace="~{fragments/layout::loginLayout(~{::login}, ~{::header-content})}" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="header-content" th:remove="tag">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <link th:href="@{/css/login.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-social.css}" rel="stylesheet">
+    <script th:src="@{/js/login.js}"></script>
+
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css" />
+</head>
+
+
+<body id="page-top" th:fragment="login">
+
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#page-top">
+                <div class="image-wrapper float-left">
+                    <img class="mr-3 img-md" src="/img/android-chrome-192x192.png" alt="">
+                </div>
+                LetsDefinitely.com
+            </a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto my-2 my-lg-0">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/register}">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/news}">News / Help</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#services">What makes us different</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Masthead-->
+    <header class="masthead">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center justify-content-center text-center">
+                <div class="col-lg-10 align-self-start">
+
+                    <div class="alert alert-danger" id="customErrMsgDiv" style="display:none;"></div>
+                    <div class="alert alert-info" id="progressMsgDiv" style="display:none;"></div>
+                    <div class="alert alert-success" id="customSuccessMsgDiv" style="display:none;">Saved!</div>
+
+                    <h4 class="text-uppercase text-white font-weight-bold">
+                        Dating shouldn't be this hard
+                    </h4>
+
+                    <hr class="divider my-4" />
+
+                    <p class="text-white-75 font-weight-light mb-5">
+                        Welcome to a new approach to online dating, taking the guesswork out of the equation.  Our service is completely FREE for our users, so get started by creating an account.
+                    </p>
+
+                    <a class="btn btn-primary btn-xl js-scroll-trigger" id="find-out-more-btn" href="#">Get started</a>
+
+                    <div id="login-form-container" class="align-items-center justify-content-center text-center d-lg-flex invisible">
+
+                        <div class="alert alert-success" th:if="${was_pwd_reset}">
+                            Your password was successfully reset, please continue to login.
+                        </div>
+
+                        <div class="alert alert-success" th:if="${was_confirmed}">
+                            Thanks for confirming your email, please continue to login.
+                        </div>
+
+                        <div class="alert alert-success" th:if="${was_deleted}">
+                            Your account and all of your data has been deleted.  Come back some time!
+                        </div>
+
+                        <div th:if="${login_error != null}" class="alert alert-danger" id="login-error-div">
+                            [(${login_error})]
+                            <a th:if="${login_error_type == 3}" href="javascript:;" id="resend-confirm-email" th:email="${email}">Re-send validation email</a>
+                        </div>
+
+                        <form id="loginForm" role="form" th:action="@{/login}" method="POST" data-parsley-validate>
+
+                            <div class="form-group text-center">
+                                <input class="form-control text-center" id="loginemail" name="loginemail" placeholder="Email" type="email"
+                                       required data-parsley-type="email">
+                            </div>
+                            <div class="form-group text-center">
+                                <input class="form-control text-center" id="loginpassword" name="loginpassword" placeholder="Password" type="password"
+                                       required data-parsley-minlength="8">
+                            </div>
+
+                            <input name="remember" type="checkbox" value="1" checked="checked" style="display: none;">
+
+                            <button class="btn btn-primary block full-width btn-rounded text-center" type="submit">Login</button>
+                            <br>
+                            <a class="btn btn-sm btn-block btn-info btn-rounded text-center" th:href="@{/register}">Create an account for FREE</a>
+                            <label><a th:href="@{/forgotpwd}" class="text-white"><small>Forgot password?</small></a></label>
+
+                            <br>
+
+                            <p class="text-white-50 font-weight-light">
+                                We never post anything to your social media
+                            </p>
+
+                            <a th:href="${googleLoginUrl}" class="btn">
+                                <img th:src="@{/img/btn_google_signin_light_normal_web.png}">
+                            </a>
+                            <a th:href="${fbLoginUrl}" class="btn btn-social btn-facebook">
+                                <i class="fab fa-facebook-f"></i> Sign in with Facebook
+                            </a>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </header>
+
+    <!-- Services-->
+    <section class="page-section" id="services">
+        <div class="container">
+            <h2 class="text-center mt-0">What makes us different</h2>
+            <hr class="divider my-4" />
+            <div class="row">
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="mt-5">
+                        <i class="fas fa-4x fa-calendar text-primary mb-4"></i>
+                        <h3 class="h4 mb-2">Definite Dating</h3>
+                        <p class="text-muted mb-0">Making definite plans leads to more kept dates and less wasted time. When two people make
+                            definite plans it shows they respect and value each other's time and are enthusiastic about
+                            seeing each other.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="mt-5">
+                        <i class="fas fa-4x fa-question text-primary mb-4"></i>
+                        <h3 class="h4 mb-2">No guesswork</h3>
+                        <p class="text-muted mb-0">Does she want another date? Does he want to see me again? These kind of questions cause
+                            unnecessary confusion. After the date, both of you will be asked to give your feedback on a 2nd
+                            date. No more guesswork!</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="mt-5">
+                        <i class="fas fa-4x fa-envelope text-primary mb-4"></i>
+                        <h3 class="h4 mb-2">Messaging</h3>
+                        <p class="text-muted mb-0">You can only get to know and build attraction with someone in-person, not by constant messaging,
+                            texting, and phone calling back and forth. You can't talk someone into liking you, but you can
+                            definitely talk them out of it!</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="mt-5">
+                        <i class="fas fa-4x fa-users text-primary mb-4"></i>
+                        <h3 class="h4 mb-2">Safety features</h3>
+                        <p class="text-muted mb-0">No one wants to be stood up. We provide a simple way for our members to flag people that don't
+                            show up after you've made definite plans to meet and you will be able to see how many no-shows
+                            everyone has! You can also hide yourself from age ranges that you don't wish to hear from.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer-->
+    <footer class="bg-light py-5">
+        <div class="container">
+            <a th:href="@{/privacy_policy}"> <strong>Privacy Policy</strong></a> |
+            <a th:href="@{/terms}"> <strong>Terms of Use</strong></a> |
+            <a href="mailto:roman@letsdefinitely.com"> <strong>Contact Us</strong></a>
+        </div>
+    </footer>
+
+</body>
+
+</html>
+

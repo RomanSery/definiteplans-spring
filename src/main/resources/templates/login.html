@@ -1,7 +1,8 @@
 <!doctype html>
-<html th:replace="~{fragments/layout::guestLayout(~{::login}, ~{::header-content}, true)}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{fragments/layout::loginLayout(~{::login}, ~{::header-content}, true)}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="header-content" th:remove="tag">
+    <link th:href="@{/css/login.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrap-social.css}" rel="stylesheet">
     <script th:src="@{/js/login.js}"></script>
 </head>
@@ -66,7 +67,9 @@
 
             <label><strong><small>We never post anything to your social media</small></strong></label>
 
-            <a th:href="${googleLoginUrl}" class="btn btn-block block full-width">
+            <br>
+
+            <a th:href="${googleLoginUrl}" class="btn">
                 <img th:src="@{/img/btn_google_signin_light_normal_web.png}">
             </a>
             <a th:href="${fbLoginUrl}" class="btn btn-social btn-facebook">

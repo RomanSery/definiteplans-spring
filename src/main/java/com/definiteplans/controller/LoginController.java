@@ -51,7 +51,7 @@ public class LoginController {
                               @RequestParam(required = false, name = "deleted") Integer deleted,
                               @RequestParam(required = false, name = "loginerror") Integer loginerror) {
 
-        ModelAndView m = new ModelAndView("login");
+        ModelAndView m = new ModelAndView("login_new");
 
         if(loginerror != null) {
             LoginErrorType type = LoginErrorType.getById(loginerror);
