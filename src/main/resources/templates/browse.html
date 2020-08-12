@@ -45,7 +45,7 @@
 
 <div th:fragment="search-results" th:remove="tag">
 
-    <div class="alert alert-success" id="search-num-results">
+    <div class="alert alert-success" id="search-num-results" th:if="${numResults > 8}">
         [[${numResults}]] results
 
         <nav class="float-right" th:if="${numResults > 0}">
