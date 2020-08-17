@@ -97,8 +97,6 @@ public class ViewProfileController {
         m.addObject("education", userService.getProfileVal(profile.getEducation()));
         m.addObject("income", userService.getProfileVal(profile.getIncome()));
         m.addObject("smokes", userService.getProfileVal(profile.getSmokes()));
-        m.addObject("aboutMe", profile.getAboutMePretty());
-        m.addObject("interests", profile.getInterestsPretty());
         m.addObject("user_pics", userImageRepository.findByUserId(profile.getId()));
         m.addObject("chat_thread", isViewingSelf ? Collections.emptyList() : chatService.getChatMsgs(currUser, profile));
         m.addObject("num_remaining_msgs", isViewingSelf ? 0 : chatService.getNumMsgsRemaining(currUser, profile));

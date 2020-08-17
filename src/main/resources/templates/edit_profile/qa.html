@@ -1,0 +1,91 @@
+<div th:fragment="questions-answers">
+    <div id="add-qa-form">
+        <div th:replace="edit_profile/qa::add-qa-frag"></div>
+    </div>
+    <div id="my-qa-list">
+        <div th:replace="edit_profile/qa::my-answered-qa-frag"></div>
+    </div>
+
+</div>
+
+
+<div th:fragment="add-qa-frag" th:remove="tag">
+
+    <div class="text-center" id="qa-form-loading-indicator" style="display: none;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <p th:if="${questions != null and !questions.isEmpty()}">
+        Answer as many questions as you like.  The more you answer, the more likely you are to find someone that is compatible.
+    </p>
+    <p th:if="${questions != null and questions.isEmpty()}">
+        You've answered all the available questions.  Great job!
+    </p>
+
+    <form id="addQaForm" method="POST" th:action="@{/me/add_qa}" th:if="${questions != null and !questions.isEmpty()}" data-parsley-validate>
+        <div class="alert alert-primary" role="alert" id="qa-info-saved" style="display:none;"></div>
+        <div class="alert alert-danger" role="alert" id="qa-info-errors" style="display:none;"></div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label>Question</label>
+                <select class="form-control doit-select2" id="selected-question" name="selected-question" required>
+                    <option th:each="q : ${questions}" th:value="${q.id}" th:text="${q.questionText}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label>Answer</label>
+                <textarea class="form-control" id="questionAnswerTxt" name="questionAnswerTxt" data-parsley-maxlength="500" required></textarea>
+                <span class="help-block m-b-none" id="questionAnswerTxtChars"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <button class="btn btn-primary btn-lg" type="submit">Add Answer</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+
+<div th:fragment="my-answered-qa-frag" th:remove="tag">
+
+    <div class="text-center" id="qa-loading-indicator" style="display: none;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <div class="form-row" th:if="${my_qa != null and !my_qa.isEmpty()}">
+        <div class="form-group col-md-12">
+            <label><strong>My Answers</strong></label>
+            <table class="table">
+                <tbody>
+                    <div th:each="qa : ${my_qa}" th:remove="tag">
+                        <tr>
+                            <td>
+                                <strong><span th:text="${qa.question}"></span></strong>
+                                <button type="button" class="btn btn-sm delete-question-btn text-danger" th:id="${qa.qaId}">
+                                    <i class="fa fa-trash-o"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><i><span th:text="${qa.answerPretty}"></span></i></td>
+                        </tr>
+                    </div>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

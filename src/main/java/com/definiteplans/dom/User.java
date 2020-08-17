@@ -65,12 +65,6 @@ public class User implements Serializable {
     @Column(name = "dob")
     private LocalDate dob;
 
-    @Column(name = "about_me")
-    private String aboutMe;
-
-    @Column(name = "interests")
-    private String interests;
-
     @Column(name = "gender")
     private int gender;
 
@@ -162,20 +156,6 @@ public class User implements Serializable {
 
     public boolean hasPwd() {
         return !StringUtils.isBlank(password);
-    }
-
-    public String getAboutMePretty() {
-        if (this.aboutMe != null) {
-            return this.aboutMe.replace("\r\n", "<br>");
-        }
-        return "";
-    }
-
-    public String getInterestsPretty() {
-        if (this.interests != null) {
-            return this.interests.replace("\r\n", "<br>");
-        }
-        return "";
     }
 
     public Set<Integer> getLanguageIds() {

@@ -45,6 +45,36 @@ definitePlansScripts.basicInfo = function () {
     });
 };
 
+
+
+definitePlansScripts.initQA = function () {
+
+    $('#addQaForm').parsley();
+
+    $("#addQaForm").submit(function (event) {
+        $.ajax({
+            type: "POST", url: '/me/add_qa', data: $('#addQaForm').serialize(),
+            error: function () {
+                definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
+            },
+            success: function (data) {
+                definitePlansScripts.showSaveResult(data, 'qa');
+                definitePlansScripts.refreshMyQaList();
+                definitePlansScripts.refreshMyQaForm();
+            }
+        });
+        return false;
+    });
+};
+
+
+
+
+
+
+
+
+
 definitePlansScripts.showSaveResult = function (data, prefix) {
     if(data.status == 'OK') {
         $('#'+prefix+'-info-saved').show();
@@ -271,6 +301,66 @@ definitePlansScripts.refreshBlockedList = function () {
     });
 };
 
+definitePlansScripts.refreshMyQaList = function () {
+    $.ajax({
+        type: "GET", url: '/me/refresh-qa-list',
+        error: function () {
+            definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
+        },
+        beforeSend: function () {
+            $('#qa-loading-indicator').show();
+        },
+        success: function (data) {
+            $('#qa-loading-indicator').hide();
+            $("#my-qa-list").html(data);
+            definitePlansScripts.deleteMyQa();
+        }
+    });
+};
+
+definitePlansScripts.refreshMyQaForm = function () {
+    $.ajax({
+        type: "GET", url: '/me/refresh-add-qa-form',
+        error: function () {
+            definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
+        },
+        beforeSend: function () {
+            $('#qa-form-loading-indicator').show();
+        },
+        success: function (data) {
+            $('#qa-form-loading-indicator').hide();
+            $("#add-qa-form").html(data);
+            definitePlansScripts.initQA();
+        }
+    });
+};
+
+definitePlansScripts.deleteMyQa = function () {
+    $('.delete-question-btn').click(function () {
+        if(confirm('Are you sure you want to delete this?')) {
+            let deleteQaBtn = $(this);
+            $.ajax({
+                type: "GET", url: '/me/delete_qa/' + $(this).attr('id'),
+                beforeSend: function (xhr) {
+                    definitePlansScripts.makeBtnLoadingObj(deleteQaBtn);
+
+                    var token = $('#_csrf').attr('content');
+                    var header = $('#_csrf_header').attr('content');
+                    xhr.setRequestHeader(header, token);
+                },
+                error: function () {
+                    definitePlansScripts.showErrorMsg('Sorry, there was some error. Please try again.');
+                },
+                success: function (data) {
+                    definitePlansScripts.stopBtnLoadingObj(deleteQaBtn);
+                    definitePlansScripts.refreshMyQaList();
+                    definitePlansScripts.refreshMyQaForm();
+                }
+            });
+        }
+    });
+};
+
 
 definitePlansScripts.deleteAccount = function () {
 
@@ -309,9 +399,12 @@ $(document).ready(function() {
     definitePlansScripts.deleteAccount();
     definitePlansScripts.initLg();
     definitePlansScripts.basicInfo();
+    definitePlansScripts.initQA();
     definitePlansScripts.initImageUpload();
     definitePlansScripts.initImgScripts();
     definitePlansScripts.unblockUser();
+    definitePlansScripts.deleteMyQa();
+
 });
 
 

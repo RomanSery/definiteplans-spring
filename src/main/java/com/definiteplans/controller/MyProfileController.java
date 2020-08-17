@@ -30,6 +30,7 @@ import com.definiteplans.dao.UserRepository;
 import com.definiteplans.dao.ZipCodeRepository;
 import com.definiteplans.dom.User;
 import com.definiteplans.service.EnumValueService;
+import com.definiteplans.service.QuestionAnswerService;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.DateUtil;
 import com.definiteplans.util.Utils;
@@ -42,13 +43,15 @@ public class MyProfileController {
     private final ZipCodeRepository zipCodeRepository;
     private final EnumValueService enumValueService;
     private final UserImageRepository userImageRepository;
+    private final QuestionAnswerService questionAnswerService;
 
-    public MyProfileController(UserService userService, UserRepository userRepository, ZipCodeRepository zipCodeRepository, EnumValueService enumValueService, UserImageRepository userImageRepository) {
+    public MyProfileController(UserService userService, UserRepository userRepository, ZipCodeRepository zipCodeRepository, EnumValueService enumValueService, UserImageRepository userImageRepository, QuestionAnswerService questionAnswerService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.zipCodeRepository = zipCodeRepository;
         this.enumValueService = enumValueService;
         this.userImageRepository = userImageRepository;
+        this.questionAnswerService = questionAnswerService;
     }
 
     @GetMapping("/profile")
@@ -66,6 +69,10 @@ public class MyProfileController {
         m.addObject("blocked_users", userService.getBlockedUserRows());
         m.addObject("was_pwd_updated", pwdUpdated != null && pwdUpdated == 1);
         m.addObject("hasPwd", currUser.hasPwd());
+
+        m.addObject("my_qa", questionAnswerService.getUserAnswers(currUser.getId()));
+        m.addObject("questions", questionAnswerService.getUnansweredQuestions(currUser.getId()));
+
         return m;
     }
 
@@ -113,8 +120,6 @@ public class MyProfileController {
             currUser.setEducation(update.getEducation());
             currUser.setSmokes(update.getSmokes());
             currUser.setEthnicity(update.getEthnicity());
-            currUser.setAboutMe(update.getAboutMe());
-            currUser.setInterests(update.getInterests());
             currUser.setHeight(update.getHeight());
 
             userService.saveUser(currUser, true);
@@ -122,7 +127,6 @@ public class MyProfileController {
 
         return AjaxResponse.success("Saved");
     }
-
 
     @PostMapping("/settings")
     public @ResponseBody AjaxResponse saveSettings(@ModelAttribute("user") @Valid User update, BindingResult bindingResult) {
@@ -147,11 +151,9 @@ public class MyProfileController {
 
     @RequestMapping("/refresh-blocked-list")
     public String refreshBlockedList(Model m) {
-        User currUser = userService.getCurrentUser();
         m.addAttribute("blocked_users", userService.getBlockedUserRows());
         return "edit_profile/settings :: blocked-list-frag";
     }
-
 
     @PostMapping("/delete/account")
     public @ResponseBody

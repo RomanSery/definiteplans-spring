@@ -9,6 +9,22 @@ something along those lines
 
 
 
+    public String getAboutMePretty() {
+        if (this.aboutMe != null) {
+            return this.aboutMe.replace("\r\n", "<br>");
+        }
+        return "";
+    }
+
+    public String getInterestsPretty() {
+        if (this.interests != null) {
+            return this.interests.replace("\r\n", "<br>");
+        }
+        return "";
+    }
+
+
+
 service firebase.storage {
   match /b/{bucket}/o {
     match /images/{userId}/{allPaths=**} {
