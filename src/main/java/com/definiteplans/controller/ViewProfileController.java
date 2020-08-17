@@ -26,6 +26,7 @@ import com.definiteplans.dom.User;
 import com.definiteplans.service.ChatService;
 import com.definiteplans.service.DateService;
 import com.definiteplans.service.PrivacyCheckerService;
+import com.definiteplans.service.QuestionAnswerService;
 import com.definiteplans.service.UserService;
 import com.definiteplans.util.Utils;
 
@@ -39,10 +40,11 @@ public class ViewProfileController {
     private final ChatService chatService;
     private final ChatMsgRepository chatMsgRepository;
     private final PrivacyCheckerService privacyCheckerService;
+    private final QuestionAnswerService questionAnswerService;
 
     public ViewProfileController(UserService userService, UserRepository userRepository,
                                  DateService dateService, DefiniteDateRepository definiteDateRepository, UserImageRepository userImageRepository,
-                                 ChatService chatService, ChatMsgRepository chatMsgRepository, PrivacyCheckerService privacyCheckerService) {
+                                 ChatService chatService, ChatMsgRepository chatMsgRepository, PrivacyCheckerService privacyCheckerService, QuestionAnswerService questionAnswerService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.dateService = dateService;
@@ -51,6 +53,7 @@ public class ViewProfileController {
         this.chatService = chatService;
         this.chatMsgRepository = chatMsgRepository;
         this.privacyCheckerService = privacyCheckerService;
+        this.questionAnswerService = questionAnswerService;
     }
 
     @GetMapping("/profiles/")
@@ -101,6 +104,8 @@ public class ViewProfileController {
         m.addObject("chat_thread", isViewingSelf ? Collections.emptyList() : chatService.getChatMsgs(currUser, profile));
         m.addObject("num_remaining_msgs", isViewingSelf ? 0 : chatService.getNumMsgsRemaining(currUser, profile));
         setDateAttributes(currUser, profile, m.getModelMap());
+
+        m.addObject("user_qa", questionAnswerService.getUserAnswers(profile.getId()));
 
         if(!isViewingSelf) {
             chatMsgRepository.markRead(profile.getId(), currUser.getId());

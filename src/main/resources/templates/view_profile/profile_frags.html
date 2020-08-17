@@ -88,11 +88,11 @@
 
 
 <div th:fragment="aboutMe" th:remove="tag">
-    <h3>About Me</h3>
-    <p th:text="${aboutMe}"></p>
-    <div class="hr-line-dashed"></div>
-    <h3>Interests</h3>
-    <p th:text="${interests}"></p>
+    <div th:each="qa : ${user_qa}" th:remove="tag">
+        <h3><span th:text="${qa.question}" th:remove="tag"></span></h3>
+        <p th:text="${qa.answerPretty}"></p>
+        <div class="hr-line-dashed"></div>
+    </div>
 </div>
 
 
